@@ -11,6 +11,7 @@ using Tapawingo_backend.Data;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Models;
 using Tapawingo_backend.Repository;
+using Tapawingo_backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,9 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Add database connection
 builder.Services.AddDbContext<DataContext>(options =>

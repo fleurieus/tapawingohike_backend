@@ -25,13 +25,6 @@ namespace Tapawingo_backend.Controllers
             _configuration = configuration;
         }
 
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] RegistrationDto model)
-        {
-            var response = await _authRepository.Register(model);
-            return Ok(response);
-        }
-
         [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponse))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
