@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System.Text;
 using System.Text.Json.Serialization;
 using Tapawingo_backend;
 using Tapawingo_backend.Data;
 using Tapawingo_backend.Interface;
+using Tapawingo_backend.Middleware;
 using Tapawingo_backend.Models;
 using Tapawingo_backend.Repository;
 using Tapawingo_backend.Services;
@@ -73,6 +75,11 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityRequirement(new OpenApiSecurityRequirement { { scheme, Array.Empty<string>() } });
 });
 
+// TODO the logger may need to be changed to also logging the methods and function used
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+
 var secret = builder.Configuration["JWT:Secret"] ?? throw new InvalidOperationException("Secret not configured");
 
 builder.Services.AddAuthentication(options =>
@@ -95,15 +102,21 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddRequestTimeouts();
 
+builder.Host.UseSerilog();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.UseSerilogRequestLogging();
+
+app.UseMiddleware<ControllerLogging>();
+app.UseMiddleware<ServiceLogging>();
+app.UseMiddleware<RepositoryLogging>();
 app.UseMiddleware(typeof(GlobalErrorHandling));
 
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
