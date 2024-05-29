@@ -25,48 +25,6 @@ namespace Tapawingo_backend.Repository
             _configuration = configuration;
         }
 
-        public async Task<CustomResponse> Register([FromBody] RegistrationDto model)
-        {
-            var existingUser = await _userManager.FindByEmailAsync(model.Email);
-
-            if (existingUser != null)
-                throw new BadHttpRequestException("User already exists");
-
-            var newUser = new User
-            {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                UserName = model.Email,
-                Email = model.Email,
-                SecurityStamp = Guid.NewGuid().ToString()
-            };
-
-            var createUser = await _userManager.CreateAsync(newUser, model.Password);
-            if (!createUser.Succeeded)
-            {
-                var errorMessages = string.Join(", ", createUser.Errors.Select(e => e.Description));
-                throw new DetailedIdentityErrorException(Status.UnProcessableEntity, errorMessages);
-            }
-
-            //Assign Default Role : Admin to first registrar; rest is user
-            var checkAdmin = await _roleManager.FindByNameAsync("Admin");
-            if (checkAdmin is null)
-            {
-                await _roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });
-                await _userManager.AddToRoleAsync(newUser, "Admin");
-                return new CustomResponse("Register succeeded");
-            }
-            else
-            {
-                var checkUser = await _roleManager.FindByNameAsync("User");
-                if (checkUser is null)
-                    await _roleManager.CreateAsync(new IdentityRole() { Name = "User" });
-
-                await _userManager.AddToRoleAsync(newUser, "User");
-                return new CustomResponse("Register succeeded");
-            }
-        }
-
         public async Task<LoginResponse> Login([FromBody] LoginDto model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
