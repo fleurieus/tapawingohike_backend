@@ -24,6 +24,8 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<RoutesService>();
+builder.Services.AddScoped<IRoutesRepository, RoutesRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Add database connection
