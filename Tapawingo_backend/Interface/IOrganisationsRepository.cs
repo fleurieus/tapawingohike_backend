@@ -5,5 +5,6 @@ namespace Tapawingo_backend.Interface
     public interface IOrganisationsRepository
     {
         OrganisationDto CreateOrganisation(CreateOrganisationDto createOrganisationDto);
+        OrganisationDto GetOrganisationById(int id); 
     }
 }

@@ -18,5 +18,10 @@ namespace Tapawingo_backend.Services
         {
             return _organisationsRepository.CreateOrganisation(organisationName);
         }
+
+        public OrganisationDto GetOrganisationById(int id)
+        {
+            return _organisationsRepository.GetOrganisationById(id);
+        }
     }
 }

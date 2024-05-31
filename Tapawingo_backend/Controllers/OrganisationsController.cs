@@ -16,6 +16,18 @@ namespace Tapawingo_backend.Controllers
         }
 
         //TODO: ADD AUTHORIZATION RULE
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrganisationDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetOrganisation(int id)
+        {
+            var organisation = _organisationsService.GetOrganisationById(id);
+            return organisation!=null ? 
+                Ok(organisation) : 
+                NotFound("Organisation with this id was not found.");
+        }
+
+        //TODO: ADD AUTHORIZATION RULE
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(OrganisationDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
