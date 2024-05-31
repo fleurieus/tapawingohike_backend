@@ -32,5 +32,19 @@ namespace Tapawingo_backend.Repository
             };
         }
 
+        public OrganisationDto GetOrganisationById(int id)
+        {
+            var foundOrganisation = _context.Organisations.FirstOrDefault(organisation => organisation.Id == id);
+            if(foundOrganisation == null)
+            {
+                return null;
+            }
+            return new OrganisationDto
+            {
+                Id = foundOrganisation.Id,
+                Name = foundOrganisation.Name
+            };
+        }
+
     }
 }
