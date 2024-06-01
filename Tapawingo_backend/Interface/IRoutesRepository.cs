@@ -5,5 +5,6 @@ namespace Tapawingo_backend.Interface
     public interface IRoutesRepository
     {
         RouteDto GetRouteById(int id);
+        RouteDto CreateRoute(CreateRouteDto createRouteDto);
     }
 }

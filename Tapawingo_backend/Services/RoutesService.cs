@@ -17,5 +17,10 @@ namespace Tapawingo_backend.Services
         {
             return _routesRepository.GetRouteById(id);
         }
+        
+        public RouteDto CreateRoute(CreateRouteDto createRouteDto)
+        {
+            return _routesRepository.CreateRoute(createRouteDto);
+        }
     }
 }
