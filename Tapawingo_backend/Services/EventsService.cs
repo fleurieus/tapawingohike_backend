@@ -22,5 +22,21 @@ namespace Tapawingo_backend.Services
             var events = _mapper.Map<List<EventDto>>(_eventsRepository.GetEventsByOrganisationId(organisationId));
             return new ObjectResult(events);
         }
+        
+        public IActionResult getEventByIdAndOrganisationId(int eventId, int organisationId)
+        {
+            if (!_eventsRepository.EventExists(eventId))
+                return new NotFoundObjectResult(new
+                {
+                    message = "Event not found"
+                });
+            
+            var twEvent = _mapper.Map<EventDto>(_eventsRepository.GetEventByIdAndOrganisationId(eventId, organisationId));
+            if (twEvent == null)
+            {
+                return new ForbidResult();
+            }
+            return new ObjectResult(twEvent);
+        }
     }
 }

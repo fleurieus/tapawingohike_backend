@@ -23,5 +23,20 @@ namespace Tapawingo_backend.Controllers
             var events = _eventsService.GetEventsByOrganisationId(organisationId);
             return Ok(events);
         }
+        
+        [HttpGet("{eventId}")]
+        [ProducesResponseType(200, Type = typeof(Event))]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(403)]
+        public IActionResult GetEventById(int eventId, int organisationId)
+        {
+            var twEvent = _eventsService.getEventByIdAndOrganisationId(eventId, organisationId);
+            return twEvent switch
+            {
+                ForbidResult => StatusCode(403, "The event does not belong to this organisation"),
+                NotFoundObjectResult => NotFound("Event not found"),
+                _ => Ok(twEvent)
+            };
+        }
     }
 }
