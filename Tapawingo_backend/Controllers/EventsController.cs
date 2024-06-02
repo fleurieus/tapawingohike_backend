@@ -2,6 +2,7 @@
 using Tapawingo_backend.Models;
 using Tapawingo_backend.Services;
 using System.Linq;
+using Tapawingo_backend.Dtos;
 
 namespace Tapawingo_backend.Controllers
 {
@@ -22,6 +23,24 @@ namespace Tapawingo_backend.Controllers
         {
             var events = _eventsService.GetEventsByOrganisationId(organisationId);
             return Ok(events);
+        }
+        
+        [HttpPost]
+        public IActionResult CreateEvent([FromBody] CreateEventDto model, int organisationId)
+        {
+            try
+            {
+                var response = _eventsService.CreateEvent(model, organisationId);
+                return Ok(response);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
         }
     }
 }

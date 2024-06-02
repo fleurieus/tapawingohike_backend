@@ -10,6 +10,7 @@ namespace Tapawingo_backend.Helper
         {
             CreateMap<User, UserDto>();
             CreateMap<Event, EventDto>();
+            CreateMap<CreateEventDto, Event>();
         }
     }
 }

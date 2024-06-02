@@ -18,5 +18,16 @@ public class EventsRepository : IEventsRepository
         return _context.Events.Where(e => e.OrganisationId == organisationId).ToList();
     }
     
+    public Event CreateEvent(Event newEvent)
+    {
+        _context.Events.Add(newEvent);
+        _context.SaveChanges();
+        return newEvent;
+    }
     
+    public bool EventExistsForOrganisation(string eventName, int organisationId)
+    {
+        return _context.Events.Any(e => e.Name == eventName && e.OrganisationId == organisationId);
+    }
+ 
 }
