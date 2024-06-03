@@ -21,8 +21,20 @@ namespace Tapawingo_backend.Services
         // Method to create a new team based on the provided DTO model
         public async Task<CreateTeamDto> CreateTeam(CreateTeamDto model)
         {
+
             // Creating a new Team object using data from the DTO model
-            return _mapper.Map<CreateTeamDto>(_teamRepository.AddTeam(model));
+            var team = new Team
+            {
+                Name = model.Name,
+                Code = model.Code,
+                ContactName = model.ContactName,
+                ContactEmail = model.ContactEmail,
+                ContactPhone = model.ContactPhone,
+                Online = model.Online,
+                EditionId = model.EditionId
+            };
+            // Creating a new Team object using data from the DTO model
+            return _mapper.Map<CreateTeamDto>(_teamRepository.AddTeam(team));
         }
     }
 }
