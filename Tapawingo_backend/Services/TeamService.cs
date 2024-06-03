@@ -18,6 +18,16 @@ namespace Tapawingo_backend.Services
         // Method to create a new team based on the provided DTO model
         public async Task<Team> CreateTeam(CreateTeamDto model)
         {
+
+            /**
+            //Check to see that the Edition object for the EditionId passed in the CreateTeamDto exists
+            var edition = await _editionService.GetTeam(model.EditionId);
+            if (edition == null) {
+                return StatusCode(StatusCodes.Status400BadRequest, "This Edition does not exist");
+                //Add logging for this maybe.
+            }
+            **/
+            
             // Creating a new Team object using data from the DTO model
             var team = new Team
             {
