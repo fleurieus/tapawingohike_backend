@@ -1,9 +1,9 @@
-﻿using Tapawingo_backend.Dtos;
+﻿using Tapawingo_backend.Models;
 
 namespace Tapawingo_backend.Interface
 {
     public interface IRoutesRepository
     {
-        Route GetRouteById(int id);
+        TWRoute GetRouteById(int id);
     }
 }
