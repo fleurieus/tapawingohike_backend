@@ -36,6 +36,11 @@ namespace Tapawingo_backend.Repository
             }
             return foundOrganisation;
         }
+        
+        public bool OrganisationExists(int id)
+        {
+            return _context.Organisations.Any(organisation => organisation.Id == id);
+        }
 
     }
 }
