@@ -35,5 +35,20 @@ namespace Tapawingo_backend.Controllers
                 return BadRequest("Cannot process this request.");
             }
         }
+        
+        [HttpGet("api/organisations/{organisationId}/Events/{eventId}")]
+        [ProducesResponseType(200, Type = typeof(Event))]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(403)]
+        public IActionResult GetEventById(int eventId, int organisationId)
+        {
+            var twEvent = _eventsService.GetEventByIdAndOrganisationId(eventId, organisationId);
+            return twEvent switch
+            {
+                ForbidResult => StatusCode(403, "The event does not belong to this organisation"),
+                NotFoundObjectResult => NotFound("Event not found"),
+                _ => Ok(twEvent)
+            };
+        }
     }
 }

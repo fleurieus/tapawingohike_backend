@@ -18,5 +18,14 @@ public class EventsRepository : IEventsRepository
         return _context.Events.Where(e => e.OrganisationId == organisationId).ToList();
     }
     
+    public bool EventExists(int eventId)
+    {
+        bool eventExists = _context.Events.Any(e => e.Id == eventId);
+        return eventExists;
+    }
     
+    public Event GetEventByIdAndOrganisationId(int eventId, int organisationId)
+    {
+        return _context.Events.Where(e => e.Id == eventId && e.OrganisationId == organisationId).FirstOrDefault();
+    }
 }

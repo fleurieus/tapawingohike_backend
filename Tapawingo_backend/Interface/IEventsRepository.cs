@@ -6,5 +6,7 @@ namespace Tapawingo_backend.Interface
     public interface IEventsRepository
     {
         ICollection<Event> GetEventsByOrganisationId(int organisationId);
+        bool EventExists(int eventId);
+        Event GetEventByIdAndOrganisationId(int eventId, int organisationId);
     }
 }
