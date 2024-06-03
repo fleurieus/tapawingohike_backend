@@ -10,6 +10,8 @@ namespace Tapawingo_backend.Helper
         {
             CreateMap<User, UserDto>();
             CreateMap<TWRoute, RouteDto>();
+            CreateMap<Organisation, OrganisationDto>();
+            CreateMap<Route, RouteDto>();
         }
     }
 }

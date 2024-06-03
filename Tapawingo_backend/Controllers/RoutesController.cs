@@ -22,9 +22,9 @@ namespace Tapawingo_backend.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetRoute(int id)
         {
-            var organisation = _routesService.GetRoutesById(id);
-            return organisation != null ?
-                Ok(organisation) :
+            var route = _routesService.GetRoutesById(id);
+            return route != null ?
+                Ok(route) :
                 NotFound("Organisation with this id was not found.");
         }
 

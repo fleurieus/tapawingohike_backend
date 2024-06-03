@@ -12,13 +12,16 @@ namespace Tapawingo_backend.Services
         private readonly IMapper _mapper;
 
         public RoutesService(IRoutesRepository routesRepository, IMapper mapper) {
+        public RoutesService(IRoutesRepository routesRepository, IMapper mapper)
+        {
+            _mapper = mapper;
             _routesRepository = routesRepository;
             _mapper = mapper;
         }
 
         public RouteDto GetRoutesById(int id)
         {
-            return _routesRepository.GetRouteById(id);
+            return _mapper.Map<RouteDto>(_routesRepository.GetRouteById(id));
         }
         
         public RouteDto CreateRoute(CreateRouteDto createRouteDto)

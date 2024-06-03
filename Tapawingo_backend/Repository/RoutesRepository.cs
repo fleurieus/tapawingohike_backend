@@ -13,7 +13,8 @@ namespace Tapawingo_backend.Repository
         {
             _context = context;
         }
-        public RouteDto GetRouteById(int id)
+
+        public TWRoute GetRouteById(int id)
         {
             var foundRoute = _context.Routes.FirstOrDefault(route => route.Id == id);
             if (foundRoute == null)
@@ -26,6 +27,7 @@ namespace Tapawingo_backend.Repository
                 Name = foundRoute.Name,
                 EditionId = foundRoute.EditionId
             };
+            return foundRoute;
         }
 
         public TWRoute CreateRoute(CreateRouteDto createRouteDto)
