@@ -1,4 +1,6 @@
-﻿namespace Tapawingo_backend.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Tapawingo_backend.Models
 {
     // Model class representing a team
     public class Team
@@ -34,6 +36,7 @@
         public int EditionId { get; set; }
 
         // The referential object of the Edition
+        [ForeignKey("Id")]
         public Edition Edition { get; set; }
     }
 }
