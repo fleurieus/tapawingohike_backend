@@ -14,7 +14,7 @@ namespace Tapawingo_backend.Repository
             _context = context;
         }
 
-        public OrganisationDto CreateOrganisation(CreateOrganisationDto createOrganisationDto) 
+        public Organisation CreateOrganisation(CreateOrganisationDto createOrganisationDto) 
         {
             var newOrganisation = new Organisation()
             {
@@ -24,26 +24,17 @@ namespace Tapawingo_backend.Repository
             _context.Organisations.Add(newOrganisation);
             //Save changes actually saves it to the database and also it fills the rest of the object. Id is set after executing this.
             _context.SaveChanges();
-
-            return new OrganisationDto()
-            {
-                Id = newOrganisation.Id,
-                Name = createOrganisationDto.Name
-            };
+            return newOrganisation;
         }
 
-        public OrganisationDto GetOrganisationById(int id)
+        public Organisation GetOrganisationById(int id)
         {
             var foundOrganisation = _context.Organisations.FirstOrDefault(organisation => organisation.Id == id);
             if(foundOrganisation == null)
             {
                 return null;
             }
-            return new OrganisationDto
-            {
-                Id = foundOrganisation.Id,
-                Name = foundOrganisation.Name
-            };
+            return foundOrganisation;
         }
 
     }
