@@ -23,7 +23,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<UserService>();
-builder.Services.AddScoped<OrganisationsService>();
+builder.Services.AddScoped<EventsService>();
 builder.Services.AddScoped<IOrganisationsRepository, OrganisationsRepository>();
 builder.Services.AddScoped<EventsService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
