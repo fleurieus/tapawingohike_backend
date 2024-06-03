@@ -23,27 +23,35 @@ namespace Tapawingo_backend.Services
             return new ObjectResult(events);
         }
 
-        public Event CreateEvent(CreateEventDto model, int organisationId)
+        public Event CreateOrUpdateEvent(CreateEventDto model, int organisationId, int? eventId)
         {
-            //TODO Implement when organisation functionality is ready
-            // if (!_organisationsRepository.OrganisationExists(organisationId))
-            // {
-            //     throw new ArgumentException("Organisation does not exist");
-            // }
-            if (string.IsNullOrEmpty(model.Name))
+            Event eventEntity;
+            if (eventId == null)
             {
-                throw new ArgumentException("Name is required");
-            }
+                //TODO Implement when organisation functionality is ready
+                // if (!_organisationsRepository.OrganisationExists(organisationId))
+                // {
+                //     throw new ArgumentException("Organisation does not exist");
+                // }
+                if (string.IsNullOrEmpty(model.Name))
+                {
+                    throw new ArgumentException("Name is required");
+                }
 
-            var eventExists = _eventsRepository.EventExistsForOrganisation(model.Name, organisationId);
-            if (eventExists)
+                var eventExists = _eventsRepository.EventExistsForOrganisation(model.Name, organisationId);
+                if (eventExists)
+                {
+                    throw new InvalidOperationException("Event already exists for this organisation");
+                }
+
+                eventEntity = _mapper.Map<Event>(model);
+                eventEntity.OrganisationId = organisationId;
+                return _eventsRepository.CreateEvent(eventEntity);
+            }
+            else
             {
-                throw new InvalidOperationException("Event already exists for this organisation");
+                eventEntity = _eventsRepository.getEventsByIdAndOrganisationId();
             }
-
-            var newEvent = _mapper.Map<Event>(model);
-            newEvent.OrganisationId = organisationId;
-            return _eventsRepository.CreateEvent(newEvent);
         }
     }
 }

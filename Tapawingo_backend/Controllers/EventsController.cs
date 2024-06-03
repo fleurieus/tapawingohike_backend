@@ -30,7 +30,25 @@ namespace Tapawingo_backend.Controllers
         {
             try
             {
-                var response = _eventsService.CreateEvent(model, organisationId);
+                var response = _eventsService.CreateOrUpdateEvent(model, organisationId, null);
+                return Ok(response);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
+        }
+        
+        [HttpPut("{eventId}")]
+        public IActionResult UpdateEvent([FromBody] CreateEventDto model, int eventId, int organisationId)
+        {
+            try
+            {
+                var response = _eventsService.CreateOrUpdateEvent(model, organisationId, eventId);
                 return Ok(response);
             }
             catch (ArgumentException ex)
