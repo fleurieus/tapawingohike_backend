@@ -23,12 +23,14 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<EventsService>();
 builder.Services.AddScoped<OrganisationsService>();
 builder.Services.AddScoped<IOrganisationsRepository, OrganisationsRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<RoutesService>();
 builder.Services.AddScoped<IRoutesRepository, RoutesRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IEventsRepository, EventsRepository>();
 
 // Add database connection
 builder.Services.AddDbContext<DataContext>(options =>
