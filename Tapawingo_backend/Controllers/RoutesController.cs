@@ -4,6 +4,8 @@ using Tapawingo_backend.Services;
 
 namespace Tapawingo_backend.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class RoutesController : Controller
     {
         private readonly RoutesService _routesService;
