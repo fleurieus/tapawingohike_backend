@@ -23,5 +23,17 @@ namespace Tapawingo_backend.Repository
             }
             return foundRoute;
         }
+
+        public TWRoute CreateRoute(CreateRouteDto createRouteDto)
+        {
+            var newRoute = new TWRoute()
+            {
+                Name = createRouteDto.Name,
+                EditionId = createRouteDto.EditionId
+            };
+            _context.Routes.Add(newRoute);
+            _context.SaveChanges();
+            return newRoute;
+        }
     }
 }

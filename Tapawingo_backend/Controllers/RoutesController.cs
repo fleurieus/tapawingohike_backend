@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Services;
 
 namespace Tapawingo_backend.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class RoutesController : Controller
     {
         private readonly RoutesService _routesService;
@@ -23,6 +26,17 @@ namespace Tapawingo_backend.Controllers
             return route != null ?
                 Ok(route) :
                 NotFound("Organisation with this id was not found.");
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(RouteDto))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult CreateRoute([FromBody] CreateRouteDto createRouteDto)
+        {
+            var newRoute = _routesService.CreateRoute(createRouteDto);
+            return newRoute != null ?
+                Ok(newRoute) : BadRequest("Cannot process this request.");
         }
     }
 }
