@@ -9,14 +9,15 @@ using Tapawingo_backend.Repository;
 
 namespace Tapawingo_backend.Tests.OrganisationsTests
 {
-    public class Organisations_Repository_Tests : TestBase, IDisposable
+    [Collection("Database collection")]
+    public class Organisations_Repository_Tests : TestBase
     {
         private readonly OrganisationsRepository _organisationsRepository;
         private readonly DataContext _context;
 
-        public Organisations_Repository_Tests()
+        public Organisations_Repository_Tests(DatabaseFixture fixture) : base(fixture)
         {
-            _context = CreateDbContext();
+            _context = Context; //inject 'shared' context from TestBase
             _organisationsRepository = new OrganisationsRepository(_context);
         }
 
@@ -43,10 +44,9 @@ namespace Tapawingo_backend.Tests.OrganisationsTests
         }
         //
 
-        public new void Dispose()
+        protected new void Dispose()
         {
             _context.Dispose();
-            base.Dispose();
         }
     }
 }

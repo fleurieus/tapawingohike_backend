@@ -7,11 +7,22 @@ using System.Threading.Tasks;
 using Tapawingo_backend.Data;
 using Tapawingo_backend.Models;
 
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
+
 namespace Tapawingo_backend.Tests
 {
-    public class TestBase : IDisposable
+    [CollectionDefinition("Database collection")]
+    public class DatabaseFixture : IDisposable
     {
-        protected DataContext CreateDbContext()
+        public DatabaseFixture()
+        {
+            // Create the database once before running all tests
+            Context = CreateDbContext();
+        }
+
+        public DataContext Context { get; private set; }
+
+        private DataContext CreateDbContext()
         {
             var options = new DbContextOptionsBuilder<DataContext>()
                 .UseMySQL("server=localhost;database=TapawingoDB_Test;user=root;password=mysql");
@@ -77,10 +88,20 @@ namespace Tapawingo_backend.Tests
 
         public void Dispose()
         {
-            using (var context = CreateDbContext())
-            {
-                context.Database.EnsureDeleted();
-            }
+            // Dispose of the database after all tests have finished
+            Context.Dispose();
         }
+    }
+
+    public class TestBase : IClassFixture<DatabaseFixture>
+    {
+        protected DataContext Context => Fixture.Context;
+
+        protected TestBase(DatabaseFixture fixture)
+        {
+            Fixture = fixture;
+        }
+
+        protected DatabaseFixture Fixture { get; }
     }
 }
