@@ -35,14 +35,8 @@ namespace Tapawingo_backend.Controllers
         public IActionResult CreateRoute([FromBody] CreateRouteDto createRouteDto)
         {
             var newRoute = _routesService.CreateRoute(createRouteDto);
-            if (newRoute != null)
-            {
-                return new ObjectResult(newRoute)
-                {
-                    StatusCode = StatusCodes.Status201Created
-                };
-            }
-            return BadRequest("Cannot process this request.");
+            return newRoute != null ?
+                Ok(newRoute) : BadRequest("Cannot process this request.");
         }
     }
 }
