@@ -5,7 +5,6 @@ using System.Linq;
 
 namespace Tapawingo_backend.Controllers
 {
-    [Route("api/organisations/{organisationId}/[controller]")]
     [ApiController]
     public class EventsController : Controller
     {
@@ -16,12 +15,19 @@ namespace Tapawingo_backend.Controllers
             _eventsService = eventsService;
         }
 
-        [HttpGet]
+        [HttpGet("api/organisations/{organisationId}/Events")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Event>))]
         public IActionResult GetEventsByOrganisationId(int organisationId)
         {
-            var events = _eventsService.GetEventsByOrganisationId(organisationId);
-            return Ok(events);
+            try
+            {
+                var events = _eventsService.GetEventsByOrganisationId(organisationId);
+                return Ok(events);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message); 
+            }
         }
     }
 }
