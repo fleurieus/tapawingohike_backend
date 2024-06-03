@@ -25,6 +25,7 @@ namespace Tapawingo_backend.Dtos
         public bool Online { get; set; }
 
          // The Editon Id of the Edition to which the team belongs
-        public int EventId { get; set; }
+        public int EditionId { get; set; }
+
     }
 }
