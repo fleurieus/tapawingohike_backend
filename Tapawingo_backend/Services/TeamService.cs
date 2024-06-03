@@ -1,4 +1,3 @@
-using System.Threading.Tasks; // Importing the namespace for Task
 using Tapawingo_backend.Dtos; // Importing the Dtos namespace
 using Tapawingo_backend.Models; // Importing the Models namespace
 using Tapawingo_backend.Repository; // Importing the Repository namespace
@@ -27,7 +26,8 @@ namespace Tapawingo_backend.Services
                 ContactName = model.ContactName,
                 ContactEmail = model.ContactEmail,
                 ContactPhone = model.ContactPhone,
-                Online = model.Online
+                Online = model.Online,
+                EditionId = model.EditionId
             };
 
             // Adding the new team to the repository and returning the result
