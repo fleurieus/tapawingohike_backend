@@ -22,25 +22,28 @@ namespace Tapawingo_backend.Controllers
         [ProducesResponseType(500)] // HTTP 500: Internal server error, if an unexpected exception occurs
         public async Task<IActionResult> CreateTeam(CreateTeamDto model)
         {
+
             try
             {
-                /** /Check to see that the Edition object for the EditionId passed in the CreateTeamDto exists
+                /** //Check to see that the Edition object for the EditionId passed in the CreateTeamDto exists
                 // Try to find the edition
                 var edition = await _editionService.GetEditionById(model.EditionId);
                 if (edition == null) {
                 return StatusCode(StatusCodes.Status400BadRequest, "The edition for the team does not exist");
                 //Add logging for this maybe.
-                }**/
+                } **/   
                 
                 // Attempt to create the team using the provided model
                 var team = await _teamService.CreateTeam(model);
-                return team != null ? Ok(team) : BadRequest("Error creating team");
+                return Ok(team);
             }
-            catch (Exception)
+            catch (ArgumentException ex)
             {
-                // Log the exception
-                // Return HTTP 500 Internal Server Error status with a generic error message
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error creating team");
+                return BadRequest(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
             }
         }
     }
