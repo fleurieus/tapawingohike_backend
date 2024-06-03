@@ -30,7 +30,7 @@ namespace Tapawingo_backend.Services
             var events = _mapper.Map<List<EventDto>>(_eventsRepository.GetEventsByOrganisationId(organisationId));
             if (events.IsNullOrEmpty())
             {
-                throw new ArgumentException("No events found for this organisation");
+                throw new KeyNotFoundException("No events found for this organisation");
             }
             return new ObjectResult(events);
         }

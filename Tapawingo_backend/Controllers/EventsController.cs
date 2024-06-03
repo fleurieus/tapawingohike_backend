@@ -17,6 +17,8 @@ namespace Tapawingo_backend.Controllers
 
         [HttpGet("api/organisations/{organisationId}/Events")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Event>))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public IActionResult GetEventsByOrganisationId(int organisationId)
         {
             try
@@ -24,9 +26,13 @@ namespace Tapawingo_backend.Controllers
                 var events = _eventsService.GetEventsByOrganisationId(organisationId);
                 return Ok(events);
             }
-            catch (ArgumentException ex)
+            catch (KeyNotFoundException ex)
             {
-                return BadRequest(ex.Message); 
+                return NotFound(ex.Message); 
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Cannot process this request.");
             }
         }
     }
