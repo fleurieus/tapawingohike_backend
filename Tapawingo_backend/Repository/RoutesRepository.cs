@@ -21,12 +21,6 @@ namespace Tapawingo_backend.Repository
             {
                 return null;
             }
-            return new RouteDto
-            {
-                Id = foundRoute.Id,
-                Name = foundRoute.Name,
-                EditionId = foundRoute.EditionId
-            };
             return foundRoute;
         }
 
