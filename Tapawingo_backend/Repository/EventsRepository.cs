@@ -25,6 +25,13 @@ public class EventsRepository : IEventsRepository
         return newEvent;
     }
     
+    public Event UpdateEvent(Event updatedEvent)
+    {
+        _context.Events.Update(updatedEvent);
+        _context.SaveChanges();
+        return updatedEvent;
+    }
+    
     public bool EventExistsForOrganisation(string eventName, int organisationId)
     {
         return _context.Events.Any(e => e.Name == eventName && e.OrganisationId == organisationId);

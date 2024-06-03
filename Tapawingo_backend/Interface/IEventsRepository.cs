@@ -7,6 +7,7 @@ namespace Tapawingo_backend.Interface
     {
         ICollection<Event> GetEventsByOrganisationId(int organisationId);
         Event CreateEvent(Event newEvent);
+        Event UpdateEvent(Event updatedEvent);
         bool EventExistsForOrganisation(string eventName, int organisationId);
     }
 }

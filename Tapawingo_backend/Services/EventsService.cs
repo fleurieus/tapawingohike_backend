@@ -9,12 +9,14 @@ namespace Tapawingo_backend.Services
     public class EventsService
     {
         private readonly IEventsRepository _eventsRepository;
+        private readonly IOrganisationsRepository _organisationsRepository;
         private readonly IMapper _mapper;
 
-        public EventsService(IEventsRepository eventsRepository, IMapper mapper)
+        public EventsService(IEventsRepository eventsRepository, IMapper mapper, IOrganisationsRepository organisationsRepository)
         {
             _eventsRepository = eventsRepository;
             _mapper = mapper;
+            _organisationsRepository = organisationsRepository;
         }
 
         public IActionResult GetEventsByOrganisationId(int organisationId)
@@ -28,11 +30,10 @@ namespace Tapawingo_backend.Services
             Event eventEntity;
             if (eventId == null)
             {
-                //TODO Implement when organisation functionality is ready
-                // if (!_organisationsRepository.OrganisationExists(organisationId))
-                // {
-                //     throw new ArgumentException("Organisation does not exist");
-                // }
+                if (!_organisationsRepository.OrganisationExists(organisationId))
+                {
+                    throw new ArgumentException("Organisation does not exist");
+                }
                 if (string.IsNullOrEmpty(model.Name))
                 {
                     throw new ArgumentException("Name is required");
@@ -51,6 +52,12 @@ namespace Tapawingo_backend.Services
             else
             {
                 eventEntity = _eventsRepository.getEventsByIdAndOrganisationId();
+                if (eventEntity == null)
+                {
+                    throw new ArgumentException("Event does not exist");
+                }
+                _mapper.Map(model, eventEntity);
+                return _eventsRepository.UpdateEvent(eventEntity);
             }
         }
     }
