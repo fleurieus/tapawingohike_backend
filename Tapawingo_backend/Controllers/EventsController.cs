@@ -57,7 +57,7 @@ namespace Tapawingo_backend.Controllers
         {
             try
             {
-                var response = _eventsService.CreateOrUpdateEvent(model, organisationId, null);
+                var response = _eventsService.CreateEvent(model, organisationId);
                 return Ok(response);
             }
             catch (ArgumentException ex)
@@ -75,7 +75,7 @@ namespace Tapawingo_backend.Controllers
         {
             try
             {
-                var response = _eventsService.CreateOrUpdateEvent(model, organisationId, eventId);
+                var response = _eventsService.UpdateEvent(model, organisationId, eventId);
                 return Ok(response);
             }
             catch (ArgumentException ex)
