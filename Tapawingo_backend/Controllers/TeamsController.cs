@@ -24,29 +24,24 @@ namespace Tapawingo_backend.Controllers
         {
             try
             {
+                /** /Check to see that the Edition object for the EditionId passed in the CreateTeamDto exists
+                // Try to find the edition
+                var edition = await _editionService.GetEditionById(model.EditionId);
+                if (edition == null) {
+                return StatusCode(StatusCodes.Status400BadRequest, "The edition for the team does not exist");
+                //Add logging for this maybe.
+                }**/
+                
                 // Attempt to create the team using the provided model
                 var team = await _teamService.CreateTeam(model);
-
-                // If the team is successfully created
-                if (team != null)
-                {
-                    // Return HTTP 200 OK status with the created team in the response body
-                    return Ok(team);
-                }
-                else
-                {
-                    // If the team is null, return HTTP 400 Bad Request status
-                    return BadRequest();
-                }
+                return team != null ? Ok(team) : BadRequest("Error creating team");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Log the exception
-
                 // Return HTTP 500 Internal Server Error status with a generic error message
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error creating team");
             }
         }
-
     }
 }
