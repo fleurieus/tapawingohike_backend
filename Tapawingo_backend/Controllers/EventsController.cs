@@ -42,7 +42,7 @@ namespace Tapawingo_backend.Controllers
         [ProducesResponseType(403)]
         public IActionResult GetEventById(int eventId, int organisationId)
         {
-            var twEvent = _eventsService.getEventByIdAndOrganisationId(eventId, organisationId);
+            var twEvent = _eventsService.GetEventByIdAndOrganisationId(eventId, organisationId);
             return twEvent switch
             {
                 ForbidResult => StatusCode(403, "The event does not belong to this organisation"),

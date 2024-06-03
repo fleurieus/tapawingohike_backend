@@ -35,7 +35,7 @@ namespace Tapawingo_backend.Services
             return new ObjectResult(events);
         }
         
-        public IActionResult getEventByIdAndOrganisationId(int eventId, int organisationId)
+        public IActionResult GetEventByIdAndOrganisationId(int eventId, int organisationId)
         {
             if (!_eventsRepository.EventExists(eventId))
                 return new NotFoundObjectResult(new
