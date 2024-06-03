@@ -37,7 +37,7 @@ builder.Services.AddScoped<IEventsRepository, EventsRepository>();
 // Add database connection
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string is not found")    );
+    options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string is not found"));
 });
 
 // Add Identity & JWT authentication
