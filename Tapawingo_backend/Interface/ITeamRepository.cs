@@ -1,3 +1,4 @@
+using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Models; // Importing the Models namespace
 
 namespace Tapawingo_backend.Repository
@@ -6,6 +7,6 @@ namespace Tapawingo_backend.Repository
     public interface ITeamRepository
     {
         // Add a new team to the repository
-        Task<Team> AddTeam(Team team);
+        Task<Team> AddTeam(CreateTeamDto team);
     }
 }
