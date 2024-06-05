@@ -27,6 +27,11 @@ namespace Tapawingo_backend.Repository
             return newOrganisation;
         }
 
+        public List<Organisation> GetAllOrganisations()
+        {
+            return _context.Organisations.ToList();
+        }
+
         public Organisation GetOrganisationById(int id)
         {
             var foundOrganisation = _context.Organisations.FirstOrDefault(organisation => organisation.Id == id);

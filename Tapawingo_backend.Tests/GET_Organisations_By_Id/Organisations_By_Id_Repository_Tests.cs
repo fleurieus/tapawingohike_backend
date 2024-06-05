@@ -10,12 +10,12 @@ using Tapawingo_backend.Repository;
 namespace Tapawingo_backend.Tests.OrganisationsTests
 {
     [Collection("Database collection")]
-    public class Organisations_Repository_Tests : TestBase
+    public class Organisations_By_Id_Repository_Tests : TestBase
     {
         private readonly OrganisationsRepository _organisationsRepository;
         private readonly DataContext _context;
 
-        public Organisations_Repository_Tests(DatabaseFixture fixture) : base(fixture)
+        public Organisations_By_Id_Repository_Tests(DatabaseFixture fixture) : base(fixture)
         {
             _context = Context; //inject 'shared' context from TestBase
             _organisationsRepository = new OrganisationsRepository(_context);
@@ -25,14 +25,22 @@ namespace Tapawingo_backend.Tests.OrganisationsTests
         [Fact]
         public void Get_Existing_Organisation_By_Id()
         {
-            var organisation = _organisationsRepository.GetAllOrganisations();
+            var organisation = _organisationsRepository.GetOrganisationById(1);
 
             Assert.NotNull(organisation);
-            Assert.Equal(2, organisation.Count());
-            Assert.Equal(1, organisation[0].Id);
-            Assert.Equal(2, organisation[1].Id);
-            Assert.Equal("TestOrganisation1", organisation[0].Name);
-            Assert.Equal("TestOrganisation2", organisation[1].Name);
+            Assert.Equal(1, organisation.Id);
+            Assert.Equal("TestOrganisation1", organisation.Name);
+        }
+        //
+
+
+        //Bad Weather
+        [Fact]
+        public void Get_Non_Existing_Organisation_By_Id()
+        {
+            var organisation = _organisationsRepository.GetOrganisationById(999);
+
+            Assert.Null(organisation);
         }
         //
 

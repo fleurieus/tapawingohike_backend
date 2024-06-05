@@ -60,6 +60,7 @@ namespace Tapawingo_backend.Tests
             //////locationlogs
             //////organisations
             var organisation1 = new Organisation { Name = "TestOrganisation1" };
+            var organisation2 = new Organisation { Name = "TestOrganisation2" };
             //////routeparts
             //////routes
             //////teamrouteparts
@@ -74,6 +75,7 @@ namespace Tapawingo_backend.Tests
             //////locationlogs
             //////organisations
             context.Organisations.Add(organisation1);
+            context.Organisations.Add(organisation2);
             //////routeparts
             //////routes
             //////teamrouteparts
