@@ -10,7 +10,7 @@ using Tapawingo_backend.Services;
 using AutoMapper;
 using Tapawingo_backend.Helper;
 
-namespace Tapawingo_backend.Tests.GET_Organisations
+namespace Tapawingo_backend.Tests.GET_Organisations_By_Id
 {
     [Collection("Database collection")]
     public class Organisations_By_Id_Service_Tests : TestBase

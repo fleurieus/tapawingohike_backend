@@ -17,6 +17,11 @@ namespace Tapawingo_backend.Services
             _routesRepository = routesRepository;
         }
 
+        public List<RouteDto> GetRoutes()
+        {
+            return _mapper.Map<List<RouteDto>>(_routesRepository.GetRoutes());
+        }
+
         public RouteDto GetRoutesById(int id)
         {
             return _mapper.Map<RouteDto>(_routesRepository.GetRouteById(id));

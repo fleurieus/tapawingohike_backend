@@ -7,7 +7,7 @@ using Tapawingo_backend.Data;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Repository;
 
-namespace Tapawingo_backend.Tests.OrganisationsTests
+namespace Tapawingo_backend.Tests.GET_Organisations_By_Id
 {
     [Collection("Database collection")]
     public class Organisations_By_Id_Repository_Tests : TestBase
