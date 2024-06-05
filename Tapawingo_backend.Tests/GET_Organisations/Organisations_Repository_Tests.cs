@@ -7,15 +7,15 @@ using Tapawingo_backend.Data;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Repository;
 
-namespace Tapawingo_backend.Tests.OrganisationsTests
+namespace Tapawingo_backend.Tests.GET_Organisations
 {
     [Collection("Database collection")]
-    public class Routes_Repository_Tests : TestBase
+    public class Organisations_Repository_Tests : TestBase
     {
         private readonly OrganisationsRepository _organisationsRepository;
         private readonly DataContext _context;
 
-        public Routes_Repository_Tests(DatabaseFixture fixture) : base(fixture)
+        public Organisations_Repository_Tests(DatabaseFixture fixture) : base(fixture)
         {
             _context = Context; //inject 'shared' context from TestBase
             _organisationsRepository = new OrganisationsRepository(_context);
@@ -23,7 +23,7 @@ namespace Tapawingo_backend.Tests.OrganisationsTests
 
         //Good Weather
         [Fact]
-        public void Get_Existing_Organisation_By_Id()
+        public void Get_All_Existing_Organisations()
         {
             var organisation = _organisationsRepository.GetAllOrganisations();
 

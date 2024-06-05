@@ -33,7 +33,7 @@ namespace Tapawingo_backend.Tests.GET_Routes
 
         //Good Weather
         [Fact]
-        public void Get_Existing_Organisation()
+        public void Get_All_Routes()
         {
             var routes = _routesService.GetRoutes();
 

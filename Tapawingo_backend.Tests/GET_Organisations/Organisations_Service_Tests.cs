@@ -13,13 +13,13 @@ using Tapawingo_backend.Helper;
 namespace Tapawingo_backend.Tests.GET_Organisations
 {
     [Collection("Database collection")]
-    public class Routes_Service_Tests : TestBase
+    public class Organisations_Service_Tests : TestBase
     {
         private readonly OrganisationsRepository _organisationsRepository;
         private readonly OrganisationsService _organisationsService;
         private readonly DataContext _context;
 
-        public Routes_Service_Tests(DatabaseFixture fixture) : base(fixture)
+        public Organisations_Service_Tests(DatabaseFixture fixture) : base(fixture)
         {
             _context = Context; //inject 'shared' context from TestBase
             //Create a repository that works on the TEST DATABASE!!
@@ -33,7 +33,7 @@ namespace Tapawingo_backend.Tests.GET_Organisations
 
         //Good Weather
         [Fact]
-        public void Get_Existing_Organisation()
+        public void Get_All_Existing_Organisations()
         {
             var organisation = _organisationsService.GetOrganisations();
 
