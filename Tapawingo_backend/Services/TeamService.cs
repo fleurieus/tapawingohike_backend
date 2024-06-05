@@ -34,7 +34,7 @@ namespace Tapawingo_backend.Services
                 EditionId = model.EditionId
             };
             // Creating a new Team object using data from the DTO model
-            return _mapper.Map<CreateTeamDto>(_teamRepository.AddTeam(team));
+            return _mapper.Map<CreateTeamDto>(_teamRepository.CreateTeam(team));
         }
     }
 }
