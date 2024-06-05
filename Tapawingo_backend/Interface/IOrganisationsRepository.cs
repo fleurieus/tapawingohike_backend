@@ -7,6 +7,7 @@ namespace Tapawingo_backend.Interface
     {
         Organisation CreateOrganisation(CreateOrganisationDto createOrganisationDto);
         Organisation GetOrganisationById(int id);
+        List<Organisation> GetAllOrganisations();
         bool OrganisationExists(int id);
     }
 }
