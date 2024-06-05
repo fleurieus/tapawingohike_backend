@@ -1,7 +1,7 @@
 # Tapawingo Backend
 
 ## Setup
-First Make sure u already have a database in posgres, and add the authorization to the connectionstring: 
+First Make sure u already have a database in mysql, and add the authorization to the connectionstring: 
 ```json
 "DefaultConnection": "server=localhost;database={database name};user={user from mysql};password={password for user}"
 ```
