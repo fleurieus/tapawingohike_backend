@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+  admin-panel:
+    restart: unless-stopped
+    container_name: admin-panel
+    build:
+      context: ./Tapawingohike_admin_panel
+      dockerfile: prod.Dockerfile
+      args:
+        ENV_VARIABLE: ${ENV_VARIABLE}
+        NEXT_PUBLIC_ENV_VARIABLE: ${NEXT_PUBLIC_ENV_VARIABLE}
+    ports:
+      - '3000'
+
+  database:
+    restart: unless-stopped
+    container_name: database
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: TapawingoDB
+    ports:
+      - '3306'
+
+  dotnet-backend:
+    restart: unless-stopped
+    container_name: backend
+    build:
+      context: Tapawingo_backend
+      args:
+        BUILD_CONFIGURATION: Release
+    ports:
+      - '7268'
+
+  nginx:
+    restart: unless-stopped
+    container_name: nginx
+    image: nginx:stable-alpine
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - dotnet-backend
