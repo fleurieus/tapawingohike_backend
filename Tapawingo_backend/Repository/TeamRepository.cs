@@ -16,7 +16,7 @@ namespace Tapawingo_backend.Repository
         }
 
         // Method to add a new team to the repository
-        public async Task<Team> AddTeam(Team team)
+        public async Task<Team> CreateTeam(Team team)
         {
             
             // Add the team object to the Teams DbSet in the database context
