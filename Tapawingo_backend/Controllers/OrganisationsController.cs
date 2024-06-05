@@ -15,6 +15,14 @@ namespace Tapawingo_backend.Controllers
             _organisationsService = organisationsService;
         }
 
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrganisationDto))]
+        public IActionResult GetOrganisations()
+        {
+            var organisations = _organisationsService.GetOrganisations();
+            return organisations == null ? Ok(new List<OrganisationDto>()) : Ok(organisations); //since the request issn't invalid, even a empty list gives a 200 status
+        }
+
         //TODO: ADD AUTHORIZATION RULE
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrganisationDto))]

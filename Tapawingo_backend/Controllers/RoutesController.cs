@@ -15,6 +15,17 @@ namespace Tapawingo_backend.Controllers
             _routesService = routesService;
         }
 
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<RouteDto>))]
+        public IActionResult GetRoutes()
+        {
+            var routes = _routesService.GetRoutes();
+            return routes == null ?
+                Ok(new List<RouteDto>()) :
+                Ok(routes);
+        }
+
+
         //TODO: ADD AUTHORIZATION RULE
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RouteDto))]

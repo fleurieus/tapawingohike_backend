@@ -13,8 +13,8 @@ namespace Tapawingo_backend.Helper
             CreateMap<Organisation, OrganisationDto>();
             CreateMap<Event, EventDto>();
             CreateMap<CreateEventDto, Event>();
-            CreateMap<Route, RouteDto>();
             CreateMap<CreateEditionDto, Edition>();
+            CreateMap<TWRoute, RouteDto>();
         }
     }
 }

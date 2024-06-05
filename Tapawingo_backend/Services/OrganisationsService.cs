@@ -17,6 +17,11 @@ namespace Tapawingo_backend.Services
             _organisationsRepository = organisationsRepository;
         }
 
+        public List<OrganisationDto> GetOrganisations()
+        {
+            return _mapper.Map<List<OrganisationDto>>(_organisationsRepository.GetAllOrganisations());
+        }
+
         public OrganisationDto CreateOrganisation(CreateOrganisationDto organisationName)
         {
             return _mapper.Map<OrganisationDto>(_organisationsRepository.CreateOrganisation(organisationName));
