@@ -22,7 +22,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<UsersService>();
 builder.Services.AddScoped<EventsService>();
 builder.Services.AddScoped<OrganisationsService>();
 builder.Services.AddScoped<EventsService>();
@@ -31,7 +31,7 @@ builder.Services.AddScoped<EventsService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<RoutesService>();
 builder.Services.AddScoped<IRoutesRepository, RoutesRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserRepository, UsersRepository>();
 builder.Services.AddScoped<IEventsRepository, EventsRepository>();
 
 // Add database connection

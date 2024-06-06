@@ -6,54 +6,46 @@ using Tapawingo_backend.Services;
 
 namespace Tapawingo_backend.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class UsersController : Controller
     {
-        private readonly UserService _usersService;
+        private readonly UsersService _usersService;
 
-        public UsersController(UserService usersService)
+        public UsersController(UsersService usersService)
         {
             _usersService = usersService;
         }
 
-        [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
-        public IActionResult GetUsers()
+        [HttpGet("api/organisations/{organisationId}/users")]
+        public IActionResult GetUsersOnOrganisation(int organisationId)
         {
-            return _usersService.GetUsers();
+            return _usersService.GetUsersOnOrganisation(organisationId);
         }
 
-        [HttpGet("{userId}")]
-        [ProducesResponseType(200, Type = typeof(User))]
-        [ProducesResponseType(400)]
-        public IActionResult GetUser(string userId)
+        [HttpGet("api/organisations/{organisationId}/user/{userId}")]
+        public IActionResult GetUserOnOrganisation(int organisationId, string userId)
         {
-            return _usersService.GetUser(userId);
+            return _usersService.GetUserOnOrganisation(organisationId, userId);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] CreateUserDto model)
+        [HttpPost("api/organisations/{organisationId}/users")]
+        public async Task<IActionResult> CreateUserOnOrganisation(int organisationId, [FromBody] CreateUserDto model)
         {
-            var response = await _usersService.CreateUser(model);
+            var response = await _usersService.CreateUserOnOrganisation(organisationId, model);
             return Ok(response);
         }
 
-        [HttpPatch("{userId}")]
-        [ProducesResponseType(200, Type = typeof(User))]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> UpdateUser(string userId, [FromBody] UpdateUserDto userRegistrationDto)
+        [HttpPatch("api/organisations/{organisationId}/users/{userId}")]
+        public async Task<IActionResult> UpdateUserOnOrganisation(int organisationId, string userId, [FromBody] UpdateUserDto userRegistrationDto)
         {
-            return await _usersService.UpdateUserAsync(userId, userRegistrationDto);
+            var response = await _usersService.UpdateUserOnOrganisationAsync(organisationId, userId, userRegistrationDto);
+            return Ok(response);
         }
 
-        [HttpDelete("{userId}")]
-        [ProducesResponseType(200, Type = typeof(User))]
-        [ProducesResponseType(400)]
-        public IActionResult DeleteUser(string userId)
+        [HttpDelete("api/organisations/{organisationId}/users/{userId}")]
+        public IActionResult DeleteUserOnOrganisation(int organisationId, string userId)
         {
-            return _usersService.DeleteUser(userId);
+            return _usersService.DeleteUserOnOrganisation(organisationId, userId);
         }
     }
 }

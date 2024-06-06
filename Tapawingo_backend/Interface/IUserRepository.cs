@@ -5,11 +5,12 @@ namespace Tapawingo_backend.Interface
 {
     public interface IUserRepository
     {
-        ICollection<User> GetUsers();
-        User GetUser(string guid);
-        User GetUserByEmail(string email);
+        ICollection<User> GetUsersOnOrganisation(int organisationId);
+        User GetUserOnOrganisation(int organisationId, string userId);
+        User GetUserByEmailAsync(string email);
         bool UserExists(string userGuid);
-        Task<bool> TryUpdateUser(User existingUser, UpdateUserDto user);
-        bool DeleteUser(string userGuid);
+        Task<User> CreateUserOnOrganisation(int organisationId, CreateUserDto model);
+        Task<User> UpdateUserOnOrganisationAsync(User existingUser, UpdateUserDto user);
+        bool DeleteUserOnOrganisation(int organisationId, string userGuid);
     }
 }
