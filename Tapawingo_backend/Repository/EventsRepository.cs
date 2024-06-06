@@ -13,9 +13,14 @@ public class EventsRepository : IEventsRepository
         _context = context;
     }
     
-    public ICollection<Event> GetEventsByOrganisationId(int organisationId)
+    public List<Event> GetEventsByOrganisationId(int organisationId)
     {
         return _context.Events.Where(e => e.OrganisationId == organisationId).ToList();
+    }
+    
+    public Event GetEventById(int eventId)
+    {
+        return _context.Events.FirstOrDefault(e => e.Id == eventId);
     }
     
     public bool EventExists(int eventId)
@@ -25,14 +30,16 @@ public class EventsRepository : IEventsRepository
     }
     public Event CreateEvent(Event newEvent)
     {
+        
         _context.Events.Add(newEvent);
         _context.SaveChanges();
         return newEvent;
     }
     
-    public Event UpdateEvent(Event updatedEvent)
+    public Event UpdateEvent(int eventId, Event updatedEvent)
     {
-        _context.Events.Update(updatedEvent);
+        Event eventToUpdate = GetEventById(eventId);
+        _context.Entry(eventToUpdate).CurrentValues.SetValues(updatedEvent);
         _context.SaveChanges();
         return updatedEvent;
     }
