@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public int RouteId { get; set; }
         public string RouteType { get; set; }
         public bool RoutepartZoom { get; set; }
         public bool RoutepartFullscreen { get; set; }
