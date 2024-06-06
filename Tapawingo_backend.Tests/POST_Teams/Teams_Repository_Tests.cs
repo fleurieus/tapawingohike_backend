@@ -11,7 +11,7 @@ using Tapawingo_backend.Models;
 namespace Tapawingo_backend.Tests.Teams_Repository_Tests
 {
     [Collection("Database collection")]
-    public class Teams_Repository_Tests : TestBase, IDisposable
+    public class Teams_Repository_Tests : TestBase
     {
         private readonly TeamRepository _teamsRepository;
         private readonly DataContext _context;
@@ -24,9 +24,9 @@ namespace Tapawingo_backend.Tests.Teams_Repository_Tests
 
         // Good Weather
         [Fact]
-        public async Task Post_Team_Successful()
+        public void Post_Team_Successful()
         {
-            var team = new Team
+            var team = new CreateTeamDto()
             {
                 Name = "Test Team",
                 Code = "TST001",
@@ -37,7 +37,7 @@ namespace Tapawingo_backend.Tests.Teams_Repository_Tests
                 EditionId = 1
             };
 
-            var createdTeam = await _teamsRepository.CreateTeam(team);
+            var createdTeam = _teamsRepository.CreateTeam(team);
 
             Assert.NotNull(createdTeam);
             Assert.Equal(team.Name, createdTeam.Name);
@@ -50,24 +50,27 @@ namespace Tapawingo_backend.Tests.Teams_Repository_Tests
         }
 
         // Bad Weather
-        [Fact]
-        public async Task Post_Team_No_TeamCode()
-        {
-            var team = new Team
-            {
-                Name = "Test Team",
-                Code = null, // Invalid team code
-                ContactName = "John Doe",
-                ContactEmail = "john.doe@example.com",
-                ContactPhone = "1234567890",
-                Online = true,
-                EditionId = 1
-            };
+        
+        //We don't need this test anymore because we're checking all misstakes in the service...
+        //[Fact]
+        //public void Post_Team_No_TeamCode_and_invalid_contactemail()
+        //{
+        //    var team = new Team
+        //    {
+        //        Name = "Test Team",
+        //        Code = null, // Invalid team code
+        //        ContactName = "John Doe",
+        //        ContactEmail = "",
+        //        ContactPhone = "1234567890",
+        //        Online = true,
+        //        EditionId = 1
+        //    };
 
-            await Assert.ThrowsAsync<ValidationException>(() => _teamsRepository.CreateTeam(team));
-        }
+        //    Assert.Throws<ArgumentException>(() => _teamsRepository.CreateTeam(team));
+        //}
+        
 
-        public new void Dispose()
+        protected new void Dispose()
         {
             _context.Dispose();
         }

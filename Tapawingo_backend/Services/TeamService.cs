@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Tapawingo_backend.Dtos; // Importing the Dtos namespace
 using Tapawingo_backend.Models; // Importing the Models namespace
 using Tapawingo_backend.Repository; // Importing the Repository namespace
@@ -19,22 +20,26 @@ namespace Tapawingo_backend.Services
         }
 
         // Method to create a new team based on the provided DTO model
-        public async Task<CreateTeamDto> CreateTeam(CreateTeamDto model)
+        public CreateTeamDto CreateTeam(CreateTeamDto model)
         {
-
-            // Creating a new Team object using data from the DTO model
-            var team = new Team
+            // Check if input is valid
+            if(
+                model.Name == null || model.Name.Equals("") || model.Name.Length == 0 ||
+                model.Code == null || model.Code.Length == 0 || model.Code.Equals("") ||
+                model.ContactName == null || model.ContactName.Equals("") || model.ContactName.Length == 0 ||
+                model.ContactEmail == null || model.ContactEmail.Equals("") || model.ContactEmail.Length == 0 ||
+                model.ContactPhone == null || model.ContactPhone.Equals("") || model.ContactPhone.Length == 0 ||
+                model.Online == null
+                )
             {
-                Name = model.Name,
-                Code = model.Code,
-                ContactName = model.ContactName,
-                ContactEmail = model.ContactEmail,
-                ContactPhone = model.ContactPhone,
-                Online = model.Online,
-                EditionId = model.EditionId
-            };
+                throw new ArgumentException("Please make sure all fields are filled correctly.");
+            }
+            if(model.EditionId == null || model.EditionId == 0) //Add Check if this editionid exists or not.
+            {
+                throw new InvalidOperationException("EditionId is not valid.");
+            }
             // Creating a new Team object using data from the DTO model
-            return _mapper.Map<CreateTeamDto>(_teamRepository.CreateTeam(team));
+            return _mapper.Map<CreateTeamDto>(_teamRepository.CreateTeam(model));
         }
     }
 }

@@ -17,10 +17,10 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(200, Type = typeof(Team))] // HTTP 200: Successful creation, returns the created team
+        [ProducesResponseType(201, Type = typeof(Team))] // HTTP 200: Successful creation, returns the created team
         [ProducesResponseType(400)] // HTTP 400: Bad request, if the request body is invalid
         [ProducesResponseType(500)] // HTTP 500: Internal server error, if an unexpected exception occurs
-        public async Task<IActionResult> CreateTeam(CreateTeamDto model)
+        public IActionResult CreateTeam(CreateTeamDto model)
         {
 
             try
@@ -34,8 +34,10 @@ namespace Tapawingo_backend.Controllers
                 } **/   
                 
                 // Attempt to create the team using the provided model
-                var team = await _teamService.CreateTeam(model);
-                return Ok(team);
+                return new ObjectResult(_teamService.CreateTeam(model))
+                {
+                    StatusCode = 201
+                };
             }
             catch (ArgumentException ex)
             {

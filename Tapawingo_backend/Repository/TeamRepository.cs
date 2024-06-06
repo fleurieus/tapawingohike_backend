@@ -16,14 +16,24 @@ namespace Tapawingo_backend.Repository
         }
 
         // Method to add a new team to the repository
-        public async Task<Team> CreateTeam(Team team)
+        public Team CreateTeam(CreateTeamDto createTeam)
         {
+            Team team = new Team()
+            {
+                Code = createTeam.Code,
+                Name = createTeam.Name,
+                ContactEmail = createTeam.ContactEmail,
+                ContactName = createTeam.ContactName,
+                ContactPhone = createTeam.ContactPhone,
+                Online = createTeam.Online,
+                EditionId = createTeam.EditionId
+            };
             
             // Add the team object to the Teams DbSet in the database context
             _context.Teams.Add(team);
             
             // Save the changes to the database asynchronously
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             
             // Return the added team object
             return team;

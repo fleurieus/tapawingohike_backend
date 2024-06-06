@@ -34,9 +34,5 @@ namespace Tapawingo_backend.Models
 
         // The Id of the edition to which the team is associated to
         public int EditionId { get; set; }
-
-        // The referential object of the Edition
-        [ForeignKey("Id")]
-        public Edition Edition { get; set; }
     }
 }

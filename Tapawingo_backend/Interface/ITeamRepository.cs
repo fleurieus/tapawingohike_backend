@@ -7,6 +7,6 @@ namespace Tapawingo_backend.Repository
     public interface ITeamRepository
     {
         // Add a new team to the repository
-        Task<Team> CreateTeam(Team team);
+        Team CreateTeam(CreateTeamDto team);
     }
 }

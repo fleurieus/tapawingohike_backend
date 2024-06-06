@@ -12,7 +12,7 @@ using Xunit;
 namespace Tapawingo_backend.Tests
 {
     [Collection("Database collection")]
-    public class Teams_Service_Tests : TestBase, IDisposable
+    public class Teams_Service_Tests : TestBase
     {
         private readonly TeamRepository _teamRepository;
         private readonly TeamService _teamsService;
@@ -51,7 +51,7 @@ namespace Tapawingo_backend.Tests
                 EditionId = 1
             };
 
-            var teamDto = await _teamsService.CreateTeam(createTeamDto);
+            var teamDto = _teamsService.CreateTeam(createTeamDto);
 
             Assert.NotNull(teamDto);
             Assert.Equal(createTeamDto.Name, teamDto.Name);
@@ -78,10 +78,25 @@ namespace Tapawingo_backend.Tests
                 EditionId = 1
             };
 
-            await Assert.ThrowsAsync<ValidationException>(() => _teamsService.CreateTeam(createTeamDto));
+            Assert.Throws<ArgumentException>(() => _teamsService.CreateTeam(createTeamDto));
+        }
+        [Fact]
+        public void Post_Team_No_Edition_Id()
+        {
+            var team = new CreateTeamDto
+            {
+                Name = "Test Team",
+                Code = "TST001",
+                ContactName = "John Doe",
+                ContactEmail = "john.doe@example.com",
+                ContactPhone = "1234567890",
+                Online = true
+            };
+
+            Assert.Throws<InvalidOperationException>(() => _teamsService.CreateTeam(team));
         }
 
-        public new void Dispose()
+        protected new void Dispose()
         {
             _context.Dispose();
         }
