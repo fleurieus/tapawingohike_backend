@@ -14,7 +14,7 @@ namespace Tapawingo_backend.Controllers
             _editionsService = editionsService;
         }
     
-            [HttpPost("POST: organisations/{organisation_id}/events/{event_id}/editions")]
+            [HttpPost("organisations/{organisation_id}/events/{event_id}/editions")]
         public IActionResult CreateEdition([FromBody] CreateEditionDto model, int organisation_id, int event_id)
         {
             try
