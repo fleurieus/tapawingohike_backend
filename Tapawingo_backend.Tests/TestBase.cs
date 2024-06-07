@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,35 +53,42 @@ namespace Tapawingo_backend.Tests
             context.Files.RemoveRange(context.Files);
             context.SaveChanges();
 
-            //Create test data
-            //////destinations
-            //////editions
-            //////events
-            //////files
-            //////locationlogs
-            //////organisations
+            // Create test data
+            // Organisations
             var organisation1 = new Organisation { Name = "TestOrganisation1" };
-            //////routeparts
-            //////routes
-            //////teamrouteparts
-            //////teams
-
-            //////userevents
-            //////userorganisations
-
-            // Insert test data
-            //////destinations
-            //////events
-            //////files
-            //////locationlogs
-            //////organisations
+            var organisation2 = new Organisation { Name = "TestOrganisation2" };
             context.Organisations.Add(organisation1);
+            context.Organisations.Add(organisation2);
+            context.SaveChanges();
+
+            // Events
+            var event1 = new Event { Name = "TestEvent1", OrganisationId = organisation1.Id };
+            context.Events.Add(event1);
+            context.SaveChanges();
+
+            // Editions
+            var edition1 = new Edition { Name = "TestEdition1", StartDate = DateTime.Now, EndDate = DateTime.Now };
+            var edition2 = new Edition { Name = "TestEdition2", StartDate = DateTime.Now, EndDate = DateTime.Now };
+            context.Editions.Add(edition1);
+            context.Editions.Add(edition2);
+            context.SaveChanges();
+
+            // Routes
+            var route1 = new TWRoute { Name = "TestRoute1", EditionId = edition1.Id };
+            var route2 = new TWRoute { Name = "TestRoute2", EditionId = edition2.Id };
+            context.Routes.Add(route1);
+            context.Routes.Add(route2);
+            context.SaveChanges();
             //////routeparts
             //////routes
             //////teamrouteparts
             //////teams
+
             //////userevents
             //////userorganisations
+
+            // Save data to the database
+            context.SaveChanges();
 
             // Users
             var user1 = new User { FirstName = "Testuser1", LastName = "Usertest1", UserName = "test1@gmail.com", Email = "test1@gmail.com", SecurityStamp = Guid.NewGuid().ToString() };
