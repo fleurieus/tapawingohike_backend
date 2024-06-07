@@ -38,20 +38,19 @@ namespace Tapawingo_backend.Tests.PATCH_User_on_organisation
         [Fact]
         public void Update_User_On_Organisation()
         {
-            CreateUserDto createUserDto = new CreateUserDto
+            var users = _usersRepository.GetUsersOnOrganisation(1);
+            var firstUser = users.First();
+
+            UpdateUserDto updateUserDto = new UpdateUserDto
             {
-                FirstName = "test",
-                LastName = "test",
-                Email = "test99@gmail.nl",
-                Password = "Password!1"
+                LastName = "updateTest",
             };
 
-            var user = _usersRepository.CreateUserOnOrganisation(1, createUserDto);
+            var user = _usersRepository.UpdateUserOnOrganisationAsync(firstUser, updateUserDto);
 
             Assert.NotNull(user);
-
-            //var organisationUsers = _usersRepository.GetUsersOnOrganisation(1);
-            //Assert.Equal(3, organisationUsers.Count());
+            var updatedUser = _usersRepository.GetUserOnOrganisation(1, firstUser.Id);
+            Assert.Equal("updateTest", updatedUser.LastName);
         }
         //
 
