@@ -20,21 +20,30 @@ namespace Tapawingo_backend.Services
             _eventsRepository = eventsRepository;
         }
 
-        public Edition CreateEdition(CreateEditionDto model, int organisationId, int eventId)
+        public IActionResult CreateEdition(CreateEditionDto model, int organisationId, int eventId)
         {
             if (!_organisationsRepository.OrganisationExists(organisationId))
             {
-                throw new ArgumentException("Organisation does not exist");
+                return new NotFoundObjectResult(new
+                {
+                    message = "Organisation not found"
+                });
             }
 
             if (!_eventsRepository.EventExists(eventId)) 
             {
-                throw new ArgumentException("Event does not exist");
+                return new NotFoundObjectResult(new
+                {
+                    message = "Event not found"
+                });
             }
 
             if (string.IsNullOrEmpty(model.Name))
             {
-                throw new ArgumentException("Name is required");
+                return new BadRequestObjectResult(new 
+                { 
+                    message = "Name is required"
+                });
             }
 
             var eventExists = _eventsRepository.GetEventByIdAndOrganisationId(eventId, organisationId);
@@ -46,7 +55,7 @@ namespace Tapawingo_backend.Services
 
             var editionEntity = _mapper.Map<Edition>(model);
             editionEntity.EventId = eventId;
-            return _editionsRepository.CreateEdition(editionEntity);
+            return new ObjectResult(_editionsRepository.CreateEdition(editionEntity));
         }
     }
 }
