@@ -69,8 +69,8 @@ namespace Tapawingo_backend.Tests
             context.SaveChanges();
 
             // Editions
-            var edition1 = new Edition { Name = "TestEdition1", StartDate = DateTime.Now, EndDate = DateTime.Now };
-            var edition2 = new Edition { Name = "TestEdition2", StartDate = DateTime.Now, EndDate = DateTime.Now };
+            var edition1 = new Edition { Name = "TestEdition1", EventId = event1.Id, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow };
+            var edition2 = new Edition { Name = "TestEdition2", EventId = event1.Id, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow };
             context.Editions.Add(edition1);
             context.Editions.Add(edition2);
             context.SaveChanges();

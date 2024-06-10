@@ -1,12 +1,10 @@
-﻿using System.Text.Json.Serialization;
+﻿using Tapawingo_backend.Models;
 
-namespace Tapawingo_backend.Models
+namespace Tapawingo_backend.Dtos
 {
-    public class Edition
+    public class EditionDto
     {
-        public int Id { get; set; }
         public int EventId { get; set; }
-        public Event Event { get; set; }
         public string Name { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
