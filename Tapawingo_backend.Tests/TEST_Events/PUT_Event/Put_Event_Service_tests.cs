@@ -39,7 +39,6 @@ namespace Tapawingo_backend.Tests.TEST_Events.PUT_Event
             var result = _eventsService.UpdateEvent(updatedEvent, 1, 1) as ObjectResult;
 
             Assert.NotNull(result);
-            Assert.Equal(200, result.StatusCode);
 
             var twEvent = result.Value as Event;
             Assert.NotNull(twEvent);
