@@ -19,69 +19,67 @@ namespace Tapawingo_backend.Services
             _organisationsRepository = organisationRepository;
         }
 
-        public IActionResult GetEventsByOrganisationId(int organisationId)
+        public List<EventDto> GetEventsByOrganisationId(int organisationId)
         {
-            if (!_organisationsRepository.OrganisationExists(organisationId))
-            {
-                throw new ArgumentException("Organisation does not exist");
-            }
-            var events = _mapper.Map<List<EventDto>>(_eventsRepository.GetEventsByOrganisationId(organisationId));
-            if (events.IsNullOrEmpty())
-            {
-                throw new KeyNotFoundException("No events found for this organisation");
-            }
-            return new ObjectResult(events);
+            return _mapper.Map<List<EventDto>>(_eventsRepository.GetEventsByOrganisationId(organisationId));
         }
         
-        public IActionResult GetEventByIdAndOrganisationId(int eventId, int organisationId)
+        public EventDto GetEventByIdAndOrganisationId(int eventId, int organisationId)
         {
-            if (!_eventsRepository.EventExists(eventId))
-                return new NotFoundObjectResult(new
-                {
-                    message = "Event not found"
-                });
+            return _mapper.Map<EventDto>(_eventsRepository.GetEventByIdAndOrganisationId(eventId, organisationId));
             
-            var twEvent = _mapper.Map<EventDto>(_eventsRepository.GetEventByIdAndOrganisationId(eventId, organisationId));
-            if (twEvent == null)
-            {
-                return new ForbidResult();
-            }
-            return new ObjectResult(twEvent);
         }
 
-        public Event CreateEvent(CreateEventDto model, int organisationId)
+        public IActionResult CreateEvent(CreateEventDto model, int organisationId)
         {
             if (!_organisationsRepository.OrganisationExists(organisationId))
             {
-                throw new ArgumentException("Organisation does not exist");
+                return new NotFoundObjectResult("Organisation does not exist");
             }
 
             if (string.IsNullOrEmpty(model.Name))
             {
-                throw new ArgumentException("Name is required");
+                return new BadRequestObjectResult("Event name is required");
             }
 
             var eventExists = _eventsRepository.EventExistsForOrganisation(model.Name, organisationId);
             if (eventExists)
             {
-                throw new InvalidOperationException("Event already exists for this organisation");
+                return new ConflictObjectResult("Event already exists for this organisation");
             }
-
             var eventEntity = _mapper.Map<Event>(model);
             eventEntity.OrganisationId = organisationId;
-            return _eventsRepository.CreateEvent(eventEntity);
+            _eventsRepository.CreateEvent(eventEntity);
+            return new ObjectResult(eventEntity);
         }
 
-        public Event UpdateEvent(CreateEventDto model, int organisationId, int eventId)
+        public IActionResult UpdateEvent(CreateEventDto model, int organisationId, int eventId)
         {
             var eventEntity = _eventsRepository.GetEventByIdAndOrganisationId(eventId, organisationId);
             if (eventEntity == null)
             {
-                throw new ArgumentException("Event does not exist");
+                return new BadRequestObjectResult("Event does not exist");
             }
-            
+    
+            if (string.IsNullOrEmpty(model.Name))
+            {
+                return new BadRequestObjectResult("Event name is required");
+            }
+
             _mapper.Map(model, eventEntity);
-            return _eventsRepository.UpdateEvent(eventEntity);
+            _eventsRepository.UpdateEvent(eventId, eventEntity);
+            return new ObjectResult(eventEntity);
+        }
+        
+        public IActionResult DeleteEvent(int eventId, int organisationId)
+        {
+            var eventEntity = _eventsRepository.GetEventByIdAndOrganisationId(eventId, organisationId);
+            if (eventEntity == null)
+            {
+                return new NotFoundObjectResult("Event does not exist");
+            }
+            _eventsRepository.DeleteEvent(eventEntity.Id);
+            return new NoContentResult();
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Tapawingo_backend.Tests
         private DataContext CreateDbContext()
         {
             var options = new DbContextOptionsBuilder<DataContext>()
-                .UseMySQL("server=localhost;database=TapawingoDB_Test;user=root;password=mysql");
+                .UseMySQL("server=localhost;database=TapawingoDB_Test;user=stef;password=stefPassword");
 
             var context = new DataContext(options.Options);
             context.Database.EnsureDeleted();
@@ -63,12 +63,14 @@ namespace Tapawingo_backend.Tests
 
             // Events
             var event1 = new Event { Name = "TestEvent1", OrganisationId = organisation1.Id };
+            var event2 = new Event { Name = "TestEvent2", OrganisationId = organisation1.Id };
             context.Events.Add(event1);
+            context.Events.Add(event2);
             context.SaveChanges();
 
             // Editions
-            var edition1 = new Edition { Name = "TestEdition1", StartDate = DateTime.Now, EndDate = DateTime.Now };
-            var edition2 = new Edition { Name = "TestEdition2", StartDate = DateTime.Now, EndDate = DateTime.Now };
+            var edition1 = new Edition { Name = "TestEdition1", EventId = event1.Id, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow };
+            var edition2 = new Edition { Name = "TestEdition2", EventId = event1.Id, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow };
             context.Editions.Add(edition1);
             context.Editions.Add(edition2);
             context.SaveChanges();
