@@ -59,6 +59,49 @@ namespace Tapawingo_backend.Data
                 .HasOne(bc => bc.Routepart)
                 .WithMany(b => b.TeamRouteparts)
                 .HasForeignKey(bc => bc.RoutepartId);
+
+
+            modelBuilder.Entity<Locationlog>()
+                .HasOne(bc => bc.Team)
+                .WithMany(b => b.Locationlogs)
+                .HasForeignKey(bc => bc.TeamId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Team>()
+                .HasOne(bc => bc.Edition)
+                .WithMany(b => b.Teams)
+                .HasForeignKey(bc => bc.EditionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Edition>()
+                .HasOne(bc => bc.Event)
+                .WithMany(b => b.Editions)
+                .HasForeignKey(bc => bc.EventId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Routepart>()
+                .HasOne(bc => bc.Route)
+                .WithMany(b => b.Routeparts)
+                .HasForeignKey(bc => bc.RouteId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TWRoute>()
+                .HasOne(bc => bc.Edition)
+                .WithMany(b => b.Routes)
+                .HasForeignKey(bc => bc.EditionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Destination>()
+                .HasOne(bc => bc.Routepart)
+                .WithMany(b => b.Destinations)
+                .HasForeignKey(bc => bc.RoutepartId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TWFile>()
+                .HasOne(bc => bc.Routepart)
+                .WithMany(b => b.Files)
+                .HasForeignKey(bc => bc.RoutepartId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -3,6 +3,8 @@
     public class Team
     {
         public int Id { get; set; }
+        public int EditionId { get; set; }
+        public Edition Edition { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
         public string ContactName { get; set; }
