@@ -64,7 +64,7 @@ namespace Tapawingo_backend.Repository
             _context.UserOrganisations.Add(new UserOrganisation { OrganisationId = organisationId, UserId = newUser.Id });
             await _context.SaveChangesAsync();
 
-            // Add claim to user
+            // Add claim that gives user acces to organisation
             var userClaim = new Claim("OrganisationRole", $"{organisationId}:OrganisationUser");
 
             if (model.IsManager)
