@@ -14,6 +14,9 @@ using Tapawingo_backend.Middleware;
 using Tapawingo_backend.Models;
 using Tapawingo_backend.Repository;
 using Tapawingo_backend.Services;
+using Tapawingo_backend.Helper;
+using static Tapawingo_backend.Helper.CustomAuthRequirements;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -107,6 +110,40 @@ builder.Services.AddAuthentication(options =>
         // ClockSkew = new TimeSpan(0, 0, 5) This is only needed if the server and client are not in sync
     };
 });
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("SuperAdminPolicy", policy =>
+        policy.RequireClaim("SuperAdminRole"));
+
+    options.AddPolicy("OrganisationPolicy", policy =>
+        policy.Requirements.Add(new CustomAuthRequirements.OrganizationRequirement(string.Empty)));
+
+
+    options.AddPolicy("SuperAdminOrOrganisationPolicy", policy =>
+        policy.RequireAssertion(context =>
+            context.User.HasClaim(c => c.Type == "SuperAdminRole") ||
+            CheckOrganizationRequirement(context)));
+});
+
+// Method to check OrganizationRequirement
+bool CheckOrganizationRequirement(AuthorizationHandlerContext context)
+{
+    if (context.Resource is HttpContext httpContext)
+    {
+        if (httpContext.Request.RouteValues.TryGetValue("organisationId", out var orgId))
+        {
+            var expectedClaim = $"{orgId}:OrganisationManager";
+            var organizationClaim = context.User.FindFirst(c => c.Type == "OrganisationRole" && c.Value.Equals(expectedClaim));
+            if (organizationClaim != null)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+builder.Services.AddSingleton<IAuthorizationHandler, OrganizationHandler>();
 
 builder.Services.AddRequestTimeouts();
 
@@ -132,5 +169,20 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+//using (var scope = app.Services.CreateScope())
+//{
+//    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+//    await RoleInitializer.InitializeAsync(roleManager);
+//}
+
+
+// Add SuperAdmin user to the database
+using (var scope = app.Services.CreateScope())
+{
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    await AdminInitializer.InitializeAsync(roleManager, userManager);
+}
 
 app.Run();

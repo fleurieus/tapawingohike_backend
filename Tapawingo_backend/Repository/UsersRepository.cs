@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Serilog;
+using System.Data;
+using System.Security.Claims;
 using Tapawingo_backend.Data;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
@@ -58,26 +60,25 @@ namespace Tapawingo_backend.Repository
                 throw new Exception("User creation failed.");
             }
 
+            // Add user to organisation
             _context.UserOrganisations.Add(new UserOrganisation { OrganisationId = organisationId, UserId = newUser.Id });
             await _context.SaveChangesAsync();
 
-            //Assign Default Role : Admin to first registrar; rest is user
-            var checkAdmin = _roleManager.FindByNameAsync("SuperAdmin");
-            if (checkAdmin is null)
-            {
-                await _roleManager.CreateAsync(new IdentityRole() { Name = "SuperAdmin" });
-                await _userManager.AddToRoleAsync(newUser, "SuperAdmin");
-                return newUser;
-            }
-            else
-            {
-                var checkUser = _roleManager.FindByNameAsync("User");
-                if (checkUser is null)
-                    await _roleManager.CreateAsync(new IdentityRole() { Name = "User" });
+            // Add claim to user
+            var userClaim = new Claim("OrganisationRole", $"{organisationId}:OrganisationUser");
 
-                await _userManager.AddToRoleAsync(newUser, "User");
-                return newUser;
+            if (model.IsManager)
+            {
+                userClaim = new Claim("OrganisationRole", $"{organisationId}:OrganisationManager");
             }
+
+            var claimResult = await _userManager.AddClaimAsync(newUser, userClaim);
+            if (!claimResult.Succeeded)
+            {
+                throw new Exception("Something went worng adding claim to user.");
+            }
+
+            return newUser;
         }
 
         public async Task<User> UpdateUserOnOrganisationAsync(User existingUser, UpdateUserDto user)

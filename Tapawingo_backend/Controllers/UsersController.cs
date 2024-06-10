@@ -28,6 +28,7 @@ namespace Tapawingo_backend.Controllers
             return _usersService.GetUserOnOrganisation(organisationId, userId);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationPolicy")]
         [HttpPost("api/organisations/{organisationId}/users")]
         public async Task<IActionResult> CreateUserOnOrganisation(int organisationId, [FromBody] CreateUserDto model)
         {
