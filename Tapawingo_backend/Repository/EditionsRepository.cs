@@ -14,6 +14,10 @@ namespace Tapawingo_backend.Repository
             _context = context;
         }
 
+        public List<Edition> GetAllEditions(int eventId)
+        {
+            return _context.Editions.Where(e => e.EventId == eventId).ToList();
+        }
         public Edition CreateEdition(Edition newEdition)
         {
             _context.Editions.Add(newEdition);
