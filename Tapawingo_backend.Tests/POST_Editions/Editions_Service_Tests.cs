@@ -9,6 +9,8 @@ using Tapawingo_backend.Repository;
 using Tapawingo_backend.Services;
 using Tapawingo_backend.Helper;
 using Tapawingo_backend.Dtos;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Builder;
 
 namespace Tapawingo_backend.Tests.POST_Editions
 {
@@ -79,8 +81,10 @@ namespace Tapawingo_backend.Tests.POST_Editions
                 EndDate = testDate
             };
 
-            // Pak default Organisation en Event
-            Assert.Throws<ArgumentException>(() => _editionsService.CreateEdition(createEditionDto, 0, 1));
+            var output = _editionsService.CreateEdition(createEditionDto, 999, 1);
+            var expectedOutput = new NotFoundObjectResult(null);
+
+            Assert.Equal(expectedOutput.GetType(), output.GetType());
         }
         //
 
@@ -102,7 +106,10 @@ namespace Tapawingo_backend.Tests.POST_Editions
             };
 
             // Pak default Organisation en Event
-            Assert.Throws<ArgumentException>(() => _editionsService.CreateEdition(createEditionDto, 0, 1));
+            var output = _editionsService.CreateEdition(createEditionDto, 1, 999);
+            var expectedOutput = new NotFoundObjectResult(null);
+
+            Assert.Equal(expectedOutput.GetType(), output.GetType()); //check based on the type, since no exception is thrown...
         }
         //
 
