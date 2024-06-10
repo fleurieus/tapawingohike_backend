@@ -11,5 +11,6 @@ namespace Tapawingo_backend.Interface
         bool EventExistsForOrganisation(string eventName, int organisationId);
         bool EventExists(int eventId);
         Event GetEventByIdAndOrganisationId(int eventId, int organisationId);
+        void DeleteEvent(int eventId);
     }
 }

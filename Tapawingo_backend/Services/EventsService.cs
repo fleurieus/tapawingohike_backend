@@ -70,5 +70,16 @@ namespace Tapawingo_backend.Services
             _eventsRepository.UpdateEvent(eventId, eventEntity);
             return new ObjectResult(eventEntity);
         }
+        
+        public IActionResult DeleteEvent(int eventId, int organisationId)
+        {
+            var eventEntity = _eventsRepository.GetEventByIdAndOrganisationId(eventId, organisationId);
+            if (eventEntity == null)
+            {
+                return new NotFoundObjectResult("Event does not exist");
+            }
+            _eventsRepository.DeleteEvent(eventEntity.Id);
+            return new NoContentResult();
+        }
     }
 }
