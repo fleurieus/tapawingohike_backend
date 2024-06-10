@@ -19,7 +19,20 @@ namespace Tapawingo_backend.Controllers
         [HttpGet("events/{event_id}/editions")]
         public IActionResult GetEditions(int event_id)
         {
-            return Ok(_editionsService.GetAllEditions(event_id));
+            try
+            {
+                var editions = _editionsService.GetAllEditions(event_id);
+                return Ok(editions);
+
+            }
+            catch (Exception ex) 
+            {
+                return BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
+            
         }
 
         [HttpPost("events/{event_id}/editions")]
