@@ -53,4 +53,12 @@ public class EventsRepository : IEventsRepository
     {
         return _context.Events.Where(e => e.Id == eventId && e.OrganisationId == organisationId).FirstOrDefault();
     }
+    
+    public void DeleteEvent(int eventId)
+    {
+        Event eventToDelete = GetEventById(eventId);
+        
+        _context.Events.Remove(eventToDelete);
+        _context.SaveChanges();
+    }
 }

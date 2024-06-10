@@ -59,5 +59,14 @@ namespace Tapawingo_backend.Controllers
             var response = _eventsService.UpdateEvent(model, organisationId, eventId);
             return response;
         }
+        
+        [HttpDelete("api/organisations/{organisationId}/events/{eventId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteEvent(int eventId, int organisationId)
+        {
+            var response = _eventsService.DeleteEvent(eventId, organisationId);
+            return response != null ? NoContent() : NotFound("Event not found."); 
+        }
     }
 }
