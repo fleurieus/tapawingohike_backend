@@ -3,6 +3,8 @@
     public class Destination
     {
         public int Id { get; set; }
+        public int RoutepartId { get; set; }
+        public Routepart Routepart { get; set; }
         public string Name { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
