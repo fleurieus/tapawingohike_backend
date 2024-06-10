@@ -16,6 +16,23 @@ namespace Tapawingo_backend.Controllers
             _editionsService = editionsService;
         }
 
+        [HttpGet("events/{event_id}/editions/{edition_id}")]
+        public IActionResult GetEditionById(int event_id, int edition_id)
+        {
+            try
+            {
+                var edition = _editionsService.GetEditionById(event_id, edition_id);
+                return Ok(edition);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
+        }
+
         [HttpGet("events/{event_id}/editions")]
         public IActionResult GetEditions(int event_id)
         {
