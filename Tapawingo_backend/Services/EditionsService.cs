@@ -20,6 +20,15 @@ namespace Tapawingo_backend.Services
             _eventsRepository = eventsRepository;
         }
 
+        public EditionDto GetEditionById(int eventId, int editionId)
+        {
+            if (!_eventsRepository.EventExists(eventId))
+            {
+                throw new ArgumentException("Event not found");
+            }
+            return _mapper.Map<EditionDto>(_editionsRepository.GetEditionById(eventId, editionId));
+        }
+
         public List<EditionDto> GetAllEditions(int eventId)
         {
             if (!_eventsRepository.EventExists(eventId))
