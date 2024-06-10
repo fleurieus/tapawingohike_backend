@@ -19,6 +19,8 @@ namespace Tapawingo_backend.Controllers
         [HttpPost]
         [ProducesResponseType(201, Type = typeof(Team))] // HTTP 200: Successful creation, returns the created team
         [ProducesResponseType(400)] // HTTP 400: Bad request, if the request body is invalid
+        [ProducesResponseType(403)] // HTTP 403: The user is not authorized to create a team
+        [ProducesResponseType(401)] // HTTP 403: The user is logged in and therefore not authenticated.
         [ProducesResponseType(500)] // HTTP 500: Internal server error, if an unexpected exception occurs
         public IActionResult CreateTeam(CreateTeamDto model)
         {
