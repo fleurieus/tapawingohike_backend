@@ -28,7 +28,7 @@ namespace Tapawingo_backend.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return Conflict(ex.Message);
+                return NotFound(ex.Message);
             }
         }
     }
