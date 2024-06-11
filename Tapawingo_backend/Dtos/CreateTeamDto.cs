@@ -1,8 +1,7 @@
-using System.ComponentModel.DataAnnotations; // Importing the namespace for data annotations
+using System.ComponentModel.DataAnnotations;
 
 namespace Tapawingo_backend.Dtos
 {
-    // Data Transfer Object (DTO) for creating a team
     public class CreateTeamDto
     {
         public string Name { get; set; }
