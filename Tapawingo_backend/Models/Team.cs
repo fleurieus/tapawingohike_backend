@@ -9,6 +9,7 @@ namespace Tapawingo_backend.Models
         public int Id { get; set; }
 
         // Name of the team
+        public Edition Edition { get; set; }
         public string Name { get; set; }
 
         // Code associated with the team

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tapawingo_backend.Data;
 
@@ -10,9 +11,11 @@ using Tapawingo_backend.Data;
 namespace Tapawingo_backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240606095123_Added-EventID-to-Edition")]
+    partial class AddedEventIDtoEdition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -176,7 +179,7 @@ namespace Tapawingo_backend.Migrations
                     b.Property<int>("Radius")
                         .HasColumnType("int");
 
-                    b.Property<int>("RoutepartId")
+                    b.Property<int?>("RoutepartId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -244,7 +247,7 @@ namespace Tapawingo_backend.Migrations
                     b.Property<double>("Longitude")
                         .HasColumnType("double");
 
-                    b.Property<int>("TeamId")
+                    b.Property<int?>("TeamId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Timestamp")
@@ -288,9 +291,6 @@ namespace Tapawingo_backend.Migrations
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
-                    b.Property<int>("RouteId")
-                        .HasColumnType("int");
-
                     b.Property<string>("RouteType")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -301,9 +301,12 @@ namespace Tapawingo_backend.Migrations
                     b.Property<bool>("RoutepartZoom")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<int?>("TWRouteId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("RouteId");
+                    b.HasIndex("TWRouteId");
 
                     b.ToTable("Routeparts");
                 });
@@ -322,7 +325,7 @@ namespace Tapawingo_backend.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("RoutepartId")
+                    b.Property<int?>("RoutepartId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -374,7 +377,7 @@ namespace Tapawingo_backend.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("EditionId")
+                    b.Property<int?>("EditionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -577,68 +580,48 @@ namespace Tapawingo_backend.Migrations
 
             modelBuilder.Entity("Tapawingo_backend.Models.Destination", b =>
                 {
-                    b.HasOne("Tapawingo_backend.Models.Routepart", "Routepart")
+                    b.HasOne("Tapawingo_backend.Models.Routepart", null)
                         .WithMany("Destinations")
-                        .HasForeignKey("RoutepartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Routepart");
+                        .HasForeignKey("RoutepartId");
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.Edition", b =>
                 {
-                    b.HasOne("Tapawingo_backend.Models.Event", "Event")
+                    b.HasOne("Tapawingo_backend.Models.Event", null)
                         .WithMany("Editions")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Event");
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.Event", b =>
                 {
-                    b.HasOne("Tapawingo_backend.Models.Organisation", "Organisation")
+                    b.HasOne("Tapawingo_backend.Models.Organisation", null)
                         .WithMany("Events")
                         .HasForeignKey("OrganisationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Organisation");
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.Locationlog", b =>
                 {
-                    b.HasOne("Tapawingo_backend.Models.Team", "Team")
+                    b.HasOne("Tapawingo_backend.Models.Team", null)
                         .WithMany("Locationlogs")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Team");
+                        .HasForeignKey("TeamId");
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.Routepart", b =>
                 {
-                    b.HasOne("Tapawingo_backend.Models.TWRoute", "Route")
+                    b.HasOne("Tapawingo_backend.Models.TWRoute", null)
                         .WithMany("Routeparts")
-                        .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Route");
+                        .HasForeignKey("TWRouteId");
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.TWFile", b =>
                 {
-                    b.HasOne("Tapawingo_backend.Models.Routepart", "Routepart")
+                    b.HasOne("Tapawingo_backend.Models.Routepart", null)
                         .WithMany("Files")
-                        .HasForeignKey("RoutepartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Routepart");
+                        .HasForeignKey("RoutepartId");
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.TWRoute", b =>
@@ -654,13 +637,9 @@ namespace Tapawingo_backend.Migrations
 
             modelBuilder.Entity("Tapawingo_backend.Models.Team", b =>
                 {
-                    b.HasOne("Tapawingo_backend.Models.Edition", "Edition")
+                    b.HasOne("Tapawingo_backend.Models.Edition", null)
                         .WithMany("Teams")
-                        .HasForeignKey("EditionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Edition");
+                        .HasForeignKey("EditionId");
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.TeamRoutepart", b =>
