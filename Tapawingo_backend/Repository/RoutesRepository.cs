@@ -32,7 +32,7 @@ namespace Tapawingo_backend.Repository
 
         public bool RouteExists(int routeId)
         {
-            bool routeExists = _context.Events.Any(e => e.Id == routeId);
+            bool routeExists = _context.Routes.Any(e => e.Id == routeId);
             return routeExists;
         }
     }
