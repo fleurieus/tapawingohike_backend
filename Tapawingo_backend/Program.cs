@@ -23,6 +23,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<TeamService>();
 builder.Services.AddScoped<EventsService>();
 builder.Services.AddScoped<OrganisationsService>();
 builder.Services.AddScoped<EventsService>();
@@ -34,7 +35,9 @@ builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<RoutesService>();
 builder.Services.AddScoped<IRoutesRepository, RoutesRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITeamRepository, TeamRepository>();
 builder.Services.AddScoped<IEventsRepository, EventsRepository>();
+builder.Services.AddScoped<ITeamRepository, TeamRepository>();
 
 // Add database connection
 builder.Services.AddDbContext<DataContext>(options =>
@@ -43,7 +46,6 @@ builder.Services.AddDbContext<DataContext>(options =>
 });
 
 // Add Identity & JWT authentication
-// Identity
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
@@ -106,7 +108,6 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
         ValidAudience = builder.Configuration["JWT:ValidAudience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret)),
-        // ClockSkew = new TimeSpan(0, 0, 5) This is only needed if the server and client are not in sync
     };
 });
 

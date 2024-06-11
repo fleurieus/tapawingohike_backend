@@ -1,4 +1,6 @@
-﻿namespace Tapawingo_backend.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Tapawingo_backend.Models
 {
     public class Team
     {

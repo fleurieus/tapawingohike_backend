@@ -31,5 +31,11 @@ namespace Tapawingo_backend.Repository
             _context.SaveChanges();
             return newEdition;
         }
+
+        public bool EditionExists(int editionId)
+        {
+            bool editionExists = _context.Editions.Any(u => u.Id == editionId);
+            return editionExists;
+        }
     }
 }
