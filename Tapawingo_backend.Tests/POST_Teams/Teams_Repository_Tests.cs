@@ -49,27 +49,6 @@ namespace Tapawingo_backend.Tests.Teams_Repository_Tests
             Assert.Equal(team.EditionId, createdTeam.EditionId);
         }
 
-        // Bad Weather
-        
-        //We don't need this test anymore because we're checking all misstakes in the service...
-        //[Fact]
-        //public void Post_Team_No_TeamCode_and_invalid_contactemail()
-        //{
-        //    var team = new Team
-        //    {
-        //        Name = "Test Team",
-        //        Code = null, // Invalid team code
-        //        ContactName = "John Doe",
-        //        ContactEmail = "",
-        //        ContactPhone = "1234567890",
-        //        Online = true,
-        //        EditionId = 1
-        //    };
-
-        //    Assert.Throws<ArgumentException>(() => _teamsRepository.CreateTeam(team));
-        //}
-        
-
         protected new void Dispose()
         {
             _context.Dispose();
