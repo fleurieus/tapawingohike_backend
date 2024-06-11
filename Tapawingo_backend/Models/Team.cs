@@ -7,8 +7,8 @@ namespace Tapawingo_backend.Models
     {
         // Unique identifier for the team
         public int Id { get; set; }
-
-        // Name of the team
+        public int EditionId { get; set; }
+        public Edition Edition { get; set; }
         public string Name { get; set; }
 
         // Code associated with the team
@@ -31,8 +31,5 @@ namespace Tapawingo_backend.Models
 
         // Collection of route parts associated with the team
         public ICollection<TeamRoutepart> TeamRouteparts { get; set; }
-
-        // The Id of the edition to which the team is associated to
-        public int EditionId { get; set; }
     }
 }

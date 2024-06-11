@@ -26,7 +26,7 @@ namespace Tapawingo_backend.Tests
         private DataContext CreateDbContext()
         {
             var options = new DbContextOptionsBuilder<DataContext>()
-                .UseMySQL("server=localhost;database=AAD;user=Gabriel;password=1234");
+                .UseMySQL("server=localhost;database=TapawingoDB_Test;user=root;password=mysql");
 
             var context = new DataContext(options.Options);
             context.Database.EnsureDeleted();

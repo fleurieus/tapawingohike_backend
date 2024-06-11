@@ -18,7 +18,7 @@ namespace Tapawingo_backend.Tests.Teams_Repository_Tests
 
         public Teams_Repository_Tests(DatabaseFixture fixture) : base(fixture)
         {
-            _context = Context; // inject 'shared' context from TestBase
+            _context = Context;
             _teamsRepository = new TeamRepository(_context);
         }
 
@@ -34,10 +34,9 @@ namespace Tapawingo_backend.Tests.Teams_Repository_Tests
                 ContactEmail = "john.doe@example.com",
                 ContactPhone = "1234567890",
                 Online = true,
-                EditionId = 1
             };
 
-            var createdTeam = _teamsRepository.CreateTeam(team);
+            var createdTeam = _teamsRepository.CreateTeamOnEdition(1, team);
 
             Assert.NotNull(createdTeam);
             Assert.Equal(team.Name, createdTeam.Name);
@@ -46,7 +45,7 @@ namespace Tapawingo_backend.Tests.Teams_Repository_Tests
             Assert.Equal(team.ContactEmail, createdTeam.ContactEmail);
             Assert.Equal(team.ContactPhone, createdTeam.ContactPhone);
             Assert.Equal(team.Online, createdTeam.Online);
-            Assert.Equal(team.EditionId, createdTeam.EditionId);
+            Assert.Equal(1, createdTeam.EditionId);
         }
 
         protected new void Dispose()
