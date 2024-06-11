@@ -5,7 +5,6 @@ using Tapawingo_backend.Services;
 
 namespace Tapawingo_backend.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class TeamsController : ControllerBase
     {
@@ -16,37 +15,11 @@ namespace Tapawingo_backend.Controllers
             _teamService = teamService;
         }
 
-        [HttpPost]
-        [ProducesResponseType(201, Type = typeof(Team))] // HTTP 200: Successful creation, returns the created team
-        [ProducesResponseType(400)] // HTTP 400: Bad request, if the request body is invalid
-        [ProducesResponseType(500)] // HTTP 500: Internal server error, if an unexpected exception occurs
-        public IActionResult CreateTeam(CreateTeamDto model)
+        [HttpPost("/editions/{editionId}/teams")]
+        public IActionResult CreateTeamOnEdition(int editionId, CreateTeamDto model)
         {
-
-            try
-            {
-                /** //Check to see that the Edition object for the EditionId passed in the CreateTeamDto exists
-                // Try to find the edition
-                var edition = await _editionService.GetEditionById(model.EditionId);
-                if (edition == null) {
-                return StatusCode(StatusCodes.Status400BadRequest, "The edition for the team does not exist");
-                //Add logging for this maybe.
-                } **/   
-                
-                // Attempt to create the team using the provided model
-                return new ObjectResult(_teamService.CreateTeam(model))
-                {
-                    StatusCode = 201
-                };
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(ex.Message);
-            }
+            var response = _teamService.CreateTeamOnEdition(editionId, model);
+            return Ok(response);
         }
     }
 }

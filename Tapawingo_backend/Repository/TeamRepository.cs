@@ -1,24 +1,21 @@
-using Tapawingo_backend.Data; // Importing the Data namespace
+using Tapawingo_backend.Data;
 using Tapawingo_backend.Dtos;
-using Tapawingo_backend.Models; // Importing the Models namespace
+using Tapawingo_backend.Models;
 
 namespace Tapawingo_backend.Repository
-{
-    // Repository class for interacting with team data
+{ 
     public class TeamRepository : ITeamRepository
     {
-        private readonly DataContext _context; // Database context for accessing data
+        private readonly DataContext _context;
 
-        // Constructor to initialize the repository with the database context
         public TeamRepository(DataContext context)
         {
             _context = context;
         }
 
-        // Method to add a new team to the repository
-        public Team CreateTeam(CreateTeamDto createTeam)
+        public Team CreateTeamOnEdition(int editionId, CreateTeamDto createTeam)
         {
-            Team team = new Team()
+            Team team = new Team
             {
                 Code = createTeam.Code,
                 Name = createTeam.Name,
@@ -26,16 +23,12 @@ namespace Tapawingo_backend.Repository
                 ContactName = createTeam.ContactName,
                 ContactPhone = createTeam.ContactPhone,
                 Online = createTeam.Online,
-                EditionId = createTeam.EditionId
+                EditionId = editionId
             };
             
-            // Add the team object to the Teams DbSet in the database context
             _context.Teams.Add(team);
-            
-            // Save the changes to the database asynchronously
             _context.SaveChanges();
             
-            // Return the added team object
             return team;
         }
     }

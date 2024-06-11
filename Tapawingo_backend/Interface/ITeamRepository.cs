@@ -1,12 +1,10 @@
 using Tapawingo_backend.Dtos;
-using Tapawingo_backend.Models; // Importing the Models namespace
+using Tapawingo_backend.Models;
 
 namespace Tapawingo_backend.Repository
 {
-    // Interface for interacting with team data
     public interface ITeamRepository
     {
-        // Add a new team to the repository
-        Team CreateTeam(CreateTeamDto team);
+        Team CreateTeamOnEdition(int editionId, CreateTeamDto team);
     }
 }

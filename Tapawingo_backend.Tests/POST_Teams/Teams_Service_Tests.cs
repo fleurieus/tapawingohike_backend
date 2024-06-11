@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Tapawingo_backend.Data;
 using Tapawingo_backend.Dtos;
+using Tapawingo_backend.Helper;
 using Tapawingo_backend.Models;
 using Tapawingo_backend.Repository;
 using Tapawingo_backend.Services;
@@ -16,24 +17,23 @@ namespace Tapawingo_backend.Tests
     {
         private readonly TeamRepository _teamRepository;
         private readonly TeamService _teamsService;
+        private readonly EditionsRepository _editionsRepository;
         private readonly DataContext _context;
         private readonly IMapper _mapper;
 
         public Teams_Service_Tests(DatabaseFixture fixture) : base(fixture)
         {
-            _context = Context; // inject 'shared' context from TestBase
+            _context = Context;
             _teamRepository = new TeamRepository(_context);
-            
-            // Create an instance of the IMapper
+            _editionsRepository = new EditionsRepository(_context);
+
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<CreateTeamDto, Team>();
-                cfg.CreateMap<Team, CreateTeamDto>();
+                cfg.AddProfile<MappingProfiles>();
             });
             _mapper = config.CreateMapper();
 
-            // Create the service instance
-            _teamsService = new TeamService(_teamRepository, _mapper);
+            _teamsService = new TeamService(_teamRepository, _editionsRepository, _mapper);
         }
 
         // Good Weather: Test for creating a team successfully
@@ -47,11 +47,10 @@ namespace Tapawingo_backend.Tests
                 ContactName = "John Doe",
                 ContactEmail = "john.doe@example.com",
                 ContactPhone = "1234567890",
-                Online = true,
-                EditionId = 1
+                Online = true
             };
 
-            var teamDto = _teamsService.CreateTeam(createTeamDto);
+            var teamDto = _teamsService.CreateTeamOnEdition(1, createTeamDto);
 
             Assert.NotNull(teamDto);
             Assert.Equal(createTeamDto.Name, teamDto.Name);
@@ -60,40 +59,7 @@ namespace Tapawingo_backend.Tests
             Assert.Equal(createTeamDto.ContactEmail, teamDto.ContactEmail);
             Assert.Equal(createTeamDto.ContactPhone, teamDto.ContactPhone);
             Assert.Equal(createTeamDto.Online, teamDto.Online);
-            Assert.Equal(createTeamDto.EditionId, teamDto.EditionId);
-        }
-
-        // Bad Weather: Test for creating a team with invalid data
-        [Fact]
-        public async Task Create_Team_Invalid_TeamCode()
-        {
-            var createTeamDto = new CreateTeamDto
-            {
-                Name = "Test Team",
-                Code = null, // Invalid team code
-                ContactName = "John Doe",
-                ContactEmail = "john.doe@example.com",
-                ContactPhone = "1234567890",
-                Online = true,
-                EditionId = 1
-            };
-
-            Assert.Throws<ArgumentException>(() => _teamsService.CreateTeam(createTeamDto));
-        }
-        [Fact]
-        public void Post_Team_No_Edition_Id()
-        {
-            var team = new CreateTeamDto
-            {
-                Name = "Test Team",
-                Code = "TST001",
-                ContactName = "John Doe",
-                ContactEmail = "john.doe@example.com",
-                ContactPhone = "1234567890",
-                Online = true
-            };
-
-            Assert.Throws<InvalidOperationException>(() => _teamsService.CreateTeam(team));
+            Assert.Equal(1, teamDto.EditionId);
         }
 
         protected new void Dispose()
