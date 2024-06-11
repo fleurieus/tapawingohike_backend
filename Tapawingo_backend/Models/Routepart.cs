@@ -3,6 +3,8 @@
     public class Routepart
     {
         public int Id { get; set; }
+        public int RouteId { get; set; }
+        public TWRoute Route { get; set; }
         public string Name { get; set; }
         public int RouteId { get; set; }
         public string RouteType { get; set; }
