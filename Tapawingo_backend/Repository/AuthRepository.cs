@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -96,6 +97,35 @@ namespace Tapawingo_backend.Repository
             await _userManager.UpdateAsync(user);
 
             return new CustomResponse("Revoke succesfull");
+        }
+
+
+        public async Task<IActionResult> LoginTeamAsync(string teamCode)
+        {
+            JwtSecurityToken token = GenerateTeamJwt(teamCode);
+
+            return new ObjectResult(new { message = token.ValidTo, token = new JwtSecurityTokenHandler().WriteToken(token) });
+        }
+
+        private JwtSecurityToken GenerateTeamJwt(string teamcode)
+        {
+            var authClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, teamcode)
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                _configuration["JWT:Secret"] ?? throw new InvalidOperationException("Secret not configured")));
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["JWT:ValidIssuer"],
+                audience: _configuration["JWT:ValidAudience"],
+                expires: DateTime.UtcNow.AddHours(24), // Valid for one day
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
+                );
+
+            return token;
         }
 
         private ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)

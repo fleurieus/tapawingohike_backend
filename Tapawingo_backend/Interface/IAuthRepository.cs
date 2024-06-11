@@ -8,5 +8,6 @@ namespace Tapawingo_backend.Interface
         Task<LoginResponse> Login([FromBody] LoginDto model);
         Task<LoginResponse> Refresh([FromBody] RefreshDto model);
         Task<CustomResponse> Revoke(HttpContext httpContext);
+        Task<IActionResult> LoginTeamAsync(string teamCode);
     }
 }

@@ -1,6 +1,8 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
+using Tapawingo_backend.Models;
 using Tapawingo_backend.Repository;
 
 namespace Tapawingo_backend.Services

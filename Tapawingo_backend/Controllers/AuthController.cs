@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Models;
+using Tapawingo_backend.Services;
 
 namespace Tapawingo_backend.Controllers
 {
@@ -55,6 +56,12 @@ namespace Tapawingo_backend.Controllers
             var httpContext = HttpContext;
             var response = await _authRepository.Revoke(httpContext);
             return Ok(response);
+        }
+
+        [HttpPost("/team_login/{teamCode}")]
+        public async Task<IActionResult> LoginTeam(string teamCode)
+        {
+            return await _authRepository.LoginTeamAsync(teamCode);
         }
     }
 }
