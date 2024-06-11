@@ -27,6 +27,8 @@ builder.Services.AddScoped<TeamService>();
 builder.Services.AddScoped<EventsService>();
 builder.Services.AddScoped<OrganisationsService>();
 builder.Services.AddScoped<EventsService>();
+builder.Services.AddScoped<EditionsService>();
+builder.Services.AddScoped<IEditionsRepository, EditionsRepository>();
 builder.Services.AddScoped<IOrganisationsRepository, OrganisationsRepository>();
 builder.Services.AddScoped<EventsService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
