@@ -61,23 +61,7 @@ namespace Tapawingo_backend.Repository
             _context.UserOrganisations.Add(new UserOrganisation { OrganisationId = organisationId, UserId = newUser.Id });
             await _context.SaveChangesAsync();
 
-            //Assign Default Role : Admin to first registrar; rest is user
-            var checkAdmin = _roleManager.FindByNameAsync("SuperAdmin");
-            if (checkAdmin is null)
-            {
-                await _roleManager.CreateAsync(new IdentityRole() { Name = "SuperAdmin" });
-                await _userManager.AddToRoleAsync(newUser, "SuperAdmin");
-                return newUser;
-            }
-            else
-            {
-                var checkUser = _roleManager.FindByNameAsync("User");
-                if (checkUser is null)
-                    await _roleManager.CreateAsync(new IdentityRole() { Name = "User" });
-
-                await _userManager.AddToRoleAsync(newUser, "User");
-                return newUser;
-            }
+            return newUser;
         }
 
         public async Task<User> UpdateUserOnOrganisationAsync(User existingUser, UpdateUserDto user)
