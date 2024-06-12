@@ -23,9 +23,10 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpGet("api/organisations/{organisationId}/user/{userId}")]
-        public IActionResult GetUserOnOrganisation(int organisationId, string userId)
+        public async Task<IActionResult> GetUserOnOrganisation(int organisationId, string userId)
         {
-            return _usersService.GetUserOnOrganisation(organisationId, userId);
+            var response =  await _usersService.GetUserOnOrganisationAsync(organisationId, userId);
+            return Ok(response);
         }
 
         [HttpPost("api/organisations/{organisationId}/users")]
@@ -43,9 +44,9 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpDelete("api/organisations/{organisationId}/users/{userId}")]
-        public IActionResult DeleteUserOnOrganisation(int organisationId, string userId)
+        public async Task<IActionResult> DeleteUserOnOrganisationAsync(int organisationId, string userId)
         {
-            return _usersService.DeleteUserOnOrganisation(organisationId, userId);
+            return await _usersService.DeleteUserOnOrganisationAsync(organisationId, userId);
         }
     }
 }

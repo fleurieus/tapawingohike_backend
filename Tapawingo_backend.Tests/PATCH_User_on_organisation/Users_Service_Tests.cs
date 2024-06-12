@@ -52,7 +52,7 @@ namespace Tapawingo_backend.Tests.PATCH_User_on_organisation
 
         //Good Weather
         [Fact]
-        public void Update_User_On_Organisation()
+        public async Task Update_User_On_Organisation()
         {
             var users = _usersRepository.GetUsersOnOrganisation(1);
             var firstUser = users.First();
@@ -62,11 +62,8 @@ namespace Tapawingo_backend.Tests.PATCH_User_on_organisation
                 LastName = "updateTest",
             };
 
-            var user = _usersRepository.UpdateUserOnOrganisationAsync(firstUser, updateUserDto);
-
-            Assert.NotNull(user);
-            var updatedUser = _usersRepository.GetUserOnOrganisation(1, firstUser.Id);
-            Assert.Equal("updateTest", updatedUser.LastName);
+            var user = await _usersRepository.UpdateUserOnOrganisationAsync(firstUser, updateUserDto);
+            Assert.Equal("updateTest", user.LastName);
         }
         //
 

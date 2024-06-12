@@ -32,23 +32,15 @@ namespace Tapawingo_backend.Services
             return new ObjectResult(users);
         }
 
-        public IActionResult GetUserOnOrganisation(int organisationId, string userId)
+        public async Task<UserDto> GetUserOnOrganisationAsync(int organisationId, string userId)
         {
             if (!_organisationsRepository.OrganisationExists(organisationId))
-                return new NotFoundObjectResult(new
-                {
-                    message = "Organisation not found"
-                });
+                throw new BadHttpRequestException("Organisation not found");
 
             if (!_userRepository.UserExists(userId))
-                return new NotFoundObjectResult(new
-                {
-                    message = "User not found"
-                });
+                throw new BadHttpRequestException("User not found");
 
-            var user = _mapper.Map<UserDto>(_userRepository.GetUserOnOrganisation(organisationId, userId));
-
-            return new ObjectResult(user);
+            return _mapper.Map<UserDto>(await _userRepository.GetUserOnOrganisationAsync(organisationId, userId));
         }
 
         public async Task<UserDto> CreateUserOnOrganisation(int organisationId, CreateUserDto model)
@@ -56,7 +48,7 @@ namespace Tapawingo_backend.Services
             if (!_organisationsRepository.OrganisationExists(organisationId))
                 throw new BadHttpRequestException("Organisation not found");
 
-            var existingUser = _userRepository.GetUserByEmailAsync(model.Email);
+            var existingUser = _userRepository.GetUserByEmail(model.Email);
 
             if (existingUser != null)
                 throw new BadHttpRequestException("User already exists");
@@ -75,15 +67,15 @@ namespace Tapawingo_backend.Services
             if (!_organisationsRepository.OrganisationExists(organisationId))
                 throw new BadHttpRequestException("Organisation not found");
 
-            if (_userRepository.GetUserOnOrganisation(organisationId, userId) == null)
+            if (await _userRepository.GetUserOnOrganisationAsync(organisationId, userId) == null)
                 throw new BadHttpRequestException("User not found");
 
-            await _userRepository.UpdateUserOnOrganisationAsync(_userRepository.GetUserOnOrganisation(organisationId, userId), user);
+            await _userRepository.UpdateUserOnOrganisationAsync(await _userRepository.GetUserOnOrganisationAsync(organisationId, userId), user);
 
-            return _mapper.Map<UserDto>(_userRepository.GetUserOnOrganisation(organisationId, userId));
+            return _mapper.Map<UserDto>(await _userRepository.GetUserOnOrganisationAsync(organisationId, userId));
         }
 
-        public IActionResult DeleteUserOnOrganisation(int organisationId, string userId)
+        public async Task<IActionResult> DeleteUserOnOrganisationAsync(int organisationId, string userId)
         {
             if (!_organisationsRepository.OrganisationExists(organisationId))
                 return new NotFoundObjectResult(new
@@ -97,7 +89,7 @@ namespace Tapawingo_backend.Services
                     message = "User not found"
                 });
 
-            bool userDeleted = _userRepository.DeleteUserOnOrganisation(organisationId, userId);
+            bool userDeleted = await _userRepository.DeleteUserOnOrganisationAsync(organisationId, userId);
             return userDeleted ? new NoContentResult() : new BadRequestObjectResult(new
             {
                 message = "User could not be deleted"
