@@ -11,15 +11,17 @@ namespace Tapawingo_backend.Services
         private readonly IMapper _mapper;
         IRoutepartsRepository _routepartsRepository;
         IRoutesRepository _routesRepository;
+        IDestinationRepository _destinationRepository;
 
-        public RoutepartsService(IMapper mapper, IRoutepartsRepository routepartsRepository, IRoutesRepository routesRepository)
+        public RoutepartsService(IMapper mapper, IRoutepartsRepository routepartsRepository, IRoutesRepository routesRepository, IDestinationRepository destinationRepository)
         {
             _mapper = mapper;
             _routepartsRepository = routepartsRepository;
             _routesRepository = routesRepository;
+            _destinationRepository = destinationRepository;
         }
 
-        public RoutepartDto CreateRoutepart(CreateRoutepartDto createRoutepart, int routeId) 
+        public async Task<RoutepartDto> CreateRoutepart(CreateRoutepartDto createRoutepart, int routeId) 
         {
             if (!_routesRepository.RouteExists(routeId))
                 return null;
@@ -31,11 +33,48 @@ namespace Tapawingo_backend.Services
                 RouteType = createRoutepart.RouteType,
                 RoutepartZoom = createRoutepart.RoutepartZoom,
                 RoutepartFullscreen = createRoutepart.RoutepartFullscreen,
-                Order = 1,
+                Order = 1, // TODO This needs to be set automaticly
                 Final = createRoutepart.Final,
             };
 
-            return _mapper.Map<RoutepartDto>(_routepartsRepository.CreateRoutePart(newRoutepart));
+            var createdRoutepart = await _routepartsRepository.CreateRoutePart(newRoutepart);
+
+            // Add destinations if provided
+            if (createRoutepart.Destinations != null && createRoutepart.Destinations.Any())
+            {
+                foreach (var destination in createRoutepart.Destinations)
+                {
+                    var newDestination = new Destination()
+                    {
+                        RoutepartId = createdRoutepart.Id,
+                        Name = destination.Name,
+                        Latitude = destination.Latitude,
+                        Longitude = destination.Longitude,
+                        Radius = destination.Radius,
+                        DestinationType = destination.DestinationType,
+                        ConfirmByUser = destination.ConfirmByUser,
+                        HideForUser = destination.HideForUser
+                    };
+
+                    await _destinationRepository.CreateDestination(newDestination);
+                }
+            }
+
+            // Add files if provided
+            //if (createRoutepart.Files != null && createRoutepart.Files.Any())
+            //{
+            //    foreach (var file in createRoutepart.Files)
+            //    {
+            //        var newFile = new File() /* Assuming File class exists */
+            //        {
+            //            // Set file properties here
+            //        };
+
+            //        createdRoutepart.AddFile(newFile); // Add file to the created routepart
+            //    }
+            //}
+
+            return _mapper.Map<RoutepartDto>(createdRoutepart);
         }
     }
 }

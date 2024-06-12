@@ -14,10 +14,10 @@ namespace Tapawingo_backend.Repository
             _context = context;
         }
 
-        public Routepart CreateRoutePart(Routepart newRoutepart)
+        public async Task<Routepart> CreateRoutePart(Routepart newRoutepart)
         {
             _context.Routeparts.Add(newRoutepart);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return newRoutepart;
         }
     }

@@ -40,6 +40,7 @@ builder.Services.AddScoped<ITeamRepository, TeamRepository>();
 builder.Services.AddScoped<IEventsRepository, EventsRepository>();
 builder.Services.AddScoped<ITeamRepository, TeamRepository>();
 builder.Services.AddScoped<IRoutepartsRepository, RoutepartsRepository>();
+builder.Services.AddScoped<IDestinationRepository, DestinationRepository>();
 
 // Add database connection
 builder.Services.AddDbContext<DataContext>(options =>

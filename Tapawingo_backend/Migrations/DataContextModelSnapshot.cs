@@ -183,7 +183,7 @@ namespace Tapawingo_backend.Migrations
 
                     b.HasIndex("RoutepartId");
 
-                    b.ToTable("Destinations");
+                    b.ToTable("Destinations", (string)null);
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.Edition", b =>
@@ -209,7 +209,7 @@ namespace Tapawingo_backend.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("Editions");
+                    b.ToTable("Editions", (string)null);
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.Event", b =>
@@ -229,7 +229,7 @@ namespace Tapawingo_backend.Migrations
 
                     b.HasIndex("OrganisationId");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", (string)null);
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.Locationlog", b =>
@@ -254,7 +254,7 @@ namespace Tapawingo_backend.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("Locationlogs");
+                    b.ToTable("Locationlogs", (string)null);
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.Organisation", b =>
@@ -269,7 +269,7 @@ namespace Tapawingo_backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Organisations");
+                    b.ToTable("Organisations", (string)null);
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.Routepart", b =>
@@ -305,7 +305,7 @@ namespace Tapawingo_backend.Migrations
 
                     b.HasIndex("RouteId");
 
-                    b.ToTable("Routeparts");
+                    b.ToTable("Routeparts", (string)null);
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.TWFile", b =>
@@ -329,7 +329,7 @@ namespace Tapawingo_backend.Migrations
 
                     b.HasIndex("RoutepartId");
 
-                    b.ToTable("Files");
+                    b.ToTable("Files", (string)null);
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.TWRoute", b =>
@@ -349,7 +349,7 @@ namespace Tapawingo_backend.Migrations
 
                     b.HasIndex("EditionId");
 
-                    b.ToTable("Routes");
+                    b.ToTable("Routes", (string)null);
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.Team", b =>
@@ -388,7 +388,7 @@ namespace Tapawingo_backend.Migrations
 
                     b.HasIndex("EditionId");
 
-                    b.ToTable("Teams");
+                    b.ToTable("Teams", (string)null);
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.TeamRoutepart", b =>
@@ -409,7 +409,7 @@ namespace Tapawingo_backend.Migrations
 
                     b.HasIndex("RoutepartId");
 
-                    b.ToTable("TeamRouteparts");
+                    b.ToTable("TeamRouteparts", (string)null);
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.User", b =>
@@ -506,7 +506,7 @@ namespace Tapawingo_backend.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("UserEvents");
+                    b.ToTable("UserEvents", (string)null);
                 });
 
             modelBuilder.Entity("Tapawingo_backend.Models.UserOrganisation", b =>
@@ -521,7 +521,7 @@ namespace Tapawingo_backend.Migrations
 
                     b.HasIndex("OrganisationId");
 
-                    b.ToTable("UserOrganisations");
+                    b.ToTable("UserOrganisations", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

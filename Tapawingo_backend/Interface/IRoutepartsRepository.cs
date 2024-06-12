@@ -4,6 +4,6 @@ namespace Tapawingo_backend.Interface
 {
     public interface IRoutepartsRepository
     {
-        Routepart CreateRoutePart(Routepart newRoutepart);
+        Task<Routepart> CreateRoutePart(Routepart newRoutepart);
     }
 }

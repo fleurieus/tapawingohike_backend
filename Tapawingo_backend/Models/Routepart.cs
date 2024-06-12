@@ -12,7 +12,7 @@
         public int Order { get; set; }
         public bool Final { get; set; }
         public ICollection<TeamRoutepart> TeamRouteparts { get; set; }
-        public ICollection<Destination>? Destinations { get; set; }
-        public ICollection<TWFile>? Files { get; set; }
+        public ICollection<Destination> Destinations { get; set; }
+        public ICollection<TWFile> Files { get; set; }
     }
 }
