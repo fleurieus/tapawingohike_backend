@@ -22,17 +22,22 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddScoped<UsersService>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<TeamService>();
 builder.Services.AddScoped<EventsService>();
 builder.Services.AddScoped<OrganisationsService>();
 builder.Services.AddScoped<EventsService>();
+builder.Services.AddScoped<EditionsService>();
+builder.Services.AddScoped<IEditionsRepository, EditionsRepository>();
 builder.Services.AddScoped<IOrganisationsRepository, OrganisationsRepository>();
 builder.Services.AddScoped<EventsService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<RoutesService>();
 builder.Services.AddScoped<IRoutesRepository, RoutesRepository>();
-builder.Services.AddScoped<IUserRepository, UsersRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITeamRepository, TeamRepository>();
 builder.Services.AddScoped<IEventsRepository, EventsRepository>();
+builder.Services.AddScoped<ITeamRepository, TeamRepository>();
 
 // Add database connection
 builder.Services.AddDbContext<DataContext>(options =>
