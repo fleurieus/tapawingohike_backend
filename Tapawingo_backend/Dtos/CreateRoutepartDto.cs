@@ -1,4 +1,6 @@
-﻿using Tapawingo_backend.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Tapawingo_backend.Models;
 
 namespace Tapawingo_backend.Dtos
 {
@@ -9,8 +11,12 @@ namespace Tapawingo_backend.Dtos
         public bool RoutepartZoom { get; set; }
         public bool RoutepartFullscreen { get; set; }
         public bool Final {  get; set; }
-        public ICollection<DestinationDto>? Destinations { get; set; }
-        public ICollection<TWFileDto>? Files { get; set; }
-
+        [FromForm(Name = "destinations")]
+        public string DestinationsJson { get; set; }
+        public List<CreateDestinationDto>? Destinations
+        {
+            get => string.IsNullOrEmpty(DestinationsJson) ? null : JsonConvert.DeserializeObject<List<CreateDestinationDto>>(DestinationsJson);
+        }
+        public ICollection<IFormFile>? Files { get; set; }
     }
 }

@@ -12,13 +12,15 @@ namespace Tapawingo_backend.Services
         IRoutepartsRepository _routepartsRepository;
         IRoutesRepository _routesRepository;
         IDestinationRepository _destinationRepository;
+        IFileRepository _fileRepository;
 
-        public RoutepartsService(IMapper mapper, IRoutepartsRepository routepartsRepository, IRoutesRepository routesRepository, IDestinationRepository destinationRepository)
+        public RoutepartsService(IMapper mapper, IRoutepartsRepository routepartsRepository, IRoutesRepository routesRepository, IDestinationRepository destinationRepository, IFileRepository fileRepository)
         {
             _mapper = mapper;
             _routepartsRepository = routepartsRepository;
             _routesRepository = routesRepository;
             _destinationRepository = destinationRepository;
+            _fileRepository = fileRepository;
         }
 
         public async Task<RoutepartDto> CreateRoutepart(CreateRoutepartDto createRoutepart, int routeId) 
@@ -56,23 +58,33 @@ namespace Tapawingo_backend.Services
                         HideForUser = destination.HideForUser
                     };
 
-                    await _destinationRepository.CreateDestination(newDestination);
+                    var savedDestination = await _destinationRepository.CreateDestinationAsync(newDestination);
                 }
             }
 
             // Add files if provided
-            //if (createRoutepart.Files != null && createRoutepart.Files.Any())
-            //{
-            //    foreach (var file in createRoutepart.Files)
-            //    {
-            //        var newFile = new File() /* Assuming File class exists */
-            //        {
-            //            // Set file properties here
-            //        };
+            if (createRoutepart.Files != null && createRoutepart.Files.Any())
+            {
+                foreach (var file in createRoutepart.Files)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await file.CopyToAsync(memoryStream);
 
-            //        createdRoutepart.AddFile(newFile); // Add file to the created routepart
-            //    }
-            //}
+                        var newFile = new TWFile
+                        {
+                            RoutepartId = createdRoutepart.Id,
+                            File = file.FileName,
+                            Category = "routepart", // TODO: This needs to be changed
+                            ContentType = file.ContentType,
+                            Data = memoryStream.ToArray(),
+                            UploadDate = DateTime.UtcNow
+                        };
+
+                        await _fileRepository.SaveFileAsync(newFile);
+                    }
+                }
+            }
 
             return _mapper.Map<RoutepartDto>(createdRoutepart);
         }

@@ -1,11 +1,7 @@
-﻿using Tapawingo_backend.Models;
-
-namespace Tapawingo_backend.Dtos
+﻿namespace Tapawingo_backend.Dtos
 {
-    public class TWFileDto
+    public class CreateTWFile
     {
-        public int Id { get; set; }
-        public int RoutepartId { get; set; }
         public string FileName { get; set; }
         public string Category { get; set; }
         public string ContentType { get; set; }

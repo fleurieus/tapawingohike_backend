@@ -12,6 +12,8 @@ namespace Tapawingo_backend.Tests.POST_Routeparts
         private readonly RoutepartsRepository _routepartsRepository;
         private readonly RoutepartsService _routepartsService;
         private readonly RoutesRepository _routesRepository;
+        private readonly DestinationRepository _destinationRepository;
+        private readonly FileRepository _fileRepository;
         private readonly DataContext _context;
 
         public Routeparts_Service_Tests(DatabaseFixture fixture) : base(fixture)
@@ -20,11 +22,14 @@ namespace Tapawingo_backend.Tests.POST_Routeparts
             //Create a repository that works on the TEST DATABASE!!
             _routepartsRepository = new RoutepartsRepository(_context);
             _routesRepository = new RoutesRepository(_context);
+            _destinationRepository = new DestinationRepository(_context);
+            _fileRepository = new FileRepository(_context);
+
             //Create a instance of the IMapper.
             _routepartsService = new RoutepartsService(new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<MappingProfiles>();
-            }).CreateMapper(), _routepartsRepository, _routesRepository);
+            }).CreateMapper(), _routepartsRepository, _routesRepository, _destinationRepository, _fileRepository);
         }
 
         //Goodweather
@@ -46,7 +51,6 @@ namespace Tapawingo_backend.Tests.POST_Routeparts
                 RouteType = routeType,
                 RoutepartZoom = routepartZoom,
                 RoutepartFullscreen = routepartFullscreen,
-                Order = order,
                 Final = final,
             };
 
@@ -68,7 +72,7 @@ namespace Tapawingo_backend.Tests.POST_Routeparts
 
         //Badweather
         [Fact]
-        public void Post_Routepart_Faulty_RouteId()
+        public async Task Post_Routepart_Faulty_RouteId()
         {
             var testName = "test";
             var routeType = "Normal";
@@ -83,11 +87,10 @@ namespace Tapawingo_backend.Tests.POST_Routeparts
                 RouteType = routeType,
                 RoutepartZoom = routepartZoom,
                 RoutepartFullscreen = routepartFullscreen,
-                Order = order,
                 Final = final,
             };
 
-            Assert.Throws<InvalidOperationException>(() => _routepartsService.CreateRoutepart(createRoutepartDto, 0));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await _routepartsService.CreateRoutepart(createRoutepartDto, 0));
         }
         //
     }

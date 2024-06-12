@@ -1,11 +1,7 @@
-﻿using Tapawingo_backend.Models;
-
-namespace Tapawingo_backend.Dtos
+﻿namespace Tapawingo_backend.Dtos
 {
-    public class DestinationDto
+    public class CreateDestinationDto
     {
-        public int Id { get; set; }
-        public int RoutepartId { get; set; }
         public string Name { get; set; }
         public double Latitude { get; set; }
         public double Longitude { get; set; }
