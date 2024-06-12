@@ -58,5 +58,17 @@ namespace Tapawingo_backend.Controllers
             }
             return BadRequest("Cannot process this request.");
         }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateOrganisation(int id, [FromBody]UpdateOrganisationDto model) 
+        {
+            var updatedOrganisation = _organisationsService.UpdateOrganisation(id, model);
+            return updatedOrganisation == null ?
+                BadRequest(new
+                {
+                    message = "A update-model must be provided."
+                }) :
+                Ok(updatedOrganisation);
+        }
     }
 }

@@ -9,5 +9,6 @@ namespace Tapawingo_backend.Interface
         Organisation GetOrganisationById(int id);
         List<Organisation> GetAllOrganisations();
         bool OrganisationExists(int id);
+        Organisation UpdateOrganisation(int id, UpdateOrganisationDto newOrganisation);
     }
 }

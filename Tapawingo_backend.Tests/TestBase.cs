@@ -57,8 +57,10 @@ namespace Tapawingo_backend.Tests
             // Organisations
             var organisation1 = new Organisation { Name = "TestOrganisation1", ContactPerson = "testPerson", ContactEmail = "testEmail" };
             var organisation2 = new Organisation { Name = "TestOrganisation2", ContactPerson = "testPerson", ContactEmail = "testEmail" };
+            var organisation3 = new Organisation { Name = "TestForUpdate", ContactPerson = "testPerson", ContactEmail = "testEmail" };
             context.Organisations.Add(organisation1);
             context.Organisations.Add(organisation2);
+            context.Organisations.Add(organisation3);
             context.SaveChanges();
 
             // Events

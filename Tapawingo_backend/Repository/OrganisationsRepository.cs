@@ -49,5 +49,17 @@ namespace Tapawingo_backend.Repository
             return _context.Organisations.Any(organisation => organisation.Id == id);
         }
 
+        public Organisation UpdateOrganisation(int id, UpdateOrganisationDto newOrganisation)
+        {
+            var oldOrganisation = GetOrganisationById(id);
+            oldOrganisation.Name = newOrganisation.Name == null ? oldOrganisation.Name : newOrganisation.Name;
+            oldOrganisation.ContactEmail = newOrganisation.ContactEmail == null ? oldOrganisation.ContactEmail : newOrganisation.ContactEmail;
+            oldOrganisation.ContactPerson = newOrganisation.ContactPerson == null ? oldOrganisation.ContactPerson : newOrganisation.ContactPerson;
+            
+            _context.Organisations.Update(oldOrganisation);
+            _context.SaveChanges();
+            return oldOrganisation;
+        }
+
     }
 }

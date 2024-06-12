@@ -31,5 +31,14 @@ namespace Tapawingo_backend.Services
         {
             return _mapper.Map<OrganisationDto>(_organisationsRepository.GetOrganisationById(id));
         }
+
+        public OrganisationDto UpdateOrganisation(int id, UpdateOrganisationDto newOrganisation)
+        {
+            if(newOrganisation == null)
+            {
+                return null;
+            }
+            return _mapper.Map<OrganisationDto>(_organisationsRepository.UpdateOrganisation(id, newOrganisation));
+        }
     }
 }
