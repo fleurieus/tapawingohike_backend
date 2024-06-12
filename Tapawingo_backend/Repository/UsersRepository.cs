@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using System.Data;
+using System.Security.Claims;
 using Tapawingo_backend.Data;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
@@ -62,8 +64,23 @@ namespace Tapawingo_backend.Repository
                 throw new Exception("User creation failed.");
             }
 
+            // Add user to organisation
             _context.UserOrganisations.Add(new UserOrganisation { OrganisationId = organisationId, UserId = newUser.Id });
             await _context.SaveChangesAsync();
+
+            // Add claim that gives user acces to organisation
+            var userClaim = new Claim("OrganisationRole", $"{organisationId}:OrganisationUser");
+
+            if (model.IsManager)
+            {
+                userClaim = new Claim("OrganisationRole", $"{organisationId}:OrganisationManager");
+            }
+
+            var claimResult = await _userManager.AddClaimAsync(newUser, userClaim);
+            if (!claimResult.Succeeded)
+            {
+                throw new Exception("Something went worng adding claim to user.");
+            }
 
             return newUser;
         }

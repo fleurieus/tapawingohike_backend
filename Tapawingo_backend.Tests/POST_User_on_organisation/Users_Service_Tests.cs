@@ -59,7 +59,8 @@ namespace Tapawingo_backend.Tests.POST_User_on_organisation
                 FirstName = "test",
                 LastName = "test",
                 Email = "test99@gmail.nl",
-                Password = "Password!1"
+                Password = "Password!1",
+                IsManager = false
             };
 
             var user = _usersRepository.CreateUserOnOrganisation(1, createUserDto);

@@ -18,7 +18,9 @@ namespace Tapawingo_backend.Repository
         {
             var newOrganisation = new Organisation()
             {
-                Name = createOrganisationDto.Name
+                Name = createOrganisationDto.Name,
+                ContactPerson = createOrganisationDto.ContactPerson,
+                ContactEmail = createOrganisationDto.ContactEmail,
             };
             //add the newly created element to the database without ID because it's auto-created.
             _context.Organisations.Add(newOrganisation);

@@ -29,6 +29,7 @@ namespace Tapawingo_backend.Controllers
             return Ok(response);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationPolicy")]
         [HttpPost("api/organisations/{organisationId}/users")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
