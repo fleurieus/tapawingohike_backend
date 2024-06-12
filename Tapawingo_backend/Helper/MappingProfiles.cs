@@ -16,7 +16,9 @@ namespace Tapawingo_backend.Helper
             CreateMap<TWRoute, RouteDto>();
             CreateMap<Team, TeamDto>();
             CreateMap<Edition, EditionDto>();
-            CreateMap<CreateRoutepartDto, Routepart>();
+            CreateMap<Routepart, RoutepartDto>();
+            CreateMap<Destination, DestinationDto>();
+            CreateMap<TWFile, TWFileDto>();
         }
     }
 }

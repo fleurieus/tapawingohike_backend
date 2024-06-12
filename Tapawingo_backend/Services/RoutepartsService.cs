@@ -2,6 +2,7 @@
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Models;
+using Tapawingo_backend.Repository;
 
 namespace Tapawingo_backend.Services
 {
@@ -18,26 +19,23 @@ namespace Tapawingo_backend.Services
             _routesRepository = routesRepository;
         }
 
-        public Routepart CreateRoutepart(CreateRoutepartDto routepart, int routeId) 
+        public RoutepartDto CreateRoutepart(CreateRoutepartDto createRoutepart, int routeId) 
         {
             if (!_routesRepository.RouteExists(routeId))
-            {
-                throw new InvalidOperationException("Route does not exist");
-            }
+                return null;
 
-            if (string.IsNullOrEmpty(routepart.Name))
+            var newRoutepart = new Routepart()
             {
-                throw new ArgumentException("Route name is required");
-            }
+                RouteId = routeId,
+                Name = createRoutepart.Name,
+                RouteType = createRoutepart.RouteType,
+                RoutepartZoom = createRoutepart.RoutepartZoom,
+                RoutepartFullscreen = createRoutepart.RoutepartFullscreen,
+                Order = 1,
+                Final = createRoutepart.Final,
+            };
 
-            if (string.IsNullOrEmpty(routepart.RouteType))
-            {
-                throw new ArgumentException("Routetype is required");
-            }
-
-            var routeEntity = _mapper.Map<Routepart>(routepart);
-            routeEntity.RouteId = routeId;
-            return _routepartsRepository.CreateRoutePart(routeEntity);
+            return _mapper.Map<RoutepartDto>(_routepartsRepository.CreateRoutePart(newRoutepart));
         }
     }
 }

@@ -15,21 +15,14 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpPost("routes/{route_id}/route_parts")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RoutepartDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult CreateRoutepart([FromBody] CreateRoutepartDto model, int route_id)
         {
-            try
-            {
-                var response = _routepartsService.CreateRoutepart(model, route_id);
-                return Ok(response);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return NotFound(ex.Message);
-            }
+            var routepart = _routepartsService.CreateRoutepart(model, route_id);
+            return routepart != null ?
+                Ok(routepart) :
+                NotFound(new { message = "Routepart not found" });
         }
     }
 }
