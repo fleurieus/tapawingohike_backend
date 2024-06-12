@@ -58,5 +58,17 @@ namespace Tapawingo_backend.Controllers
             }
             return BadRequest("Cannot process this request.");
         }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateOrganisation(int id, [FromBody]UpdateOrganisationDto model) 
+        {
+            var updatedOrganisation = await _organisationsService.UpdateOrganisation(id, model);
+            return updatedOrganisation == null ?
+                NotFound(new
+                {
+                    message = "This organisation could not be found."
+                }) :
+                Ok(updatedOrganisation);
+        }
     }
 }

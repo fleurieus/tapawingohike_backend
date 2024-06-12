@@ -17,6 +17,7 @@ namespace Tapawingo_backend.Helper
             CreateMap<TWRoute, RouteDto>();
             CreateMap<Team, TeamDto>();
             CreateMap<Edition, EditionDto>();
+            CreateMap<UpdateOrganisationDto, OrganisationDto>();
         }
     }
 }
