@@ -64,9 +64,9 @@ namespace Tapawingo_backend.Controllers
         {
             var updatedOrganisation = await _organisationsService.UpdateOrganisation(id, model);
             return updatedOrganisation == null ?
-                BadRequest(new
+                NotFound(new
                 {
-                    message = "A update-model must be provided."
+                    message = "This organisation could not be found."
                 }) :
                 Ok(updatedOrganisation);
         }

@@ -34,7 +34,7 @@ namespace Tapawingo_backend.Services
 
         public async Task<OrganisationDto> UpdateOrganisation(int id, UpdateOrganisationDto newOrganisation)
         {
-            if(newOrganisation == null)
+            if(await _organisationsRepository.GetOrganisationById(id) == null)
             {
                 return null;
             }
