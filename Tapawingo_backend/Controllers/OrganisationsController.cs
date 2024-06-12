@@ -59,10 +59,10 @@ namespace Tapawingo_backend.Controllers
             return BadRequest("Cannot process this request.");
         }
 
-        [HttpPut("{id}")]
-        public IActionResult UpdateOrganisation(int id, [FromBody]UpdateOrganisationDto model) 
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateOrganisation(int id, [FromBody]UpdateOrganisationDto model) 
         {
-            var updatedOrganisation = _organisationsService.UpdateOrganisation(id, model);
+            var updatedOrganisation = await _organisationsService.UpdateOrganisation(id, model);
             return updatedOrganisation == null ?
                 BadRequest(new
                 {

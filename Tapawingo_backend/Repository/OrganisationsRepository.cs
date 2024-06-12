@@ -1,4 +1,5 @@
-﻿using Tapawingo_backend.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Tapawingo_backend.Data;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Models;
@@ -34,9 +35,9 @@ namespace Tapawingo_backend.Repository
             return _context.Organisations.ToList();
         }
 
-        public Organisation GetOrganisationById(int id)
+        public async Task<Organisation> GetOrganisationById(int id)
         {
-            var foundOrganisation = _context.Organisations.FirstOrDefault(organisation => organisation.Id == id);
+            var foundOrganisation = await _context.Organisations.FirstOrDefaultAsync(organisation => organisation.Id == id);
             if(foundOrganisation == null)
             {
                 return null;
@@ -49,9 +50,9 @@ namespace Tapawingo_backend.Repository
             return _context.Organisations.Any(organisation => organisation.Id == id);
         }
 
-        public Organisation UpdateOrganisation(int id, UpdateOrganisationDto newOrganisation)
+        public async Task<Organisation> UpdateOrganisation(int id, UpdateOrganisationDto newOrganisation)
         {
-            var oldOrganisation = GetOrganisationById(id);
+            var oldOrganisation = await GetOrganisationById(id);
             oldOrganisation.Name = newOrganisation.Name == null ? oldOrganisation.Name : newOrganisation.Name;
             oldOrganisation.ContactEmail = newOrganisation.ContactEmail == null ? oldOrganisation.ContactEmail : newOrganisation.ContactEmail;
             oldOrganisation.ContactPerson = newOrganisation.ContactPerson == null ? oldOrganisation.ContactPerson : newOrganisation.ContactPerson;

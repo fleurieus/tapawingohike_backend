@@ -25,11 +25,11 @@ namespace Tapawingo_backend.Tests.PUT_Organisations
 
         //Good Weather
         [Fact]
-        public void Update_A_Organisation_By_One_Element()
+        public async void Update_A_Organisation_By_One_Element()
         {
 
             //before update
-            var oldOrganisation = _organisationsRepository.GetOrganisationById(3);
+            var oldOrganisation = await _organisationsRepository.GetOrganisationById(3);
 
             Assert.NotNull(oldOrganisation);
             Assert.Equal("TestForUpdate", oldOrganisation.Name);
@@ -40,10 +40,10 @@ namespace Tapawingo_backend.Tests.PUT_Organisations
                 Name = "YetAnotherName"
             };
 
-            _organisationsRepository.UpdateOrganisation(3, newOrganisationModel);
+            await _organisationsRepository.UpdateOrganisation(3, newOrganisationModel);
 
             //after update
-            var newOrganisation = _organisationsRepository.GetOrganisationById(3);
+            var newOrganisation = await _organisationsRepository.GetOrganisationById(3);
             Assert.NotNull(newOrganisation);
             Assert.Equal("YetAnotherName", newOrganisation.Name);
             Assert.Equal(oldOrganisation.ContactEmail, newOrganisation.ContactEmail);

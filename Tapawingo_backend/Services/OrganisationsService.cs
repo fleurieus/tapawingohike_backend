@@ -27,18 +27,18 @@ namespace Tapawingo_backend.Services
             return _mapper.Map<OrganisationDto>(_organisationsRepository.CreateOrganisation(organisationName));
         }
 
-        public OrganisationDto GetOrganisationById(int id)
+        public async Task<OrganisationDto> GetOrganisationById(int id)
         {
-            return _mapper.Map<OrganisationDto>(_organisationsRepository.GetOrganisationById(id));
+            return _mapper.Map<OrganisationDto>(await _organisationsRepository.GetOrganisationById(id));
         }
 
-        public OrganisationDto UpdateOrganisation(int id, UpdateOrganisationDto newOrganisation)
+        public async Task<OrganisationDto> UpdateOrganisation(int id, UpdateOrganisationDto newOrganisation)
         {
             if(newOrganisation == null)
             {
                 return null;
             }
-            return _mapper.Map<OrganisationDto>(_organisationsRepository.UpdateOrganisation(id, newOrganisation));
+            return _mapper.Map<OrganisationDto>(await _organisationsRepository.UpdateOrganisation(id, newOrganisation));
         }
     }
 }
