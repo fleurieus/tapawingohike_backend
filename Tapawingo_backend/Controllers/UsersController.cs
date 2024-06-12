@@ -30,10 +30,13 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpPost("api/organisations/{organisationId}/users")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserDto))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateUserOnOrganisation(int organisationId, [FromBody] CreateUserDto model)
         {
-            var response = await _usersService.CreateUserOnOrganisation(organisationId, model);
-            return Ok(response);
+            var user = await _usersService.CreateUserOnOrganisation(organisationId, model);
+            return new ObjectResult(user) { StatusCode = StatusCodes.Status201Created };
         }
 
         [HttpPatch("api/organisations/{organisationId}/users/{userId}")]

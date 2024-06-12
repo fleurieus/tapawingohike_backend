@@ -29,7 +29,7 @@ namespace Tapawingo_backend.Services
                 });
             
             var users = _mapper.Map<List<UserDto>>(_userRepository.GetUsersOnOrganisation(organisationId));
-            return new ObjectResult(users);
+            return new OkObjectResult(users);
         }
 
         public async Task<UserDto> GetUserOnOrganisationAsync(int organisationId, string userId)

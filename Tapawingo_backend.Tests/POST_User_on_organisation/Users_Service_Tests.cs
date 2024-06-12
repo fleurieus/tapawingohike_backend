@@ -65,9 +65,6 @@ namespace Tapawingo_backend.Tests.POST_User_on_organisation
             var user = _usersRepository.CreateUserOnOrganisation(1, createUserDto);
 
             Assert.NotNull(user);
-
-            //var organisationUsers = _usersRepository.GetUsersOnOrganisation(1);
-            //Assert.Equal(3, organisationUsers.Count());
         }
         //
 
