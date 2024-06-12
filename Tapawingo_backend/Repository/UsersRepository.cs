@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Data;
 using System.Security.Claims;
@@ -27,12 +28,15 @@ namespace Tapawingo_backend.Repository
             return _context.UserOrganisations.Where(uo => uo.OrganisationId == organisationId).Select(user => user.User).OrderBy(u => u.FirstName).ToList();
         }
 
-        public User GetUserOnOrganisation(int organisationId, string userId)
+        public async Task<User> GetUserOnOrganisationAsync(int organisationId, string userId)
         {
-            return _context.UserOrganisations.Where(uo => uo.OrganisationId == organisationId && uo.UserId == userId).Select(user => user.User).FirstOrDefault();
+            return await _context.UserOrganisations
+                                 .Where(uo => uo.OrganisationId == organisationId && uo.UserId == userId)
+                                 .Select(user => user.User)
+                                 .FirstOrDefaultAsync();
         }
 
-        public User GetUserByEmailAsync(string email)
+        public User GetUserByEmail(string email)
         {
             return _context.Users.FirstOrDefault(u => u.Email == email);
         }
@@ -105,12 +109,12 @@ namespace Tapawingo_backend.Repository
             return existingUser;
         }
 
-        public bool DeleteUserOnOrganisation(int organisationId, string userGuid)
+        public async Task<bool> DeleteUserOnOrganisationAsync(int organisationId, string userGuid)
         {
             try
             {
-                _context.Users.Remove(GetUserOnOrganisation(organisationId, userGuid));
-                _context.SaveChanges();
+                _context.Users.Remove(await GetUserOnOrganisationAsync(organisationId, userGuid));
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
@@ -118,6 +122,5 @@ namespace Tapawingo_backend.Repository
                 return false;
             }
         }
-
     }
 }

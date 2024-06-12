@@ -35,13 +35,13 @@ namespace Tapawingo_backend.Tests.DELETE_User_on_organisation
 
         //Good Weather
         [Fact]
-        public void Get_User_On_Organisation()
+        public async Task Delete_User_On_Organisation()
         {
             var users = _usersRepository.GetUsersOnOrganisation(1);
 
             var firstUser = users.First();
 
-            var user = _usersRepository.DeleteUserOnOrganisation(1, firstUser.Id);
+            var user = await _usersRepository.DeleteUserOnOrganisationAsync(1, firstUser.Id);
 
             var usersAfterDeletion = _usersRepository.GetUsersOnOrganisation(1);
 

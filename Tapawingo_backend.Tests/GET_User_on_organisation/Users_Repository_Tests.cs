@@ -35,13 +35,13 @@ namespace Tapawingo_backend.Tests.GET_User_on_organisation
 
         //Good Weather
         [Fact]
-        public void Get_User_On_Organisation()
+        public async Task Get_User_On_Organisation()
         {
             var users = _usersRepository.GetUsersOnOrganisation(1);
 
             var firstUser = users.First();
 
-            var user = _usersRepository.GetUserOnOrganisation(1, firstUser.Id);
+            var user = await _usersRepository.GetUserOnOrganisationAsync(1, firstUser.Id);
 
             Assert.NotNull(user);
             Assert.Equal("test1@gmail.com", user.Email);

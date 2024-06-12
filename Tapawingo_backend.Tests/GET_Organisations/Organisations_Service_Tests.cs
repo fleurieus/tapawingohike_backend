@@ -35,14 +35,14 @@ namespace Tapawingo_backend.Tests.GET_Organisations
         [Fact]
         public void Get_All_Existing_Organisations()
         {
-            var organisation = _organisationsService.GetOrganisations();
+            var organisations = _organisationsService.GetOrganisations();
 
-            Assert.NotNull(organisation);
-            Assert.Equal(2, organisation.Count());
-            Assert.Equal(1, organisation[0].Id);
-            Assert.Equal(2, organisation[1].Id);
-            Assert.Equal("TestOrganisation1", organisation[0].Name);
-            Assert.Equal("TestOrganisation2", organisation[1].Name);
+            Assert.NotNull(organisations);
+            Assert.Equal(2, organisations.Count());
+            Assert.Equal(1, organisations[0].Id);
+            Assert.Equal(2, organisations[1].Id);
+            Assert.Equal("TestOrganisation1", organisations[0].Name);
+            Assert.Equal("TestOrganisation2", organisations[1].Name);
         }
         //
 

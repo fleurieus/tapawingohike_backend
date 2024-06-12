@@ -7,5 +7,6 @@ namespace Tapawingo_backend.Interface
         Edition GetEditionById(int eventId, int editionId);
         List<Edition> GetAllEditions(int editionId);
         Edition CreateEdition(Edition newEdition);
+        bool EditionExists(int editionId);
     }
 }

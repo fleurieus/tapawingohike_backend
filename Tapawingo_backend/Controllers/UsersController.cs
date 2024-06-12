@@ -23,17 +23,21 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpGet("api/organisations/{organisationId}/user/{userId}")]
-        public IActionResult GetUserOnOrganisation(int organisationId, string userId)
+        public async Task<IActionResult> GetUserOnOrganisation(int organisationId, string userId)
         {
-            return _usersService.GetUserOnOrganisation(organisationId, userId);
+            var response =  await _usersService.GetUserOnOrganisationAsync(organisationId, userId);
+            return Ok(response);
         }
 
         [Authorize(Policy = "SuperAdminOrOrganisationPolicy")]
         [HttpPost("api/organisations/{organisationId}/users")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserDto))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateUserOnOrganisation(int organisationId, [FromBody] CreateUserDto model)
         {
-            var response = await _usersService.CreateUserOnOrganisation(organisationId, model);
-            return Ok(response);
+            var user = await _usersService.CreateUserOnOrganisation(organisationId, model);
+            return new ObjectResult(user) { StatusCode = StatusCodes.Status201Created };
         }
 
         [HttpPatch("api/organisations/{organisationId}/users/{userId}")]
@@ -44,9 +48,9 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpDelete("api/organisations/{organisationId}/users/{userId}")]
-        public IActionResult DeleteUserOnOrganisation(int organisationId, string userId)
+        public async Task<IActionResult> DeleteUserOnOrganisationAsync(int organisationId, string userId)
         {
-            return _usersService.DeleteUserOnOrganisation(organisationId, userId);
+            return await _usersService.DeleteUserOnOrganisationAsync(organisationId, userId);
         }
     }
 }
