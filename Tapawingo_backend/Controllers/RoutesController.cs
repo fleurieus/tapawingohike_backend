@@ -35,7 +35,7 @@ namespace Tapawingo_backend.Controllers
             var route = _routesService.GetRoutesById(id);
             return route != null ?
                 Ok(route) :
-                NotFound("Organisation with this id was not found.");
+                NotFound(new { message = "Route not found" });
         }
     }
 }

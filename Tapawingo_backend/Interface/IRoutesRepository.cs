@@ -6,5 +6,6 @@ namespace Tapawingo_backend.Interface
     {
         List<TWRoute> GetRoutes();
         TWRoute GetRouteById(int id);
+        bool RouteExists(int routeId);
     }
 }
