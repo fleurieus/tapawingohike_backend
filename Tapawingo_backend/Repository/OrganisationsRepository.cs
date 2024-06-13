@@ -50,7 +50,7 @@ namespace Tapawingo_backend.Repository
             return _context.Organisations.Any(organisation => organisation.Id == id);
         }
 
-        public async Task<Organisation> UpdateOrganisation(int id, UpdateOrganisationDto newOrganisation)
+        public async Task<Organisation> UpdateOrganisationAsync(int id, UpdateOrganisationDto newOrganisation)
         {
             var oldOrganisation = await GetOrganisationById(id);
             oldOrganisation.Name = newOrganisation.Name == null ? oldOrganisation.Name : newOrganisation.Name;
@@ -60,6 +60,15 @@ namespace Tapawingo_backend.Repository
             _context.Organisations.Update(oldOrganisation);
             _context.SaveChanges();
             return oldOrganisation;
+        }
+
+        public async Task<bool> DeleteOrganisationAsync(int id)
+        {
+            var organisation = await GetOrganisationById(id);
+            if(organisation == null) {  return false; }
+            _context.Organisations.Remove(organisation);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
     }

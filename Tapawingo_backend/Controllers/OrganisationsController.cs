@@ -70,5 +70,11 @@ namespace Tapawingo_backend.Controllers
                 }) :
                 Ok(updatedOrganisation);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOrganisation(int id)
+        {
+            return await _organisationsService.DeleteOrganisationAsync(id);
+        }
     }
 }

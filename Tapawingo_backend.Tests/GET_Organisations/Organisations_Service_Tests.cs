@@ -38,7 +38,7 @@ namespace Tapawingo_backend.Tests.GET_Organisations
             var organisation = _organisationsService.GetOrganisations();
 
             Assert.NotNull(organisation);
-            Assert.Equal(3, organisation.Count());
+            Assert.Equal(5, organisation.Count());
             Assert.Equal(1, organisation[0].Id);
             Assert.Equal(2, organisation[1].Id);
             Assert.Equal("TestOrganisation1", organisation[0].Name);

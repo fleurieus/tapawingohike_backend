@@ -40,7 +40,7 @@ namespace Tapawingo_backend.Tests.PUT_Organisations
                 Name = "YetAnotherName"
             };
 
-            await _organisationsRepository.UpdateOrganisation(3, newOrganisationModel);
+            await _organisationsRepository.UpdateOrganisationAsync(3, newOrganisationModel);
 
             //after update
             var newOrganisation = await _organisationsRepository.GetOrganisationById(3);

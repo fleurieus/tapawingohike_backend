@@ -23,15 +23,15 @@ namespace Tapawingo_backend.Tests.TEST_Events.POST_Event
         {
             var newEvent = new Event
             {
-                Name = "TestEvent3",
+                Name = "TestEvent4",
                 OrganisationId = 1
             };
             _eventsRepository.CreateEvent(newEvent);
             
-            var twEvent = _eventsRepository.GetEventByIdAndOrganisationId(3, 1);
+            var twEvent = _eventsRepository.GetEventByIdAndOrganisationId(4, 1);
             Assert.NotNull(twEvent);
-            Assert.Equal(3, twEvent.Id);
-            Assert.Equal("TestEvent3", twEvent.Name);
+            Assert.Equal(4, twEvent.Id);
+            Assert.Equal("TestEvent4", twEvent.Name);
         }
         //
         

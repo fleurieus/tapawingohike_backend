@@ -58,16 +58,22 @@ namespace Tapawingo_backend.Tests
             var organisation1 = new Organisation { Name = "TestOrganisation1", ContactPerson = "testPerson", ContactEmail = "testEmail" };
             var organisation2 = new Organisation { Name = "TestOrganisation2", ContactPerson = "testPerson", ContactEmail = "testEmail" };
             var organisation3 = new Organisation { Name = "TestForUpdate", ContactPerson = "testPerson", ContactEmail = "testEmail" };
+            var organisation4 = new Organisation { Name = "TestForDelete1", ContactPerson = "testPerson", ContactEmail = "testEmail" };
+            var organisation5 = new Organisation { Name = "TestForDelete2", ContactPerson = "testPerson", ContactEmail = "testEmail" };
             context.Organisations.Add(organisation1);
             context.Organisations.Add(organisation2);
             context.Organisations.Add(organisation3);
+            context.Organisations.Add(organisation4);
+            context.Organisations.Add(organisation5);
             context.SaveChanges();
 
             // Events
             var event1 = new Event { Name = "TestEvent1", OrganisationId = organisation1.Id };
             var event2 = new Event { Name = "TestEvent2", OrganisationId = organisation1.Id };
+            var event3 = new Event { Name = "TestForDelete", OrganisationId = organisation5.Id };
             context.Events.Add(event1);
             context.Events.Add(event2);
+            context.Events.Add(event3);
             context.SaveChanges();
 
             // Editions
