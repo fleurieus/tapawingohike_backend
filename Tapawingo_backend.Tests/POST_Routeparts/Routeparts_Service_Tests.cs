@@ -54,7 +54,7 @@ namespace Tapawingo_backend.Tests.POST_Routeparts
                 Final = final,
             };
 
-            var result = _routepartsService.CreateRoutepart(createRoutepartDto, routeId);
+            var result = _routepartsService.CreateRoutepartAsync(createRoutepartDto, routeId);
 
             Assert.NotNull(result);
 
@@ -90,7 +90,7 @@ namespace Tapawingo_backend.Tests.POST_Routeparts
                 Final = final,
             };
 
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await _routepartsService.CreateRoutepart(createRoutepartDto, 0));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await _routepartsService.CreateRoutepartAsync(createRoutepartDto, 0));
         }
         //
     }

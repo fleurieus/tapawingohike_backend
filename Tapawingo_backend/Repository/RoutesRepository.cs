@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Tapawingo_backend.Data;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
@@ -22,7 +23,7 @@ namespace Tapawingo_backend.Repository
 
         public TWRoute GetRouteById(int id)
         {
-            var foundRoute = _context.Routes.FirstOrDefault(route => route.Id == id);
+            var foundRoute = _context.Routes.Where(route => route.Id == id).Include(r => r.Routeparts).FirstOrDefault();
             if (foundRoute == null)
             {
                 return null;

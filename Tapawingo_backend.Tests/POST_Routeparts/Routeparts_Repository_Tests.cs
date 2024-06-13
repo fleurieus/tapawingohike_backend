@@ -40,7 +40,7 @@ namespace Tapawingo_backend.Tests.POST_Routeparts
                 RouteId = routeId
             };
 
-            var result = _routepartsRepository.CreateRoutePart(routepart);
+            var result = _routepartsRepository.CreateRoutePartAsync(routepart);
 
             Assert.NotNull(result);
 

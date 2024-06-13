@@ -12,7 +12,7 @@ namespace Tapawingo_backend.Dtos
         public bool RoutepartFullscreen { get; set; }
         public bool Final {  get; set; }
         [FromForm(Name = "destinations")]
-        public string DestinationsJson { get; set; }
+        public string? DestinationsJson { get; set; }
         public List<CreateDestinationDto>? Destinations
         {
             get => string.IsNullOrEmpty(DestinationsJson) ? null : JsonConvert.DeserializeObject<List<CreateDestinationDto>>(DestinationsJson);

@@ -14,7 +14,7 @@ namespace Tapawingo_backend.Repository
             _context = context;
         }
 
-        public async Task<Routepart> CreateRoutePart(Routepart newRoutepart)
+        public async Task<Routepart> CreateRoutePartAsync(Routepart newRoutepart)
         {
             _context.Routeparts.Add(newRoutepart);
             await _context.SaveChangesAsync();

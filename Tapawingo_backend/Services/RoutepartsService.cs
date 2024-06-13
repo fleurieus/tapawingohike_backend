@@ -23,9 +23,11 @@ namespace Tapawingo_backend.Services
             _fileRepository = fileRepository;
         }
 
-        public async Task<RoutepartDto> CreateRoutepart(CreateRoutepartDto createRoutepart, int routeId) 
+        public async Task<RoutepartDto> CreateRoutepartAsync(CreateRoutepartDto createRoutepart, int routeId) 
         {
-            if (!_routesRepository.RouteExists(routeId))
+            TWRoute route = _routesRepository.GetRouteById(routeId);
+            
+            if (route == null)
                 return null;
 
             var newRoutepart = new Routepart()
@@ -35,11 +37,11 @@ namespace Tapawingo_backend.Services
                 RouteType = createRoutepart.RouteType,
                 RoutepartZoom = createRoutepart.RoutepartZoom,
                 RoutepartFullscreen = createRoutepart.RoutepartFullscreen,
-                Order = 1, // TODO This needs to be set automaticly
+                Order = route.Routeparts.Count + 1,
                 Final = createRoutepart.Final,
             };
 
-            var createdRoutepart = await _routepartsRepository.CreateRoutePart(newRoutepart);
+            var createdRoutepart = await _routepartsRepository.CreateRoutePartAsync(newRoutepart);
 
             // Add destinations if provided
             if (createRoutepart.Destinations != null && createRoutepart.Destinations.Any())
@@ -58,7 +60,7 @@ namespace Tapawingo_backend.Services
                         HideForUser = destination.HideForUser
                     };
 
-                    var savedDestination = await _destinationRepository.CreateDestinationAsync(newDestination);
+                    await _destinationRepository.CreateDestinationAsync(newDestination);
                 }
             }
 
@@ -75,8 +77,7 @@ namespace Tapawingo_backend.Services
                         {
                             RoutepartId = createdRoutepart.Id,
                             File = file.FileName,
-                            Category = "routepart", // TODO: This needs to be changed
-                            ContentType = file.ContentType,
+                            ContentType = file.ContentType, // This is also the category of the file
                             Data = memoryStream.ToArray(),
                             UploadDate = DateTime.UtcNow
                         };
