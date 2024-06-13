@@ -23,6 +23,12 @@ namespace Tapawingo_backend.Services
             _fileRepository = fileRepository;
         }
 
+        public async Task<List<RoutepartDto>> GetRoutepartsAsync(int route_id)
+        {
+            if (!_routesRepository.RouteExists(route_id)) return null;
+            return _mapper.Map<List<RoutepartDto>>(await _routepartsRepository.GetRoutepartsAsync(route_id));
+        }
+
         public async Task<RoutepartDto> CreateRoutepartAsync(CreateRoutepartDto createRoutepart, int routeId) 
         {
             TWRoute route = _routesRepository.GetRouteById(routeId);

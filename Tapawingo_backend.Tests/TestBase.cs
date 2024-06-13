@@ -86,10 +86,19 @@ namespace Tapawingo_backend.Tests
             // Routes
             var route1 = new TWRoute { Name = "TestRoute1", EditionId = edition1.Id };
             var route2 = new TWRoute { Name = "TestRoute2", EditionId = edition2.Id };
+            var route3 = new TWRoute { Name = "TestRoute3", EditionId = edition2.Id };
             context.Routes.Add(route1);
             context.Routes.Add(route2);
+            context.Routes.Add(route3);
             context.SaveChanges();
-            //////routeparts
+            
+            //routeparts
+            var routepart1 = new Routepart { Name = "Routepart1", Final = false, Order = 1, RoutepartFullscreen = false, RoutepartZoom = false, RouteType = "normal", RouteId = route3.Id };
+            var routepart2 = new Routepart { Name = "Routepart2", Final = false, Order = 1, RoutepartFullscreen = false, RoutepartZoom = false, RouteType = "normal", RouteId = route3.Id };
+            context.Routeparts.Add(routepart1);
+            context.Routeparts.Add(routepart2);
+            context.SaveChanges();
+
             //////routes
             //////teamrouteparts
             //////teams

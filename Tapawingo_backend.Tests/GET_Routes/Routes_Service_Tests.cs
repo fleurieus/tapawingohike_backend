@@ -38,7 +38,7 @@ namespace Tapawingo_backend.Tests.GET_Routes
             var routes = _routesService.GetRoutes();
 
             Assert.NotNull(routes);
-            Assert.Equal(2, routes.Count());
+            Assert.Equal(3, routes.Count());
             Assert.Equal(1, routes[0].Id);
             Assert.Equal(2, routes[1].Id);
             Assert.Equal("TestRoute1", routes[0].Name);

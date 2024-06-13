@@ -20,5 +20,10 @@ namespace Tapawingo_backend.Repository
             await _context.SaveChangesAsync();
             return newRoutepart;
         }
+
+        public async Task<List<Routepart>> GetRoutepartsAsync(int route_id)
+        {
+            return await _context.Routeparts.Where(rp => rp.RouteId == route_id).ToListAsync();
+        }
     }
 }
