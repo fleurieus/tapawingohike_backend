@@ -25,7 +25,7 @@ namespace Tapawingo_backend.Controllers
                 NotFound(new { message = "Route not found" });
         }
 
-        [HttpGet("routes/{routeId}/route_parts")]
+        [HttpGet("routes/{routeId}/routeparts")]
         public async Task<IActionResult> GetRouteParts(int routeId)
         {
             var route_parts = await _routepartsService.GetRoutepartsAsync(routeId);
