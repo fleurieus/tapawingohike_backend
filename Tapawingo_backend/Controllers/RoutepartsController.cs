@@ -24,5 +24,14 @@ namespace Tapawingo_backend.Controllers
                 new ObjectResult(routepart) { StatusCode = StatusCodes.Status201Created } :
                 NotFound(new { message = "Route not found" });
         }
+
+        [HttpGet("routes/{routeId}/routeparts")]
+        public async Task<IActionResult> GetRouteParts(int routeId)
+        {
+            var route_parts = await _routepartsService.GetRoutepartsAsync(routeId);
+            return route_parts == null ?
+                new NotFoundObjectResult(new { message = "Route is not found" }) :
+                new OkObjectResult(route_parts);
+        }
     }
 }

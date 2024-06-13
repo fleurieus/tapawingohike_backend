@@ -38,7 +38,18 @@ namespace Tapawingo_backend.Services
             {
                 return null;
             }
-            return _mapper.Map<OrganisationDto>(await _organisationsRepository.UpdateOrganisation(id, newOrganisation));
+            return _mapper.Map<OrganisationDto>(await _organisationsRepository.UpdateOrganisationAsync(id, newOrganisation));
+        }
+
+        public async Task<IActionResult> DeleteOrganisationAsync(int id)
+        {
+            var targetOrganisation = await _organisationsRepository.GetOrganisationById(id);
+            if (targetOrganisation == null)
+                return new NotFoundObjectResult(new { message = "Organisation not found" });
+            var deleteOperationSuccesfull = await _organisationsRepository.DeleteOrganisationAsync(id);
+            return deleteOperationSuccesfull ?
+                new NoContentResult() :
+                new BadRequestObjectResult(new { message = "This request could not be handled" });
         }
     }
 }

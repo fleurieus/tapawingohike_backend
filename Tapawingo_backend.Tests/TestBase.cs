@@ -58,16 +58,22 @@ namespace Tapawingo_backend.Tests
             var organisation1 = new Organisation { Name = "TestOrganisation1", ContactPerson = "testPerson", ContactEmail = "testEmail" };
             var organisation2 = new Organisation { Name = "TestOrganisation2", ContactPerson = "testPerson", ContactEmail = "testEmail" };
             var organisation3 = new Organisation { Name = "TestForUpdate", ContactPerson = "testPerson", ContactEmail = "testEmail" };
+            var organisation4 = new Organisation { Name = "TestForDelete1", ContactPerson = "testPerson", ContactEmail = "testEmail" };
+            var organisation5 = new Organisation { Name = "TestForDelete2", ContactPerson = "testPerson", ContactEmail = "testEmail" };
             context.Organisations.Add(organisation1);
             context.Organisations.Add(organisation2);
             context.Organisations.Add(organisation3);
+            context.Organisations.Add(organisation4);
+            context.Organisations.Add(organisation5);
             context.SaveChanges();
 
             // Events
             var event1 = new Event { Name = "TestEvent1", OrganisationId = organisation1.Id };
             var event2 = new Event { Name = "TestEvent2", OrganisationId = organisation1.Id };
+            var event3 = new Event { Name = "TestForDelete", OrganisationId = organisation5.Id };
             context.Events.Add(event1);
             context.Events.Add(event2);
+            context.Events.Add(event3);
             context.SaveChanges();
 
             // Editions
@@ -80,10 +86,19 @@ namespace Tapawingo_backend.Tests
             // Routes
             var route1 = new TWRoute { Name = "TestRoute1", EditionId = edition1.Id };
             var route2 = new TWRoute { Name = "TestRoute2", EditionId = edition2.Id };
+            var route3 = new TWRoute { Name = "TestRoute3", EditionId = edition2.Id };
             context.Routes.Add(route1);
             context.Routes.Add(route2);
+            context.Routes.Add(route3);
             context.SaveChanges();
-            //////routeparts
+            
+            //routeparts
+            var routepart1 = new Routepart { Name = "Routepart1", Final = false, Order = 1, RoutepartFullscreen = false, RoutepartZoom = false, RouteType = "normal", RouteId = route3.Id };
+            var routepart2 = new Routepart { Name = "Routepart2", Final = false, Order = 1, RoutepartFullscreen = false, RoutepartZoom = false, RouteType = "normal", RouteId = route3.Id };
+            context.Routeparts.Add(routepart1);
+            context.Routeparts.Add(routepart2);
+            context.SaveChanges();
+
             //////routes
             //////teamrouteparts
             //////teams
