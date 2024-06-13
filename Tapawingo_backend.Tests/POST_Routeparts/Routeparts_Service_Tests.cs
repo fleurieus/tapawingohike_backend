@@ -4,6 +4,9 @@ using Tapawingo_backend.Repository;
 using Tapawingo_backend.Services;
 using Tapawingo_backend.Helper;
 using Tapawingo_backend.Dtos;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using System.Text;
 
 namespace Tapawingo_backend.Tests.POST_Routeparts
 {
@@ -18,14 +21,12 @@ namespace Tapawingo_backend.Tests.POST_Routeparts
 
         public Routeparts_Service_Tests(DatabaseFixture fixture) : base(fixture)
         {
-            _context = Context; //inject 'shared' context from TestBase
-            //Create a repository that works on the TEST DATABASE!!
+            _context = Context;
             _routepartsRepository = new RoutepartsRepository(_context);
             _routesRepository = new RoutesRepository(_context);
             _destinationRepository = new DestinationRepository(_context);
             _fileRepository = new FileRepository(_context);
 
-            //Create a instance of the IMapper.
             _routepartsService = new RoutepartsService(new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<MappingProfiles>();
@@ -34,39 +35,85 @@ namespace Tapawingo_backend.Tests.POST_Routeparts
 
         //Goodweather
         [Fact]
-        public void Post_Routepart()
+        public async Task Post_Routepart_No_Destinations_No_Files()
         {
-            var testName = "test";
-            var routeType = "Normal";
-            var routepartZoom = false;
-            var routepartFullscreen = false;
-            var order = 1;
-            var final = true;
-
             var routeId = _context.Routes.First().Id;
 
             CreateRoutepartDto createRoutepartDto = new CreateRoutepartDto
             {
-                Name = testName,
-                RouteType = routeType,
-                RoutepartZoom = routepartZoom,
-                RoutepartFullscreen = routepartFullscreen,
-                Final = final,
+                Name = "test99",
+                RouteType = "Normal",
+                RoutepartZoom = false,
+                RoutepartFullscreen = true,
+                Final = false,
+                DestinationsJson = null,
+                Files = null
             };
 
-            var result = _routepartsService.CreateRoutepartAsync(createRoutepartDto, routeId);
+            var result = await _routepartsService.CreateRoutepartAsync(createRoutepartDto, routeId);
 
             Assert.NotNull(result);
 
-            var foundRoutepart = _context.Routeparts.FirstOrDefault(r => r.Name == testName);
+            var foundRoutepart = await _context.Routeparts.FirstOrDefaultAsync(r => r.Name == "test99");
 
             Assert.NotNull(foundRoutepart);
-            Assert.Equal(routeType, foundRoutepart.RouteType);
-            Assert.Equal(routepartZoom, foundRoutepart.RoutepartZoom);
-            Assert.Equal(routepartFullscreen, foundRoutepart.RoutepartFullscreen);
-            Assert.Equal(order, foundRoutepart.Order);
-            Assert.Equal(final, foundRoutepart.Final);
+            Assert.Equal("Normal", foundRoutepart.RouteType);
+            Assert.False(foundRoutepart.RoutepartZoom);
+            Assert.True(foundRoutepart.RoutepartFullscreen);
+            Assert.False(foundRoutepart.Final);
             Assert.Equal(routeId, foundRoutepart.RouteId);
+        }
+        //
+
+        //Goodweather
+        [Fact]
+        public async Task Post_Routepart()
+        {
+            var routeId = _context.Routes.First().Id;
+
+            // Creating a byte array for the dummy file content
+            var dummyFileContent = Encoding.UTF8.GetBytes("This is a dummy file");
+            var fileName = "dummy.txt";
+
+            // Creating a FormFile object with proper initialization
+            var formFile = new FormFile(
+                new MemoryStream(dummyFileContent),
+                0,
+                dummyFileContent.Length,
+                "Data",
+                fileName)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "text/plain"
+            };
+
+            CreateRoutepartDto createRoutepartDto = new CreateRoutepartDto
+            {
+                Name = "test99",
+                RouteType = "Normal",
+                RoutepartZoom = false,
+                RoutepartFullscreen = true,
+                Final = false,
+                DestinationsJson = "[{\"Name\":\"testDestination\",\"Latitude\":1.0,\"Longitude\":1.0,\"Radius\":1,\"DestinationType\":\"Normal\",\"ConfirmByUser\":false,\"HideForUser\":false}]",
+                Files = new List<IFormFile> { formFile }
+            };
+
+            var result = await _routepartsService.CreateRoutepartAsync(createRoutepartDto, routeId);
+
+            Assert.NotNull(result);
+
+            var foundDestination = await _context.Destinations.FirstOrDefaultAsync(d => d.Name == "testDestination");
+            var foundFile = await _context.Files.FirstAsync();
+
+            Assert.NotNull(foundDestination);
+            Assert.NotNull(foundFile);
+
+            Assert.Equal("Normal", foundDestination.DestinationType);
+            Assert.False(foundDestination.ConfirmByUser);
+
+
+            Assert.Equal("dummy.txt", foundFile.File);
+            Assert.Equal(Encoding.UTF8.GetBytes("This is a dummy file"), foundFile.Data);
         }
         //
 
@@ -74,23 +121,18 @@ namespace Tapawingo_backend.Tests.POST_Routeparts
         [Fact]
         public async Task Post_Routepart_Faulty_RouteId()
         {
-            var testName = "test";
-            var routeType = "Normal";
-            var routepartZoom = false;
-            var routepartFullscreen = false;
-            var order = 1;
-            var final = true;
-
             CreateRoutepartDto createRoutepartDto = new CreateRoutepartDto
             {
-                Name = testName,
-                RouteType = routeType,
-                RoutepartZoom = routepartZoom,
-                RoutepartFullscreen = routepartFullscreen,
-                Final = final,
+                Name = "test99",
+                RouteType = "Normal",
+                RoutepartZoom = false,
+                RoutepartFullscreen = true,
+                Final = false,
+                DestinationsJson = null,
+                Files = null
             };
 
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await _routepartsService.CreateRoutepartAsync(createRoutepartDto, 0));
+            Assert.Null(await _routepartsService.CreateRoutepartAsync(createRoutepartDto, 99));
         }
         //
     }

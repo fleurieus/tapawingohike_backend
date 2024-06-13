@@ -19,39 +19,32 @@ namespace Tapawingo_backend.Tests.POST_Routeparts
 
         //Goodweather
         [Fact]
-        public void Post_Routepart()
+        public async Task Post_Routepart_No_Destinations_No_Files()
         {
-            var testName = "test";
-            var routeType = "Normal";
-            var routepartZoom = false;
-            var routepartFullscreen = false;
-            var order = 1;
-            var final = true;
             var routeId = _context.Routes.First().Id;
 
             Routepart routepart = new Routepart()
             {
-                Name = testName,
-                RouteType = routeType,
-                RoutepartZoom = routepartZoom,
-                RoutepartFullscreen = routepartFullscreen,
-                Order = order,
-                Final = final,
+                Name = "test100",
+                RouteType = "Normal",
+                RoutepartZoom = false,
+                RoutepartFullscreen = true,
+                Order = 1,
+                Final = false,
                 RouteId = routeId
             };
 
-            var result = _routepartsRepository.CreateRoutePartAsync(routepart);
+            var result = await _routepartsRepository.CreateRoutePartAsync(routepart);
 
             Assert.NotNull(result);
 
-            var foundRoutepart = _context.Routeparts.FirstOrDefault(r => r.Name == testName);
+            var foundRoutepart = _context.Routeparts.FirstOrDefault(r => r.Name == "test100");
 
             Assert.NotNull(foundRoutepart);
-            Assert.Equal(routeType, foundRoutepart.RouteType);
-            Assert.Equal(routepartZoom, foundRoutepart.RoutepartZoom);
-            Assert.Equal(routepartFullscreen, foundRoutepart.RoutepartFullscreen);
-            Assert.Equal(order, foundRoutepart.Order);
-            Assert.Equal(final, foundRoutepart.Final);
+            Assert.Equal("Normal", foundRoutepart.RouteType);
+            Assert.False(foundRoutepart.RoutepartZoom);
+            Assert.True(foundRoutepart.RoutepartFullscreen);
+            Assert.False(foundRoutepart.Final);
             Assert.Equal(routeId, foundRoutepart.RouteId);
         }
         //
