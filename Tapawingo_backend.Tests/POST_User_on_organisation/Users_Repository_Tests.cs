@@ -19,7 +19,6 @@ namespace Tapawingo_backend.Tests.POST_User_on_organisation
         private readonly UsersRepository _usersRepository;
         private readonly DataContext _context;
         private readonly Mock<UserManager<User>> _userManagerMock;
-        private readonly Mock<RoleManager<IdentityRole>> _roleManagerMock;
 
         public Users_Repository_Tests(DatabaseFixture fixture) : base(fixture)
         {
@@ -28,10 +27,7 @@ namespace Tapawingo_backend.Tests.POST_User_on_organisation
             var userStoreMock = new Mock<IUserStore<User>>();
             _userManagerMock = new Mock<UserManager<User>>(userStoreMock.Object, null, null, null, null, null, null, null, null);
 
-            var roleStoreMock = new Mock<IRoleStore<IdentityRole>>();
-            _roleManagerMock = new Mock<RoleManager<IdentityRole>>(roleStoreMock.Object, null, null, null, null);
-
-            _usersRepository = new UsersRepository(_context, _userManagerMock.Object, _roleManagerMock.Object);
+            _usersRepository = new UsersRepository(_context, _userManagerMock.Object);
         }
 
         //Good Weather

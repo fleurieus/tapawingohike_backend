@@ -3,6 +3,7 @@ using Tapawingo_backend.Models;
 using Tapawingo_backend.Services;
 using System.Linq;
 using Tapawingo_backend.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Tapawingo_backend.Controllers
 {
@@ -37,7 +38,7 @@ namespace Tapawingo_backend.Controllers
                 Ok(twEvent) : 
                 NotFound("Event not found.");
         }
-        
+
         [HttpPost("api/organisations/{organisationId}/Events")]
         [ProducesResponseType(200, Type = typeof(Event))]
         [ProducesResponseType(400)]
