@@ -14,7 +14,7 @@ using Tapawingo_backend.Models;
 using Tapawingo_backend.Repository;
 using Tapawingo_backend.Services;
 
-namespace Tapawingo_backend.Tests.POST_User_on_organisation
+namespace Tapawingo_backend.Tests.TEST_Users_on_organisation.POST_User_on_organisation
 {
     [Collection("Database collection")]
     public class Users_Service_Tests : TestBase

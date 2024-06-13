@@ -13,7 +13,7 @@ using Tapawingo_backend.Models;
 using Tapawingo_backend.Repository;
 using Tapawingo_backend.Services;
 
-namespace Tapawingo_backend.Tests.GET_Users_on_organisation
+namespace Tapawingo_backend.Tests.TEST_Users_on_event.DELETE_User_on_event
 {
     [Collection("Database collection")]
     public class Users_Service_Tests : TestBase
@@ -49,13 +49,17 @@ namespace Tapawingo_backend.Tests.GET_Users_on_organisation
 
         //Good Weather
         [Fact]
-        public void Get_All_Users_On_Organisation()
+        public async Task Delete_User_On_Event()
         {
-            var users = _usersRepository.GetUsersOnOrganisation(1);
+            var users = _usersRepository.GetUsersOnEvent(1);
 
-            Assert.NotNull(users);
-            Assert.Equal(2, users.Count());
-            Assert.Equal("test1@gmail.com", users.First().Email);
+            var firstUser = users.First();
+
+            await _usersRepository.DeleteUserOnEventAsync(1, firstUser.Id);
+
+            var usersAfterDeletion = _usersRepository.GetUsersOnEvent(1);
+
+            Assert.Equal(1, usersAfterDeletion.Count());
         }
         //
 

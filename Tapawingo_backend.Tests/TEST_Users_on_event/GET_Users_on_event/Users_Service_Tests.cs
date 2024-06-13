@@ -13,7 +13,7 @@ using Tapawingo_backend.Models;
 using Tapawingo_backend.Repository;
 using Tapawingo_backend.Services;
 
-namespace Tapawingo_backend.Tests.GET_User_on_organisation
+namespace Tapawingo_backend.Tests.TEST_Users_on_event.GET_Users_on_event
 {
     [Collection("Database collection")]
     public class Users_Service_Tests : TestBase
@@ -49,16 +49,13 @@ namespace Tapawingo_backend.Tests.GET_User_on_organisation
 
         //Good Weather
         [Fact]
-        public async Task Get_User_On_Organisation()
+        public void Get_All_Users_On_Eventn()
         {
-            var users = _usersRepository.GetUsersOnOrganisation(1);
+            var users = _usersRepository.GetUsersOnEvent(1);
 
-            var firstUser = users.First();
-
-            var user = await _usersRepository.GetUserOnOrganisationAsync(1, firstUser.Id);
-
-            Assert.NotNull(user);
-            Assert.Equal("test1@gmail.com", user.Email);
+            Assert.NotNull(users);
+            Assert.Equal(2, users.Count());
+            Assert.Equal("test3@gmail.com", users.First().Email);
         }
         //
 

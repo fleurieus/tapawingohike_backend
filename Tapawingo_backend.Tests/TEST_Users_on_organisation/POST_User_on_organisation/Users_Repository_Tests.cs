@@ -6,20 +6,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tapawingo_backend.Data;
+using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Models;
 using Tapawingo_backend.Repository;
 
-namespace Tapawingo_backend.Tests.GET_Users_on_organisation
+namespace Tapawingo_backend.Tests.TEST_Users_on_organisation.POST_User_on_organisation
 {
     [Collection("Database collection")]
-    public class User_Repository_Tests : TestBase
+    public class Users_Repository_Tests : TestBase
     {
         private readonly UsersRepository _usersRepository;
         private readonly DataContext _context;
         private readonly Mock<UserManager<User>> _userManagerMock;
 
-        public User_Repository_Tests(DatabaseFixture fixture) : base(fixture)
+        public Users_Repository_Tests(DatabaseFixture fixture) : base(fixture)
         {
             _context = Context;
 
@@ -31,13 +32,20 @@ namespace Tapawingo_backend.Tests.GET_Users_on_organisation
 
         //Good Weather
         [Fact]
-        public void Get_All_Users_On_Organisation()
+        public void Create_User_On_Organisation()
         {
-            var users = _usersRepository.GetUsersOnOrganisation(1);
+            CreateUserDto createUserDto = new CreateUserDto
+            {
+                FirstName = "test",
+                LastName = "test",
+                Email = "test99@gmail.nl",
+                Password = "Password!1",
+                IsManager = false
+            };
 
-            Assert.NotNull(users);
-            Assert.Equal(2, users.Count());
-            Assert.Equal("test1@gmail.com", users.First().Email);
+            var user = _usersRepository.CreateUserOnOrganisation(1, createUserDto);
+
+            Assert.NotNull(user);
         }
         //
 

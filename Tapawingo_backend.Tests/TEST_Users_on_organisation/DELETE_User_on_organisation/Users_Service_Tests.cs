@@ -7,14 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tapawingo_backend.Data;
-using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Helper;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Models;
 using Tapawingo_backend.Repository;
 using Tapawingo_backend.Services;
 
-namespace Tapawingo_backend.Tests.PATCH_User_on_organisation
+namespace Tapawingo_backend.Tests.TEST_Users_on_organisation.DELETE_User_on_organisation
 {
     [Collection("Database collection")]
     public class Users_Service_Tests : TestBase
@@ -50,18 +49,17 @@ namespace Tapawingo_backend.Tests.PATCH_User_on_organisation
 
         //Good Weather
         [Fact]
-        public async Task Update_User_On_Organisation()
+        public async Task Delete_User_On_Organisation()
         {
             var users = _usersRepository.GetUsersOnOrganisation(1);
+
             var firstUser = users.First();
 
-            UpdateUserDto updateUserDto = new UpdateUserDto
-            {
-                LastName = "updateTest",
-            };
+            var user = await _usersRepository.DeleteUserOnOrganisationAsync(1, firstUser.Id);
 
-            var user = await _usersRepository.UpdateUserOnOrganisationAsync(firstUser, updateUserDto);
-            Assert.Equal("updateTest", user.LastName);
+            var usersAfterDeletion = _usersRepository.GetUsersOnOrganisation(1);
+
+            Assert.Equal(1, usersAfterDeletion.Count());
         }
         //
 
