@@ -32,9 +32,7 @@ namespace Tapawingo_backend.Repository
             if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
                 throw new BadHttpRequestException("Invalid credentials");
 
-            var getUserRole = await _userManager.GetRolesAsync(user);
-
-            JwtSecurityToken token = GenerateJwt(model.Email, user.Id, getUserRole.First());
+            JwtSecurityToken token = await GenerateJwt(user.Id);
 
             var refreshToken = GenerateRefreshToken();
 
@@ -65,9 +63,7 @@ namespace Tapawingo_backend.Repository
             if (user is null || user.RefreshToken != model.RefreshToken || user.RefreshTokenExpiry < DateTime.UtcNow)
                 throw new UnauthorizedAccessException();
 
-            var getUserRole = await _userManager.GetRolesAsync(user);
-
-            var token = GenerateJwt(principal.Identity.Name, user.Id, getUserRole.First());
+            var token = await GenerateJwt(user.Id);
 
             Console.WriteLine("Refresh succeeded");
 
@@ -113,14 +109,9 @@ namespace Tapawingo_backend.Repository
             return new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
         }
 
-        private JwtSecurityToken GenerateJwt(string username, string userId, string role)
+        private async Task<JwtSecurityToken> GenerateJwt(string userId)
         {
-            var authClaims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Role, role),
-                new Claim(JwtRegisteredClaimNames.Jti, userId)
-            };
+            var claims = await GetAllValidClaims(userId);
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 _configuration["JWT:Secret"] ?? throw new InvalidOperationException("Secret not configured")));
@@ -129,11 +120,31 @@ namespace Tapawingo_backend.Repository
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["JWT:ValidAudience"],
                 expires: DateTime.UtcNow.AddHours(2),
-                claims: authClaims,
+                claims: claims,
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
                 );
 
             return token;
+        }
+
+        private async Task<List<Claim>> GetAllValidClaims(string userId)
+        {
+            var _options = new IdentityOptions();
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            var claims = new List<Claim>
+            {
+                new Claim("id", user.Id),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
+
+            // Get claims that are assigned to user
+            var userClaims = await _userManager.GetClaimsAsync(user);
+            claims.AddRange(userClaims);
+
+            return claims;
         }
 
         private static string GenerateRefreshToken()

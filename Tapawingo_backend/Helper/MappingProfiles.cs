@@ -9,6 +9,7 @@ namespace Tapawingo_backend.Helper
         public MappingProfiles()
         {
             CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();
             CreateMap<Event, EventDto>();
             CreateMap<Organisation, OrganisationDto>();
             CreateMap<CreateEventDto, Event>();
@@ -16,6 +17,7 @@ namespace Tapawingo_backend.Helper
             CreateMap<TWRoute, RouteDto>();
             CreateMap<Team, TeamDto>();
             CreateMap<Edition, EditionDto>();
+            CreateMap<UpdateOrganisationDto, OrganisationDto>();
             CreateMap<Routepart, RoutepartDto>();
             CreateMap<Destination, DestinationDto>();
             CreateMap<TWFile, TWFileDto>();

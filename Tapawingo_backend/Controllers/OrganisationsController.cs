@@ -40,15 +40,15 @@ namespace Tapawingo_backend.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(OrganisationDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult CreateOrganisation([FromBody]CreateOrganisationDto name)
+        public IActionResult CreateOrganisation([FromBody]CreateOrganisationDto model)
         {
-            if(name.Name == null || name.Name.Length == 0 || name.Name.Equals(""))
+            if(model.Name == null || model.Name.Length == 0 || model.Name.Equals(""))
             {
                 return BadRequest("Cannot create organisation without name.");
             }
 
             //only doing these 'extra' steps since we want to return a 201 status with the object.
-            var newOrganisation = _organisationsService.CreateOrganisation(name);
+            var newOrganisation = _organisationsService.CreateOrganisation(model);
             if(newOrganisation != null)
             {
                 return new ObjectResult(newOrganisation)
@@ -57,6 +57,18 @@ namespace Tapawingo_backend.Controllers
                 };
             }
             return BadRequest("Cannot process this request.");
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateOrganisation(int id, [FromBody]UpdateOrganisationDto model) 
+        {
+            var updatedOrganisation = await _organisationsService.UpdateOrganisation(id, model);
+            return updatedOrganisation == null ?
+                NotFound(new
+                {
+                    message = "This organisation could not be found."
+                }) :
+                Ok(updatedOrganisation);
         }
     }
 }

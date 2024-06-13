@@ -55,10 +55,12 @@ namespace Tapawingo_backend.Tests
 
             // Create test data
             // Organisations
-            var organisation1 = new Organisation { Name = "TestOrganisation1" };
-            var organisation2 = new Organisation { Name = "TestOrganisation2" };
+            var organisation1 = new Organisation { Name = "TestOrganisation1", ContactPerson = "testPerson", ContactEmail = "testEmail" };
+            var organisation2 = new Organisation { Name = "TestOrganisation2", ContactPerson = "testPerson", ContactEmail = "testEmail" };
+            var organisation3 = new Organisation { Name = "TestForUpdate", ContactPerson = "testPerson", ContactEmail = "testEmail" };
             context.Organisations.Add(organisation1);
             context.Organisations.Add(organisation2);
+            context.Organisations.Add(organisation3);
             context.SaveChanges();
 
             // Events
@@ -81,8 +83,32 @@ namespace Tapawingo_backend.Tests
             context.Routes.Add(route1);
             context.Routes.Add(route2);
             context.SaveChanges();
+            //////routeparts
+            //////routes
+            //////teamrouteparts
+            //////teams
+
+            //////userevents
+            //////userorganisations
 
             // Save data to the database
+            context.SaveChanges();
+
+            // Users
+            var user1 = new User { FirstName = "Testuser1", LastName = "Usertest1", UserName = "test1@gmail.com", Email = "test1@gmail.com", SecurityStamp = Guid.NewGuid().ToString() };
+            context.Users.Add(user1);
+            context.SaveChanges();
+
+            // Add user to organisation
+            context.UserOrganisations.Add(new UserOrganisation { Organisation = organisation1, User = user1 });
+            context.SaveChanges();
+
+            var user2 = new User { FirstName = "Testuser2", LastName = "Usertest2", UserName = "test2@gmail.com", Email = "test2@gmail.com", SecurityStamp = Guid.NewGuid().ToString() };
+            context.Users.Add(user2);
+            context.SaveChanges();
+
+            // Add user to organisation
+            context.UserOrganisations.Add(new UserOrganisation { Organisation = organisation1, User = user2 });
             context.SaveChanges();
 
 

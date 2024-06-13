@@ -33,9 +33,9 @@ namespace Tapawingo_backend.Tests.GET_Organisations_By_Id
 
         //Good Weather
         [Fact]
-        public void Get_Existing_Organisation_By_Id()
+        public async void Get_Existing_Organisation_By_Id()
         {
-            var organisation = _organisationsService.GetOrganisationById(1);
+            var organisation = await _organisationsService.GetOrganisationById(1);
 
             Assert.NotNull(organisation);
             Assert.Equal(1, organisation.Id);
@@ -46,9 +46,9 @@ namespace Tapawingo_backend.Tests.GET_Organisations_By_Id
 
         //Bad Weather
         [Fact]
-        public void Get_Non_Existing_ogranisation_By_Id()
+        public async void Get_Non_Existing_ogranisation_By_Id()
         {
-            var organisation = _organisationsService.GetOrganisationById(999);
+            var organisation = await _organisationsService.GetOrganisationById(999);
 
             Assert.Null(organisation);
         }
