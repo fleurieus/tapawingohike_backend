@@ -1,11 +1,12 @@
-﻿namespace Tapawingo_backend.Models
+﻿using Tapawingo_backend.Models;
+
+namespace Tapawingo_backend.Dtos
 {
-    public class TWFile
+    public class TWFileDto
     {
         public int Id { get; set; }
         public int RoutepartId { get; set; }
-        public Routepart Routepart { get; set; }
-        public string File { get; set; }
+        public string FileName { get; set; }
         public string ContentType { get; set; }
         public byte[] Data { get; set; }
         public DateTime UploadDate { get; set; }

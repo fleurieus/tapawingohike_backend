@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tapawingo_backend.Data;
 
@@ -10,9 +11,11 @@ using Tapawingo_backend.Data;
 namespace Tapawingo_backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240613091136_RemovedCategoryAttributeFromTWFileTable")]
+    partial class RemovedCategoryAttributeFromTWFileTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,12 +265,6 @@ namespace Tapawingo_backend.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    b.Property<string>("ContactEmail")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ContactPerson")
-                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
