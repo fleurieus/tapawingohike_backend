@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Repository;
@@ -18,7 +19,26 @@ namespace Tapawingo_backend.Services
             _mapper = mapper;
         }
 
-        public async Task<TeamDto> CreateTeamOnEdition(int editionId, CreateTeamDto model)
+        public List<TeamDto> GetTeamsOnEdition(int editionId)
+        {
+            if (!_editionsRepository.EditionExists(editionId))
+                throw new BadHttpRequestException("Edition not found");
+
+            return _mapper.Map<List<TeamDto>>(_teamRepository.GetTeamsOnEdition(editionId));
+        }
+
+        public async Task<TeamDto> GetTeamOnEditionAsync(int editionId, int teamId)
+        {
+            if (!_editionsRepository.EditionExists(editionId))
+                throw new BadHttpRequestException("Edition not found");
+
+            if (!_teamRepository.TeamExists(teamId))
+                throw new BadHttpRequestException("Team not found");
+
+            return _mapper.Map<TeamDto>(await _teamRepository.GetTeamOnEditionAsync(editionId, teamId));
+        }
+
+        public async Task<TeamDto> CreateTeamOnEditionAsync(int editionId, CreateTeamDto model)
         {
             if (!_editionsRepository.EditionExists(editionId))
                 throw new BadHttpRequestException("Edition not found");
@@ -27,7 +47,7 @@ namespace Tapawingo_backend.Services
 
             try
             {
-                return _mapper.Map<TeamDto>(await _teamRepository.CreateTeamOnEdition(editionId, model));
+                return _mapper.Map<TeamDto>(await _teamRepository.CreateTeamOnEditionAsync(editionId, model));
             }
             catch (Exception e)
             {

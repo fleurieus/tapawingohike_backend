@@ -10,7 +10,7 @@ using Tapawingo_backend.Repository;
 using Tapawingo_backend.Services;
 using Xunit;
 
-namespace Tapawingo_backend.Tests
+namespace Tapawingo_backend.Tests.TEST_Teams.POST_Teams
 {
     [Collection("Database collection")]
     public class Teams_Service_Tests : TestBase
@@ -50,7 +50,7 @@ namespace Tapawingo_backend.Tests
                 Online = true
             };
 
-            var teamDto = await _teamsService.CreateTeamOnEdition(1, createTeamDto);
+            var teamDto = await _teamsService.CreateTeamOnEditionAsync(1, createTeamDto);
 
             Assert.NotNull(teamDto);
             Assert.Equal(createTeamDto.Name, teamDto.Name);

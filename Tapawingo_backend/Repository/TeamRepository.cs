@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Tapawingo_backend.Data;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Models;
@@ -13,7 +14,23 @@ namespace Tapawingo_backend.Repository
             _context = context;
         }
 
-        public async Task<Team> CreateTeamOnEdition(int editionId, CreateTeamDto createTeam)
+        public ICollection<Team> GetTeamsOnEdition(int editionId)
+        {
+            return _context.Teams.Where(t => t.EditionId == editionId).ToList();
+        }
+
+        public async Task<Team> GetTeamOnEditionAsync(int editionId, int teamId)
+        {
+            return await _context.Teams.FirstOrDefaultAsync(t => t.EditionId == editionId && t.Id == teamId);
+        }
+
+        public bool TeamExists(int teamId)
+        {
+            bool teamExists = _context.Teams.Any(u => u.Id == teamId);
+            return teamExists;
+        }
+
+        public async Task<Team> CreateTeamOnEditionAsync(int editionId, CreateTeamDto createTeam)
         {
             Team team = new Team
             {

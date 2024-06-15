@@ -8,7 +8,7 @@ using Tapawingo_backend.Repository;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Models;
 
-namespace Tapawingo_backend.Tests.Teams_Repository_Tests
+namespace Tapawingo_backend.Tests.TEST_Teams.POST_Teams
 {
     [Collection("Database collection")]
     public class Teams_Repository_Tests : TestBase
@@ -36,7 +36,7 @@ namespace Tapawingo_backend.Tests.Teams_Repository_Tests
                 Online = true,
             };
 
-            var createdTeam = await _teamsRepository.CreateTeamOnEdition(1, team);
+            var createdTeam = await _teamsRepository.CreateTeamOnEditionAsync(1, team);
 
             Assert.NotNull(createdTeam);
             Assert.Equal(team.Name, createdTeam.Name);
