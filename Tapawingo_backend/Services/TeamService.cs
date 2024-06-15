@@ -54,5 +54,39 @@ namespace Tapawingo_backend.Services
                 throw new BadHttpRequestException(e.Message);
             }
         }
+
+        public async Task<TeamDto> UpdateTeamOnEditionAsync(int editionId, int teamId, UpdateTeamDto model)
+        {
+            if (!_editionsRepository.EditionExists(editionId))
+                throw new BadHttpRequestException("Edition not found");
+
+            if (!_teamRepository.TeamExists(teamId))
+                throw new BadHttpRequestException("Team not found");
+
+            await _teamRepository.UpdateTeamOnEditionAsync(await _teamRepository.GetTeamOnEditionAsync(editionId, teamId), model);
+
+            return _mapper.Map<TeamDto>(await _teamRepository.GetTeamOnEditionAsync(editionId, teamId));
+        }
+
+        public async Task<IActionResult> DeleteTeamOnEditionAsync(int editionId, int teamId)
+        {
+            if (!_editionsRepository.EditionExists(editionId))
+                return new NotFoundObjectResult(new
+                {
+                    message = "Edition not found"
+                });
+
+            if (!_teamRepository.TeamExists(teamId))
+                return new NotFoundObjectResult(new
+                {
+                    message = "Team not found"
+                });
+
+            bool teamDeleted = await _teamRepository.DeleteTeamOnEditionAsync(editionId, teamId);
+            return teamDeleted ? new NoContentResult() : new BadRequestObjectResult(new
+            {
+                message = "Team could not be deleted"
+            });
+        }
     }
 }

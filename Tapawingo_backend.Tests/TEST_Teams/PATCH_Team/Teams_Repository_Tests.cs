@@ -7,8 +7,9 @@ using Tapawingo_backend.Interface;
 using Tapawingo_backend.Repository;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Models;
+using Tapawingo_backend.Services;
 
-namespace Tapawingo_backend.Tests.TEST_Teams.POST_Teams
+namespace Tapawingo_backend.Tests.TEST_Teams.PATCH_Team
 {
     [Collection("Database collection")]
     public class Teams_Repository_Tests : TestBase
@@ -24,28 +25,29 @@ namespace Tapawingo_backend.Tests.TEST_Teams.POST_Teams
 
         // Good Weather
         [Fact]
-        public async Task Post_Team_Successful()
+        public async Task Patch_team()
         {
-            var team = new CreateTeamDto()
+            Team team = await _teamsRepository.GetTeamOnEditionAsync(1, 2);
+            
+            UpdateTeamDto updateTeamDto = new UpdateTeamDto
             {
                 Name = "Test Team",
                 Code = "TST001",
                 ContactName = "John Doe",
                 ContactEmail = "john.doe@example.com",
                 ContactPhone = "1234567890",
-                Online = true,
+                Online = false
             };
 
-            var createdTeam = await _teamsRepository.CreateTeamOnEditionAsync(1, team);
+            var teamDto = await _teamsRepository.UpdateTeamOnEditionAsync(team, updateTeamDto);
 
-            Assert.NotNull(createdTeam);
-            Assert.Equal(team.Name, createdTeam.Name);
-            Assert.Equal(team.Code, createdTeam.Code);
-            Assert.Equal(team.ContactName, createdTeam.ContactName);
-            Assert.Equal(team.ContactEmail, createdTeam.ContactEmail);
-            Assert.Equal(team.ContactPhone, createdTeam.ContactPhone);
-            Assert.Equal(team.Online, createdTeam.Online);
-            Assert.Equal(1, createdTeam.EditionId);
+            Assert.NotNull(teamDto);
+            Assert.Equal(updateTeamDto.Name, teamDto.Name);
+            Assert.Equal(updateTeamDto.Code, teamDto.Code);
+            Assert.Equal(updateTeamDto.ContactName, teamDto.ContactName);
+            Assert.Equal(updateTeamDto.ContactEmail, teamDto.ContactEmail);
+            Assert.Equal(updateTeamDto.ContactPhone, teamDto.ContactPhone);
+            Assert.Equal(updateTeamDto.Online, teamDto.Online);
         }
 
         protected new void Dispose()

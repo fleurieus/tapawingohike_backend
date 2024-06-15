@@ -9,7 +9,7 @@ using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Models;
 using Tapawingo_backend.Services;
 
-namespace Tapawingo_backend.Tests.TEST_Teams.GET_Teams
+namespace Tapawingo_backend.Tests.TEST_Teams.GET_Team
 {
     [Collection("Database collection")]
     public class Teams_Repository_Tests : TestBase
@@ -25,12 +25,12 @@ namespace Tapawingo_backend.Tests.TEST_Teams.GET_Teams
 
         // Good Weather
         [Fact]
-        public async Task GET_teams()
+        public async Task Get_Team()
         {
-            var teams = _teamsRepository.GetTeamsOnEdition(1);
+            var team = await _teamsRepository.GetTeamOnEditionAsync(1, 2);
 
-            Assert.NotNull(teams);
-            Assert.Equal(2, teams.Count());
+            Assert.NotNull(team);
+            Assert.Equal("TestTeam2", team.Name);
         }
 
         protected new void Dispose()

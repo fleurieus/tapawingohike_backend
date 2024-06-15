@@ -35,5 +35,18 @@ namespace Tapawingo_backend.Controllers
             var response = await _teamService.CreateTeamOnEditionAsync(editionId, model);
             return Ok(response);
         }
+
+        [HttpPatch("/editions/{editionId}/teams/{teamId}")]
+        public async Task<IActionResult> UpdateTeamOnEdition(int editionId, int teamId, [FromBody] UpdateTeamDto model)
+        {
+            var response = await _teamService.UpdateTeamOnEditionAsync(editionId, teamId, model);
+            return Ok(response);
+        }
+
+        [HttpDelete("/editions/{editionId}/teams/{teamId}")]
+        public async Task<IActionResult> DeleteTeamOnEditionAsync(int editionId, int teamId)
+        {
+            return await _teamService.DeleteTeamOnEditionAsync(editionId, teamId);
+        }
     }
 }
