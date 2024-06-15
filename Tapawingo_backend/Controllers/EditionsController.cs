@@ -65,5 +65,11 @@ namespace Tapawingo_backend.Controllers
             var response = await _editionsService.UpdateEditionAsync(eventId, editionId, model);
             return Ok(response);
         }
+
+        [HttpDelete("events/{eventId}/editions/{editionId}")]
+        public async Task<IActionResult> DeleteEditionAsync(int eventId, int editionId)
+        {
+            return await _editionsService.DeleteEditionAsync(eventId, editionId);
+        }
     }
 }

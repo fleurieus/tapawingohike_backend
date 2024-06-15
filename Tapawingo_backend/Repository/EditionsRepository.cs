@@ -62,6 +62,20 @@ namespace Tapawingo_backend.Repository
             await _context.SaveChangesAsync();
 
             return existingEdition;
-        }   
+        }
+
+        public async Task<bool> DeleteEditionAsync(int eventId, int editionId)
+        {
+            try
+            {
+                _context.Editions.Remove(GetEditionById(eventId, editionId));
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

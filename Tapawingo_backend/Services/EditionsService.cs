@@ -96,5 +96,26 @@ namespace Tapawingo_backend.Services
 
             return _mapper.Map<EditionDto>(await _editionsRepository.UpdateEditionAsync(edition, model));
         }
+
+        public async Task<IActionResult> DeleteEditionAsync(int eventId, int editionId)
+        {
+            if (!_eventsRepository.EventExists(eventId))
+                return new NotFoundObjectResult(new
+                {
+                    message = "Event not found"
+                });
+
+            if (!_editionsRepository.EditionExists(editionId))
+                return new NotFoundObjectResult(new
+                {
+                    message = "Edition not found"
+                });
+
+            bool editionDeleted = await _editionsRepository.DeleteEditionAsync(eventId, editionId);
+            return editionDeleted ? new NoContentResult() : new BadRequestObjectResult(new
+            {
+                message = "Edition could not be deleted"
+            });
+        }
     }
 }
