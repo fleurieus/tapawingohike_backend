@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Tapawingo_backend.Data;
+using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Models;
 
@@ -37,5 +38,30 @@ namespace Tapawingo_backend.Repository
             bool editionExists = _context.Editions.Any(u => u.Id == editionId);
             return editionExists;
         }
+
+        public async Task<Edition> UpdateEditionAsync(Edition existingEdition, UpdateEditionDto updateEditionDto)
+        {
+            if (updateEditionDto.Name != null)
+            {
+                existingEdition.Name = updateEditionDto.Name;
+                _context.Editions.Update(existingEdition);
+            }
+
+            if (updateEditionDto.StartDate != null)
+            {
+                existingEdition.StartDate = (DateTime)updateEditionDto.StartDate;
+                _context.Editions.Update(existingEdition);
+            }
+
+            if (updateEditionDto.EndDate != null)
+            {
+                existingEdition.EndDate = (DateTime)updateEditionDto.EndDate;
+                _context.Editions.Update(existingEdition);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return existingEdition;
+        }   
     }
 }

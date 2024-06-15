@@ -58,5 +58,12 @@ namespace Tapawingo_backend.Controllers
             var twEvent = _editionsService.CreateEdition(model, organisation_id, event_id);
             return twEvent;
         }
+
+        [HttpPatch("events/{eventId}/editions/{editionId}")]
+        public async Task<IActionResult> UpdateEditionAsync(int eventId, int editionId, [FromBody] UpdateEditionDto model)
+        {
+            var response = await _editionsService.UpdateEditionAsync(eventId, editionId, model);
+            return Ok(response);
+        }
     }
 }

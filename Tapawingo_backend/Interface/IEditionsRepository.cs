@@ -1,4 +1,5 @@
-﻿using Tapawingo_backend.Models;
+﻿using Tapawingo_backend.Dtos;
+using Tapawingo_backend.Models;
 
 namespace Tapawingo_backend.Interface
 {
@@ -8,5 +9,6 @@ namespace Tapawingo_backend.Interface
         List<Edition> GetAllEditions(int editionId);
         Edition CreateEdition(Edition newEdition);
         bool EditionExists(int editionId);
+        Task<Edition> UpdateEditionAsync(Edition existingEdition, UpdateEditionDto updateEditionDto);
     }
 }
