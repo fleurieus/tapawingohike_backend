@@ -16,9 +16,9 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpPost("/editions/{editionId}/teams")]
-        public IActionResult CreateTeamOnEdition(int editionId, CreateTeamDto model)
+        public async Task<IActionResult> CreateTeamOnEdition(int editionId, CreateTeamDto model)
         {
-            var response = _teamService.CreateTeamOnEdition(editionId, model);
+            var response = await _teamService.CreateTeamOnEdition(editionId, model);
             return Ok(response);
         }
     }

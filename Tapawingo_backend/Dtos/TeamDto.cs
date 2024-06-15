@@ -4,6 +4,7 @@ namespace Tapawingo_backend.Dtos
 {
     public class TeamDto
     {
+        public string Id { get; set; }
         public string Name { get; set; }
         public int EditionId { get; set; }
         public string Code { get; set; }

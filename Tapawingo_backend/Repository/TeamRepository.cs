@@ -13,7 +13,7 @@ namespace Tapawingo_backend.Repository
             _context = context;
         }
 
-        public Team CreateTeamOnEdition(int editionId, CreateTeamDto createTeam)
+        public async Task<Team> CreateTeamOnEdition(int editionId, CreateTeamDto createTeam)
         {
             Team team = new Team
             {

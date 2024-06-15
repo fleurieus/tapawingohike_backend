@@ -50,7 +50,7 @@ namespace Tapawingo_backend.Tests
                 Online = true
             };
 
-            var teamDto = _teamsService.CreateTeamOnEdition(1, createTeamDto);
+            var teamDto = await _teamsService.CreateTeamOnEdition(1, createTeamDto);
 
             Assert.NotNull(teamDto);
             Assert.Equal(createTeamDto.Name, teamDto.Name);

@@ -24,7 +24,7 @@ namespace Tapawingo_backend.Tests.Teams_Repository_Tests
 
         // Good Weather
         [Fact]
-        public void Post_Team_Successful()
+        public async Task Post_Team_Successful()
         {
             var team = new CreateTeamDto()
             {
@@ -36,7 +36,7 @@ namespace Tapawingo_backend.Tests.Teams_Repository_Tests
                 Online = true,
             };
 
-            var createdTeam = _teamsRepository.CreateTeamOnEdition(1, team);
+            var createdTeam = await _teamsRepository.CreateTeamOnEdition(1, team);
 
             Assert.NotNull(createdTeam);
             Assert.Equal(team.Name, createdTeam.Name);

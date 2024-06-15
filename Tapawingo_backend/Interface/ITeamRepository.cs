@@ -5,6 +5,6 @@ namespace Tapawingo_backend.Repository
 {
     public interface ITeamRepository
     {
-        Team CreateTeamOnEdition(int editionId, CreateTeamDto team);
+        Task<Team> CreateTeamOnEdition(int editionId, CreateTeamDto team);
     }
 }
