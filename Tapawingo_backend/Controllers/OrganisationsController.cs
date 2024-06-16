@@ -27,11 +27,11 @@ namespace Tapawingo_backend.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrganisationDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetOrganisation(int id)
+        public async Task<IActionResult> GetOrganisation(int id)
         {
-            var organisation = _organisationsService.GetOrganisationById(id);
-            return organisation!=null ? 
-                Ok(organisation) : 
+            var organisation = await _organisationsService.GetOrganisationById(id);
+            return organisation != null ?
+                Ok(organisation) :
                 NotFound("Organisation with this id was not found.");
         }
 
