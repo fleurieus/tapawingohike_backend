@@ -111,6 +111,7 @@ namespace Tapawingo_backend.Tests
             // Save data to the database
             context.SaveChanges();
 
+            // Test users on organisation
             // Users
             var user1 = new User { FirstName = "Testuser1", LastName = "Usertest1", UserName = "test1@gmail.com", Email = "test1@gmail.com", SecurityStamp = Guid.NewGuid().ToString() };
             context.Users.Add(user1);
@@ -128,6 +129,24 @@ namespace Tapawingo_backend.Tests
             context.UserOrganisations.Add(new UserOrganisation { Organisation = organisation1, User = user2 });
             context.SaveChanges();
 
+
+            // Test users on event
+            // Users
+            var user3 = new User { FirstName = "Testuser3", LastName = "Usertest3", UserName = "test3@gmail.com", Email = "test3@gmail.com", SecurityStamp = Guid.NewGuid().ToString() };
+            context.Users.Add(user3);
+            context.SaveChanges();
+
+            // Add user to event
+            context.UserEvents.Add(new UserEvent { Event = event1, User = user3 });
+            context.SaveChanges();
+
+            var user4 = new User { FirstName = "Testuser4", LastName = "Usertest4", UserName = "test4@gmail.com", Email = "test4@gmail.com", SecurityStamp = Guid.NewGuid().ToString() };
+            context.Users.Add(user4);
+            context.SaveChanges();
+
+            // Add user to event
+            context.UserEvents.Add(new UserEvent { Event = event1, User = user4 });
+            context.SaveChanges();
 
             //Save Data
             context.SaveChanges();
