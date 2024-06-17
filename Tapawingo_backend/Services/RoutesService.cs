@@ -9,22 +9,40 @@ namespace Tapawingo_backend.Services
     public class RoutesService
     {
         private readonly IRoutesRepository _routesRepository;
+        private readonly IEditionsRepository _editionsRepository;
         private readonly IMapper _mapper;
 
-        public RoutesService(IRoutesRepository routesRepository, IMapper mapper)
+        public RoutesService(IRoutesRepository routesRepository, IEditionsRepository editionsRepository, IMapper mapper)
         {
             _mapper = mapper;
             _routesRepository = routesRepository;
+            _editionsRepository = editionsRepository;
         }
 
-        public List<RouteDto> GetRoutes()
+        public async Task<List<RouteDto>> GetRoutes(int editionId)
         {
-            return _mapper.Map<List<RouteDto>>(_routesRepository.GetRoutes());
+            if (!_editionsRepository.EditionExists(editionId)) throw new ArgumentException("Edition not found");
+            return _mapper.Map<List<RouteDto>>(await _routesRepository.GetRoutesAsync());
         }
 
-        public RouteDto GetRoutesById(int id)
+        public async Task<RouteDto> GetRoutesById(int editionId, int routeId)
         {
-            return _mapper.Map<RouteDto>(_routesRepository.GetRouteById(id));
+            if (!_editionsRepository.EditionExists(editionId)) throw new ArgumentException("Edition not found");
+            var foundRoute = await _routesRepository.GetRouteByIdAsync(routeId);
+            if (foundRoute == null) return null;
+            if (foundRoute.EditionId != editionId) throw new ArgumentException("Route does not exist on Edition");
+
+            return _mapper.Map<RouteDto>(foundRoute);
+        }
+
+        public async Task<bool> DeleteRouteById(int editionId, int routeId)
+        {
+            if (!_editionsRepository.EditionExists(editionId)) throw new ArgumentException("Edition not found");
+            var foundRoute = await _routesRepository.GetRouteByIdAsync(routeId);
+            if (foundRoute == null) throw new ArgumentException("Route not found"); ;
+            if (foundRoute.EditionId != editionId) throw new ArgumentException("Route does not exist on Edition");
+
+            return await _routesRepository.DeleteRouteByIdAsync(routeId);
         }
     }
 }

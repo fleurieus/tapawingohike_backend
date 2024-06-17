@@ -7,15 +7,15 @@ using Tapawingo_backend.Data;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Repository;
 
-namespace Tapawingo_backend.Tests.GET_Routes
+namespace Tapawingo_backend.Tests.DELETE_Routes
 {
     [Collection("Database collection")]
-    public class Routes_Repository_Tests : TestBase
+    public class DELETE_Routes_Repository_Tests : TestBase
     {
         private readonly RoutesRepository _routesRepository;
         private readonly DataContext _context;
 
-        public Routes_Repository_Tests(DatabaseFixture fixture) : base(fixture)
+        public DELETE_Routes_Repository_Tests(DatabaseFixture fixture) : base(fixture)
         {
             _context = Context; //inject 'shared' context from TestBase
             _routesRepository = new RoutesRepository(_context);
@@ -23,16 +23,21 @@ namespace Tapawingo_backend.Tests.GET_Routes
 
         //Good Weather
         [Fact]
-        public async void Get_All_Routes()
+        public async void Delete_Route()
         {
-            var routes = await _routesRepository.GetRoutesAsync();
+            var existingroute = _routesRepository.RouteExists(4);
 
-            Assert.NotNull(routes);
-            Assert.Equal(5, routes.Count());
-            Assert.Equal(1, routes[0].Id);
-            Assert.Equal(2, routes[1].Id);
-            Assert.Equal("TestRoute1", routes[0].Name);
-            Assert.Equal("TestRoute2", routes[1].Name);
+            Assert.True(existingroute);
+
+            var deletion = await _routesRepository.DeleteRouteByIdAsync(4);
+
+            Assert.True(deletion);
+
+            //check that route is deletted
+
+            var deletionComplete = _routesRepository.RouteExists(4);
+
+            Assert.False(deletionComplete);
         }
         //
 

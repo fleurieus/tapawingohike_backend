@@ -4,8 +4,9 @@ namespace Tapawingo_backend.Interface
 {
     public interface IRoutesRepository
     {
-        List<TWRoute> GetRoutes();
-        TWRoute GetRouteById(int id);
+        Task<List<TWRoute>> GetRoutesAsync();
+        Task<TWRoute> GetRouteByIdAsync(int id);
         bool RouteExists(int routeId);
+        Task<bool> DeleteRouteByIdAsync(int routeId);
     }
 }
