@@ -5,6 +5,11 @@ namespace Tapawingo_backend.Repository
 {
     public interface ITeamRepository
     {
-        Team CreateTeamOnEdition(int editionId, CreateTeamDto team);
+        ICollection<Team> GetTeamsOnEdition(int editionId);
+        Task<Team> GetTeamOnEditionAsync(int editionId, int teamId);
+        bool TeamExists(int teamId);
+        Task<Team> CreateTeamOnEditionAsync(int editionId, CreateTeamDto team);
+        Task<Team> UpdateTeamOnEditionAsync(Team existingTeam, UpdateTeamDto team);
+        Task<bool> DeleteTeamOnEditionAsync(int editionId, int teamId);
     }
 }

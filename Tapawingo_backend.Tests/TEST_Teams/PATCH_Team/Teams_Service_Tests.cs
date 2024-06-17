@@ -10,7 +10,7 @@ using Tapawingo_backend.Repository;
 using Tapawingo_backend.Services;
 using Xunit;
 
-namespace Tapawingo_backend.Tests
+namespace Tapawingo_backend.Tests.TEST_Teams.PATCH_Team
 {
     [Collection("Database collection")]
     public class Teams_Service_Tests : TestBase
@@ -38,28 +38,27 @@ namespace Tapawingo_backend.Tests
 
         // Good Weather: Test for creating a team successfully
         [Fact]
-        public async Task Create_Team_Successful()
+        public async Task Patch_team()
         {
-            var createTeamDto = new CreateTeamDto
+            UpdateTeamDto updateTeamDto = new UpdateTeamDto
             {
                 Name = "Test Team",
                 Code = "TST001",
                 ContactName = "John Doe",
                 ContactEmail = "john.doe@example.com",
                 ContactPhone = "1234567890",
-                Online = true
+                Online = false
             };
 
-            var teamDto = _teamsService.CreateTeamOnEdition(1, createTeamDto);
+            var teamDto = await _teamsService.UpdateTeamOnEditionAsync(1, 2, updateTeamDto);
 
             Assert.NotNull(teamDto);
-            Assert.Equal(createTeamDto.Name, teamDto.Name);
-            Assert.Equal(createTeamDto.Code, teamDto.Code);
-            Assert.Equal(createTeamDto.ContactName, teamDto.ContactName);
-            Assert.Equal(createTeamDto.ContactEmail, teamDto.ContactEmail);
-            Assert.Equal(createTeamDto.ContactPhone, teamDto.ContactPhone);
-            Assert.Equal(createTeamDto.Online, teamDto.Online);
-            Assert.Equal(1, teamDto.EditionId);
+            Assert.Equal(updateTeamDto.Name, teamDto.Name);
+            Assert.Equal(updateTeamDto.Code, teamDto.Code);
+            Assert.Equal(updateTeamDto.ContactName, teamDto.ContactName);
+            Assert.Equal(updateTeamDto.ContactEmail, teamDto.ContactEmail);
+            Assert.Equal(updateTeamDto.ContactPhone, teamDto.ContactPhone);
+            Assert.Equal(updateTeamDto.Online, teamDto.Online);
         }
 
         protected new void Dispose()

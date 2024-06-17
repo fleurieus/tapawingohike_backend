@@ -85,6 +85,13 @@ namespace Tapawingo_backend.Tests
             context.Editions.Add(edition3);
             context.SaveChanges();
 
+            // Teams
+            var team1 = new Team { Name = "TestTeam1", Code = "test", ContactEmail = "testEmail", ContactName = "testName", ContactPhone = "0123456789", Online = false, EditionId = edition1.Id };
+            var team2 = new Team { Name = "TestTeam2", Code = "test", ContactEmail = "testEmail", ContactName = "testName", ContactPhone = "0123456789", Online = false, EditionId = edition1.Id };
+            context.Teams.Add(team1);
+            context.Teams.Add(team2);
+            context.SaveChanges();
+
             // Routes
             var route1 = new TWRoute { Name = "TestRoute1", EditionId = edition1.Id };
             var route2 = new TWRoute { Name = "TestRoute2", EditionId = edition2.Id };
@@ -103,7 +110,6 @@ namespace Tapawingo_backend.Tests
 
             //////routes
             //////teamrouteparts
-            //////teams
 
             //////userevents
             //////userorganisations

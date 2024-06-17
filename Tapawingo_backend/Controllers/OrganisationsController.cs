@@ -30,8 +30,8 @@ namespace Tapawingo_backend.Controllers
         public async Task<IActionResult> GetOrganisation(int id)
         {
             var organisation = await _organisationsService.GetOrganisationById(id);
-            return organisation!=null ? 
-                Ok(organisation) : 
+            return organisation != null ?
+                Ok(organisation) :
                 NotFound("Organisation with this id was not found.");
         }
 
