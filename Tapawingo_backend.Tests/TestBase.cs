@@ -79,8 +79,10 @@ namespace Tapawingo_backend.Tests
             // Editions
             var edition1 = new Edition { Name = "TestEdition1", StartDate = DateTime.Now, EndDate = DateTime.Now, Event = event1 };
             var edition2 = new Edition { Name = "TestEdition2", StartDate = DateTime.Now, EndDate = DateTime.Now, Event = event1 };
+            var edition3 = new Edition { Name = "TestEdition3", StartDate = DateTime.Now, EndDate = DateTime.Now, Event = event2 };
             context.Editions.Add(edition1);
             context.Editions.Add(edition2);
+            context.Editions.Add(edition3);
             context.SaveChanges();
 
             // Routes

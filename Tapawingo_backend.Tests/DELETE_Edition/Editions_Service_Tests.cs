@@ -7,14 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tapawingo_backend.Data;
+using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Helper;
 using Tapawingo_backend.Repository;
 using Tapawingo_backend.Services;
 
-namespace Tapawingo_backend.Tests.GET_Editions_By_Id
+namespace Tapawingo_backend.Tests.DELETE_Edition
 {
     [Collection("Database collection")]
-    public class Editions_Repository_Tests : TestBase
+    public class Editions_Service_Tests : TestBase
     {
         private readonly EditionsRepository _editionsRepository;
         private readonly OrganisationsRepository _organisationsRepository;
@@ -22,7 +23,7 @@ namespace Tapawingo_backend.Tests.GET_Editions_By_Id
         private readonly EditionsService _editionsService;
         private readonly DataContext _context;
 
-        public Editions_Repository_Tests(DatabaseFixture fixture) : base(fixture)
+        public Editions_Service_Tests(DatabaseFixture fixture) : base(fixture)
         {
             _context = Context; //inject 'shared' context from TestBase
             _editionsRepository = new EditionsRepository(_context);
@@ -36,28 +37,15 @@ namespace Tapawingo_backend.Tests.GET_Editions_By_Id
 
         //Good weather
         [Fact]
-        public void Get_Editions_Linked_To_Existing_EventID()
+        public async Task DELETE_Edition()
         {
-            var edition = _editionsService.GetEditionById(1, 1);
+            var editions = _editionsService.GetAllEditions(1);
+            Assert.Equal(2, editions.Count);
+            
+            await _editionsService.DeleteEditionAsync(1, 2);
 
-            Assert.NotNull(edition);
-            Assert.Equal("TestEdition1", edition.Name);
-            Assert.Equal(1, edition.EventId);
+            var editionsWithOneRemovedEdition = _editionsService.GetAllEditions(1);
+            Assert.Single(editionsWithOneRemovedEdition);
         }
-
-        //Bad weather
-        [Fact]
-        public void Get_Edition_By_Id_BadEventId()
-        {
-            Assert.Throws<ArgumentException>(() => _editionsService.GetEditionById(999, 1));
-        }
-
-        [Fact]
-        public void Get_Edition_By_Id_BadEditionId()
-        {
-            Assert.Throws<ArgumentException>(() => _editionsService.GetEditionById(1, 999));
-        }
-
-
     }
 }
