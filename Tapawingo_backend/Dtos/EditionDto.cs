@@ -4,6 +4,7 @@ namespace Tapawingo_backend.Dtos
 {
     public class EditionDto
     {
+        public int Id { get; set; }
         public int EventId { get; set; }
         public string Name { get; set; }
         public DateTime StartDate { get; set; }

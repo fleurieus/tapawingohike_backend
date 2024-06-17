@@ -12,12 +12,14 @@ namespace Tapawingo_backend.Services
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IOrganisationsRepository _organisationsRepository;
+        private readonly IEventsRepository _eventsRepository;
 
-        public UsersService(IUserRepository userRepository, IMapper mapper, IOrganisationsRepository organisationsRepository)
+        public UsersService(IUserRepository userRepository, IMapper mapper, IOrganisationsRepository organisationsRepository, IEventsRepository eventsRepository)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _organisationsRepository = organisationsRepository;
+            _eventsRepository = eventsRepository;
         }
 
         public IActionResult GetUsersOnOrganisation(int organisationId)
@@ -92,7 +94,85 @@ namespace Tapawingo_backend.Services
             bool userDeleted = await _userRepository.DeleteUserOnOrganisationAsync(organisationId, userId);
             return userDeleted ? new NoContentResult() : new BadRequestObjectResult(new
             {
-                message = "User could not be deleted"
+                message = "User could not be deleted on organisation"
+            });
+        }
+
+        // User on events
+        public IActionResult GetUsersOnEvent(int eventId)
+        {
+            if (!_eventsRepository.EventExists(eventId))
+                return new NotFoundObjectResult(new
+                {
+                    message = "Event not found"
+                });
+
+            var users = _mapper.Map<List<UserDto>>(_userRepository.GetUsersOnEvent(eventId));
+            return new OkObjectResult(users);
+        }
+
+        public async Task<UserDto> GetUserOnEventAsync(int eventId, string userId)
+        {
+            if (!_eventsRepository.EventExists(eventId))
+                throw new BadHttpRequestException("Event not found");
+
+            if (!_userRepository.UserExists(userId))
+                throw new BadHttpRequestException("User not found");
+
+            return _mapper.Map<UserDto>(await _userRepository.GetUserOnEventAsync(eventId, userId));
+        }
+
+        public async Task<UserDto> CreateUserOnEvent(int eventId, CreateUserOnEventDto model)
+        {
+            if (!_eventsRepository.EventExists(eventId))
+                throw new BadHttpRequestException("Event not found");
+
+            var existingUser = _userRepository.GetUserByEmail(model.Email);
+
+            if (existingUser != null)
+                throw new BadHttpRequestException("User already exists");
+
+            try
+            {
+                return _mapper.Map<UserDto>(await _userRepository.CreateUserOnEvent(eventId, model));
+            }
+            catch (Exception e)
+            {
+                throw new BadHttpRequestException(e.Message);
+            }
+        }
+
+        public async Task<UserDto> UpdateUserOnEventAsync(int eventId, string userId, UpdateUserOnEventDto user)
+        {
+            if (!_eventsRepository.EventExists(eventId))
+                throw new BadHttpRequestException("Event not found");
+
+            if (await _userRepository.GetUserOnEventAsync(eventId, userId) == null)
+                throw new BadHttpRequestException("User not found");
+
+            await _userRepository.UpdateUserOnEventAsync(await _userRepository.GetUserOnEventAsync(eventId, userId), user);
+
+            return _mapper.Map<UserDto>(await _userRepository.GetUserOnEventAsync(eventId, userId));
+        }
+
+        public async Task<IActionResult> DeleteUserOnEventAsync(int eventId, string userId)
+        {
+            if (!_eventsRepository.EventExists(eventId))
+                return new NotFoundObjectResult(new
+                {
+                    message = "Event not found"
+                });
+
+            if (!_userRepository.UserExists(userId))
+                return new NotFoundObjectResult(new
+                {
+                    message = "User not found"
+                });
+
+            bool userDeleted = await _userRepository.DeleteUserOnEventAsync(eventId, userId);
+            return userDeleted ? new NoContentResult() : new BadRequestObjectResult(new
+            {
+                message = "User could not be deleted on event"
             });
         }
     }

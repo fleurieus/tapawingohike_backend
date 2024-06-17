@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Models;
+using Tapawingo_backend.Repository;
 
 namespace Tapawingo_backend.Services
 {
@@ -81,6 +82,40 @@ namespace Tapawingo_backend.Services
             var editionEntity = _mapper.Map<Edition>(model);
             editionEntity.EventId = eventId;
             return new ObjectResult(_editionsRepository.CreateEdition(editionEntity));
+        }
+
+        public async Task<EditionDto> UpdateEditionAsync(int eventId, int editionId, UpdateEditionDto model)
+        {
+            if (!_eventsRepository.EventExists(eventId))
+                throw new BadHttpRequestException("Event not found");
+
+            if (!_editionsRepository.EditionExists(editionId))
+                throw new BadHttpRequestException("Edition not found");
+
+            Edition edition = _editionsRepository.GetEditionById(eventId, editionId);
+
+            return _mapper.Map<EditionDto>(await _editionsRepository.UpdateEditionAsync(edition, model));
+        }
+
+        public async Task<IActionResult> DeleteEditionAsync(int eventId, int editionId)
+        {
+            if (!_eventsRepository.EventExists(eventId))
+                return new NotFoundObjectResult(new
+                {
+                    message = "Event not found"
+                });
+
+            if (!_editionsRepository.EditionExists(editionId))
+                return new NotFoundObjectResult(new
+                {
+                    message = "Edition not found"
+                });
+
+            bool editionDeleted = await _editionsRepository.DeleteEditionAsync(eventId, editionId);
+            return editionDeleted ? new NoContentResult() : new BadRequestObjectResult(new
+            {
+                message = "Edition could not be deleted"
+            });
         }
     }
 }

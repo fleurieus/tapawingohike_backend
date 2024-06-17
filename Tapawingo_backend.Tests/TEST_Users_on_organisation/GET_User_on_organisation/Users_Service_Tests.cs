@@ -13,7 +13,7 @@ using Tapawingo_backend.Models;
 using Tapawingo_backend.Repository;
 using Tapawingo_backend.Services;
 
-namespace Tapawingo_backend.Tests.GET_Users_on_organisation
+namespace Tapawingo_backend.Tests.TEST_Users_on_organisation.GET_User_on_organisation
 {
     [Collection("Database collection")]
     public class Users_Service_Tests : TestBase
@@ -23,8 +23,8 @@ namespace Tapawingo_backend.Tests.GET_Users_on_organisation
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly Mock<UserManager<User>> _userManagerMock;
-        private readonly Mock<RoleManager<IdentityRole>> _roleManagerMock;
         private readonly Mock<IOrganisationsRepository> _organisationsRepositoryMock;
+        private readonly Mock<IEventsRepository> _eventsRepositoryMock;
 
         public Users_Service_Tests(DatabaseFixture fixture) : base(fixture)
         {
@@ -33,10 +33,8 @@ namespace Tapawingo_backend.Tests.GET_Users_on_organisation
             var userStoreMock = new Mock<IUserStore<User>>();
             _userManagerMock = new Mock<UserManager<User>>(userStoreMock.Object, null, null, null, null, null, null, null, null);
 
-            var roleStoreMock = new Mock<IRoleStore<IdentityRole>>();
-            _roleManagerMock = new Mock<RoleManager<IdentityRole>>(roleStoreMock.Object, null, null, null, null);
-
             _organisationsRepositoryMock = new Mock<IOrganisationsRepository>();
+            _eventsRepositoryMock = new Mock<IEventsRepository>();
 
             var config = new MapperConfiguration(cfg =>
             {
@@ -44,20 +42,23 @@ namespace Tapawingo_backend.Tests.GET_Users_on_organisation
             });
             _mapper = config.CreateMapper();
 
-            _usersRepository = new UsersRepository(_context, _userManagerMock.Object, _roleManagerMock.Object);
+            _usersRepository = new UsersRepository(_context, _userManagerMock.Object);
 
-            _usersService = new UsersService(_usersRepository, _mapper, _organisationsRepositoryMock.Object);
+            _usersService = new UsersService(_usersRepository, _mapper, _organisationsRepositoryMock.Object, _eventsRepositoryMock.Object);
         }
 
         //Good Weather
         [Fact]
-        public void Get_All_Users_On_Organisation()
+        public async Task Get_User_On_Organisation()
         {
             var users = _usersRepository.GetUsersOnOrganisation(1);
 
-            Assert.NotNull(users);
-            Assert.Equal(2, users.Count());
-            Assert.Equal("test1@gmail.com", users.First().Email);
+            var firstUser = users.First();
+
+            var user = await _usersRepository.GetUserOnOrganisationAsync(1, firstUser.Id);
+
+            Assert.NotNull(user);
+            Assert.Equal("test1@gmail.com", user.Email);
         }
         //
 

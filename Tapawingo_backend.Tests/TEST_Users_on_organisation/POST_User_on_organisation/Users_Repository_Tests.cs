@@ -6,11 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tapawingo_backend.Data;
+using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Models;
 using Tapawingo_backend.Repository;
 
-namespace Tapawingo_backend.Tests.GET_User_on_organisation
+namespace Tapawingo_backend.Tests.TEST_Users_on_organisation.POST_User_on_organisation
 {
     [Collection("Database collection")]
     public class Users_Repository_Tests : TestBase
@@ -18,7 +19,6 @@ namespace Tapawingo_backend.Tests.GET_User_on_organisation
         private readonly UsersRepository _usersRepository;
         private readonly DataContext _context;
         private readonly Mock<UserManager<User>> _userManagerMock;
-        private readonly Mock<RoleManager<IdentityRole>> _roleManagerMock;
 
         public Users_Repository_Tests(DatabaseFixture fixture) : base(fixture)
         {
@@ -27,24 +27,25 @@ namespace Tapawingo_backend.Tests.GET_User_on_organisation
             var userStoreMock = new Mock<IUserStore<User>>();
             _userManagerMock = new Mock<UserManager<User>>(userStoreMock.Object, null, null, null, null, null, null, null, null);
 
-            var roleStoreMock = new Mock<IRoleStore<IdentityRole>>();
-            _roleManagerMock = new Mock<RoleManager<IdentityRole>>(roleStoreMock.Object, null, null, null, null);
-
-            _usersRepository = new UsersRepository(_context, _userManagerMock.Object, _roleManagerMock.Object);
+            _usersRepository = new UsersRepository(_context, _userManagerMock.Object);
         }
 
         //Good Weather
         [Fact]
-        public async Task Get_User_On_Organisation()
+        public void Create_User_On_Organisation()
         {
-            var users = _usersRepository.GetUsersOnOrganisation(1);
+            CreateUserDto createUserDto = new CreateUserDto
+            {
+                FirstName = "test",
+                LastName = "test",
+                Email = "test99@gmail.nl",
+                Password = "Password!1",
+                IsManager = false
+            };
 
-            var firstUser = users.First();
-
-            var user = await _usersRepository.GetUserOnOrganisationAsync(1, firstUser.Id);
+            var user = _usersRepository.CreateUserOnOrganisation(1, createUserDto);
 
             Assert.NotNull(user);
-            Assert.Equal("test1@gmail.com", user.Email);
         }
         //
 

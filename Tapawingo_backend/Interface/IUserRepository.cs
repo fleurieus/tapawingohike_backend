@@ -12,5 +12,12 @@ namespace Tapawingo_backend.Interface
         Task<User> CreateUserOnOrganisation(int organisationId, CreateUserDto model);
         Task<User> UpdateUserOnOrganisationAsync(User existingUser, UpdateUserDto user);
         Task<bool> DeleteUserOnOrganisationAsync(int organisationId, string userGuid);
+
+        // User on events
+        ICollection<User> GetUsersOnEvent(int eventId);
+        Task<User> GetUserOnEventAsync(int eventId, string userId);
+        Task<User> CreateUserOnEvent(int eventId, CreateUserOnEventDto model);
+        Task<User> UpdateUserOnEventAsync(User existingUser, UpdateUserOnEventDto user);
+        Task<bool> DeleteUserOnEventAsync(int eventId, string userGuid);
     }
 }

@@ -9,12 +9,12 @@ using Tapawingo_backend.Repository;
 namespace Tapawingo_backend.Tests.GET_Editions_By_Id
 {
     [Collection("Database collection")]
-    public class GET_EditionsById_repository_Tests : TestBase
+    public class Editions_Service_Tests : TestBase
     {
         private readonly EditionsRepository _editionsRepository;
         private readonly DataContext _context;
 
-        public GET_EditionsById_repository_Tests(DatabaseFixture fixture) : base(fixture)
+        public Editions_Service_Tests(DatabaseFixture fixture) : base(fixture)
         {
             _context = Context; //inject 'shared' context from TestBase
             _editionsRepository = new EditionsRepository(_context);

@@ -3,6 +3,7 @@ using Tapawingo_backend.Services;
 using Tapawingo_backend.Dtos;
 using Microsoft.Extensions.Logging;
 using Tapawingo_backend.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Tapawingo_backend.Controllers
 {
@@ -16,7 +17,7 @@ namespace Tapawingo_backend.Controllers
             _editionsService = editionsService;
         }
 
-        [HttpGet("events/{event_id}/editions/{edition_id}")]
+        [HttpGet("events/{eventId}/editions/{edition_id}")]
         public IActionResult GetEditionById(int event_id, int edition_id)
         {
             try
@@ -33,7 +34,7 @@ namespace Tapawingo_backend.Controllers
             }
         }
 
-        [HttpGet("events/{event_id}/editions")]
+        [HttpGet("events/{eventId}/editions")]
         public IActionResult GetEditions(int event_id)
         {
             try
@@ -52,11 +53,25 @@ namespace Tapawingo_backend.Controllers
             
         }
 
-        [HttpPost("events/{event_id}/editions")]
-        public IActionResult CreateEdition([FromBody] CreateEditionDto model, int organisation_id, int event_id)
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
+        [HttpPost("events/{eventId}/editions")]
+        public IActionResult CreateEdition([FromBody] CreateEditionDto model, int organisation_id, int eventId)
         {
-            var twEvent = _editionsService.CreateEdition(model, organisation_id, event_id);
+            var twEvent = _editionsService.CreateEdition(model, organisation_id, eventId);
             return twEvent;
+        }
+
+        [HttpPatch("events/{eventId}/editions/{editionId}")]
+        public async Task<IActionResult> UpdateEditionAsync(int eventId, int editionId, [FromBody] UpdateEditionDto model)
+        {
+            var response = await _editionsService.UpdateEditionAsync(eventId, editionId, model);
+            return Ok(response);
+        }
+
+        [HttpDelete("events/{eventId}/editions/{editionId}")]
+        public async Task<IActionResult> DeleteEditionAsync(int eventId, int editionId)
+        {
+            return await _editionsService.DeleteEditionAsync(eventId, editionId);
         }
     }
 }
