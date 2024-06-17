@@ -31,7 +31,7 @@ namespace Tapawingo_backend.Services
 
         public async Task<RoutepartDto> CreateRoutepartAsync(CreateRoutepartDto createRoutepart, int routeId) 
         {
-            TWRoute route = _routesRepository.GetRouteById(routeId);
+            TWRoute route = await _routesRepository.GetRouteByIdAsync(routeId);
             
             if (route == null)
                 return null;

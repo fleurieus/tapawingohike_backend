@@ -75,7 +75,7 @@ namespace Tapawingo_backend.Repository
 
         public async Task<CustomResponse> Revoke(HttpContext httpContext)
         {
-            var username = httpContext.User.Identity?.Name;
+            var username = httpContext.User.Claims.ElementAt(3).Value;
 
             if (username is null)
                 throw new UnauthorizedAccessException();
