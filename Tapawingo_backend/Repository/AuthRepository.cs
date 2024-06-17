@@ -15,13 +15,11 @@ namespace Tapawingo_backend.Repository
     public class AuthRepository : IAuthRepository
     {
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
 
-        public AuthRepository(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public AuthRepository(UserManager<User> userManager, IConfiguration configuration)
         {
             _userManager = userManager;
-            _roleManager = roleManager;
             _configuration = configuration;
         }
 
@@ -136,6 +134,8 @@ namespace Tapawingo_backend.Repository
             var claims = new List<Claim>
             {
                 new Claim("id", user.Id),
+                new Claim("firstname", user.FirstName),
+                new Claim("lastname", user.LastName),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };

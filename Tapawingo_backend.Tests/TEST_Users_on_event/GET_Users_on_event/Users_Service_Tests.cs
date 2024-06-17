@@ -7,14 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tapawingo_backend.Data;
-using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Helper;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Models;
 using Tapawingo_backend.Repository;
 using Tapawingo_backend.Services;
 
-namespace Tapawingo_backend.Tests.POST_User_on_organisation
+namespace Tapawingo_backend.Tests.TEST_Users_on_event.GET_Users_on_event
 {
     [Collection("Database collection")]
     public class Users_Service_Tests : TestBase
@@ -24,8 +23,8 @@ namespace Tapawingo_backend.Tests.POST_User_on_organisation
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly Mock<UserManager<User>> _userManagerMock;
-        private readonly Mock<RoleManager<IdentityRole>> _roleManagerMock;
         private readonly Mock<IOrganisationsRepository> _organisationsRepositoryMock;
+        private readonly Mock<IEventsRepository> _eventsRepositoryMock;
 
         public Users_Service_Tests(DatabaseFixture fixture) : base(fixture)
         {
@@ -34,10 +33,8 @@ namespace Tapawingo_backend.Tests.POST_User_on_organisation
             var userStoreMock = new Mock<IUserStore<User>>();
             _userManagerMock = new Mock<UserManager<User>>(userStoreMock.Object, null, null, null, null, null, null, null, null);
 
-            var roleStoreMock = new Mock<IRoleStore<IdentityRole>>();
-            _roleManagerMock = new Mock<RoleManager<IdentityRole>>(roleStoreMock.Object, null, null, null, null);
-
             _organisationsRepositoryMock = new Mock<IOrganisationsRepository>();
+            _eventsRepositoryMock = new Mock<IEventsRepository>();
 
             var config = new MapperConfiguration(cfg =>
             {
@@ -45,27 +42,20 @@ namespace Tapawingo_backend.Tests.POST_User_on_organisation
             });
             _mapper = config.CreateMapper();
 
-            _usersRepository = new UsersRepository(_context, _userManagerMock.Object, _roleManagerMock.Object);
+            _usersRepository = new UsersRepository(_context, _userManagerMock.Object);
 
-            _usersService = new UsersService(_usersRepository, _mapper, _organisationsRepositoryMock.Object);
+            _usersService = new UsersService(_usersRepository, _mapper, _organisationsRepositoryMock.Object, _eventsRepositoryMock.Object);
         }
 
         //Good Weather
         [Fact]
-        public void Create_User_On_Organisation()
+        public void Get_All_Users_On_Eventn()
         {
-            CreateUserDto createUserDto = new CreateUserDto
-            {
-                FirstName = "test",
-                LastName = "test",
-                Email = "test99@gmail.nl",
-                Password = "Password!1",
-                IsManager = false
-            };
+            var users = _usersRepository.GetUsersOnEvent(1);
 
-            var user = _usersRepository.CreateUserOnOrganisation(1, createUserDto);
-
-            Assert.NotNull(user);
+            Assert.NotNull(users);
+            Assert.Equal(2, users.Count());
+            Assert.Equal("test3@gmail.com", users.First().Email);
         }
         //
 

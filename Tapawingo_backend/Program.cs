@@ -131,11 +131,24 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("SuperAdminOrOrganisationPolicy", policy =>
         policy.RequireAssertion(context =>
             context.User.HasClaim(c => c.Type == "SuperAdminRole") ||
-            CheckOrganizationRequirement(context)));
+            CheckOrganizationManagerRequirement(context)));
+
+    options.AddPolicy("SuperAdminOrOrganisationMOrUPolicy", policy =>
+    policy.RequireAssertion(context =>
+        context.User.HasClaim(c => c.Type == "SuperAdminRole") ||
+        CheckOrganizationManagerRequirement(context) ||
+        CheckOrganizationUserRequirement(context)));
+
+    options.AddPolicy("SuperAdminOrOrganisationMOrUOrEventUserPolicy", policy =>
+    policy.RequireAssertion(context =>
+        context.User.HasClaim(c => c.Type == "SuperAdminRole") ||
+        CheckOrganizationManagerRequirement(context) ||
+        CheckOrganizationUserRequirement(context) ||
+        CheckEventUserRequirement(context)));
 });
 
 // Method to check OrganizationRequirement
-bool CheckOrganizationRequirement(AuthorizationHandlerContext context)
+bool CheckOrganizationManagerRequirement(AuthorizationHandlerContext context)
 {
     if (context.Resource is HttpContext httpContext)
     {
@@ -143,6 +156,40 @@ bool CheckOrganizationRequirement(AuthorizationHandlerContext context)
         {
             var expectedClaim = $"{orgId}:OrganisationManager";
             var organizationClaim = context.User.FindFirst(c => c.Type == "OrganisationRole" && c.Value.Equals(expectedClaim));
+            if (organizationClaim != null)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool CheckOrganizationUserRequirement(AuthorizationHandlerContext context)
+{
+    if (context.Resource is HttpContext httpContext)
+    {
+        if (httpContext.Request.RouteValues.TryGetValue("organisationId", out var orgId))
+        {
+            var expectedClaim = $"{orgId}:OrganisationUser";
+            var organizationClaim = context.User.FindFirst(c => c.Type == "OrganisationRole" && c.Value.Equals(expectedClaim));
+            if (organizationClaim != null)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool CheckEventUserRequirement(AuthorizationHandlerContext context)
+{
+    if (context.Resource is HttpContext httpContext)
+    {
+        if (httpContext.Request.RouteValues.TryGetValue("eventId", out var evId))
+        {
+            var expectedClaim = $"{evId}:EventUser";
+            var organizationClaim = context.User.FindFirst(c => c.Type == "EventRole" && c.Value.Equals(expectedClaim));
             if (organizationClaim != null)
             {
                 return true;
