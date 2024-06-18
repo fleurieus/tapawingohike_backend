@@ -21,7 +21,10 @@ namespace Tapawingo_backend.Repository
 
         public async Task<Routepart> GetRoutepartOnRouteAsync(int routeId, int routepartId)
         {
-            return await _context.Routeparts.FirstOrDefaultAsync(rp => rp.RouteId == routeId && rp.Id == routepartId);
+            return await _context.Routeparts
+                .Include(rp => rp.Destinations)
+                .Include(d => d.Files)
+                .FirstOrDefaultAsync(rp => rp.RouteId == routeId && rp.Id == routepartId);
         }
 
         public bool RoutepartExists(int routepartId)

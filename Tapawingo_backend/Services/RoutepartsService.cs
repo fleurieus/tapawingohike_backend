@@ -37,7 +37,11 @@ namespace Tapawingo_backend.Services
             if (!_routepartsRepository.RoutepartExists(routepartId))
                 throw new BadHttpRequestException("Routepart not found");
 
-            return _mapper.Map<RoutepartDto>(await _routepartsRepository.GetRoutepartOnRouteAsync(routeId, routepartId));
+            Routepart routepart = await _routepartsRepository.GetRoutepartOnRouteAsync(routeId, routepartId);
+            if (routepart == null)
+                throw new BadHttpRequestException("Routepart does not exist on route");
+            else
+                return _mapper.Map<RoutepartDto>(await _routepartsRepository.GetRoutepartOnRouteAsync(routeId, routepartId));
         }
 
         public async Task<RoutepartDto> CreateRoutepartAsync(CreateRoutepartDto createRoutepart, int routeId) 
