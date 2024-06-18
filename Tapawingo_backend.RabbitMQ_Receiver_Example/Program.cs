@@ -42,8 +42,33 @@ class Program
 
     private static async Task SendApiCallAsync(string message)
     {
-        var url = "https://your-api-endpoint.com/endpoint"; // Replace with your actual API endpoint
-        var content = new StringContent(message, Encoding.UTF8, "application/json");
+        var parts = message.Split(';');
+        if (parts.Length != 3)
+        {
+            Console.WriteLine(" [x] Invalid message format");
+            return;
+        }
+
+        if (!int.TryParse(parts[0], out int teamId) ||
+            !double.TryParse(parts[1], out double longitude) ||
+            !double.TryParse(parts[2], out double latitude))
+        {
+            Console.WriteLine(" [x] Invalid data in message");
+            return;
+        }
+
+        var url = $"https://localhost:7061/teams/{teamId}/locationlogs";
+        var jsonPayload = new
+        {
+            latitude,
+            longitude
+        };
+
+        var content = new StringContent(
+            System.Text.Json.JsonSerializer.Serialize(jsonPayload),
+            Encoding.UTF8,
+            "application/json"
+        );
 
         try
         {
@@ -56,4 +81,5 @@ class Program
             Console.WriteLine($" [x] API call failed: {e.Message}");
         }
     }
+
 }

@@ -13,7 +13,7 @@ channel.QueueDeclare(queue: "locationlogs",
                      arguments: null);
 
 Console.WriteLine("Format: team_id;longtitude;latitude");
-Console.WriteLine("You're placed in team: 3");
+Console.WriteLine("You're placed in team: 1");
 
 while(true)
 {
@@ -21,7 +21,7 @@ while(true)
     Random random = new Random();
     double latitude = random.NextDouble() * 180 - 90;
     double longitude = random.NextDouble() * 360 - 180;
-    int team_id = 3;
+    int team_id = 1;
 
     Console.WriteLine(" Press [enter] to send new locationlog.");
     Console.ReadLine();
