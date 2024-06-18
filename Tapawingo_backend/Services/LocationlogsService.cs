@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Models;
@@ -17,6 +18,18 @@ namespace Tapawingo_backend.Services
             _locationlogsRepository = locationlogsRepository;
             _teamsRepository = teamsRepository;
             _mapper = mapper;
+        }
+
+        public async Task<IActionResult> GetLocationlogsOnTeamAsync(int teamId)
+        {
+            if (!_teamsRepository.TeamExists(teamId))
+                return new NotFoundObjectResult(new
+                {
+                    message = "Team not found"
+                });
+
+            var locationlogs = _mapper.Map<List<LocationlogDto>>(await _locationlogsRepository.GetLocationlogsOnTeamAsync(teamId));
+            return new OkObjectResult(locationlogs);
         }
 
         public async Task<LocationlogDto> CreateLocationlogOnTeamAsync(int teamId, CreateLocationlogDto createLocationlogDto)
