@@ -17,6 +17,12 @@ namespace Tapawingo_backend.Controllers
             _locationlogsService = locationlogsService;
         }
 
+        [HttpGet("teams/{teamId}/locationlogs")]
+        public async Task<IActionResult> GetLocationlogsOnTeam(int teamId)
+        {
+            return await _locationlogsService.GetLocationlogsOnTeamAsync(teamId);
+        }
+
         [HttpPost("teams/{teamId}/locationlogs")]
         [ProducesResponseType(200, Type = typeof(Locationlog))]
         [ProducesResponseType(400)]

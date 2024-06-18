@@ -92,6 +92,13 @@ namespace Tapawingo_backend.Tests
             context.Teams.Add(team2);
             context.SaveChanges();
 
+            // Locationlogs
+            var locationlog1 = new Locationlog { Latitude = 1, Longitude = 1, TeamId = team1.Id, Timestamp = DateTime.Now };
+            var locationlog2 = new Locationlog { Latitude = 2, Longitude = 2, TeamId = team1.Id, Timestamp = DateTime.Now };
+            context.Locationlogs.Add(locationlog1);
+            context.Locationlogs.Add(locationlog2);
+            context.SaveChanges();
+
             // Routes
             var route1 = new TWRoute { Name = "TestRoute1", EditionId = edition1.Id };
             var route2 = new TWRoute { Name = "TestRoute2", EditionId = edition2.Id };
