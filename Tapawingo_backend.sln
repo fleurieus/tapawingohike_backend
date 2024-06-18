@@ -5,7 +5,11 @@ VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tapawingo_backend", "Tapawingo_backend\Tapawingo_backend.csproj", "{CA3A448B-6465-4869-BC78-95AC708E6D10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tapawingo_backend.Tests", "Tapawingo_backend.Tests\Tapawingo_backend.Tests.csproj", "{0903556E-907F-43DD-B199-A0DA8520FB04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tapawingo_backend.Tests", "Tapawingo_backend.Tests\Tapawingo_backend.Tests.csproj", "{0903556E-907F-43DD-B199-A0DA8520FB04}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tapawingo_backend.RabbitMQ_Sender_Example", "Tapawingo_backend.RabbitMQ_Server\Tapawingo_backend.RabbitMQ_Sender_Example.csproj", "{96186DA5-3C15-4D1F-8ED6-3E1C71656557}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tapawingo_backend.RabbitMQ_Receiver_Example", "Tapawingo_backend.RabbitMQ_Receiver_Example\Tapawingo_backend.RabbitMQ_Receiver_Example.csproj", "{C3326122-4140-40C0-BC2E-CFD6E77E6A60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{0903556E-907F-43DD-B199-A0DA8520FB04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0903556E-907F-43DD-B199-A0DA8520FB04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0903556E-907F-43DD-B199-A0DA8520FB04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96186DA5-3C15-4D1F-8ED6-3E1C71656557}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96186DA5-3C15-4D1F-8ED6-3E1C71656557}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96186DA5-3C15-4D1F-8ED6-3E1C71656557}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96186DA5-3C15-4D1F-8ED6-3E1C71656557}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3326122-4140-40C0-BC2E-CFD6E77E6A60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3326122-4140-40C0-BC2E-CFD6E77E6A60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3326122-4140-40C0-BC2E-CFD6E77E6A60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3326122-4140-40C0-BC2E-CFD6E77E6A60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
