@@ -16,9 +16,9 @@ namespace Tapawingo_backend.Repository
             _context = context;
         }
 
-        public async Task<List<TWRoute>> GetRoutesAsync()
+        public async Task<List<TWRoute>> GetRoutesOnEditionAsync(int editionId)
         {
-            return await _context.Routes.ToListAsync();
+            return await _context.Routes.Where(route => route.EditionId == editionId).ToListAsync();
         }
 
         public async Task<TWRoute> GetRouteByIdAsync(int id)
@@ -35,6 +35,14 @@ namespace Tapawingo_backend.Repository
         {
             bool routeExists = _context.Routes.Any(e => e.Id == routeId);
             return routeExists;
+        }
+
+        public async Task<TWRoute> CreateRouteOnEditionAsync(TWRoute route)
+        {
+            _context.Routes.Add(route);
+            await _context.SaveChangesAsync();
+
+            return route;
         }
 
         public async Task<bool> DeleteRouteByIdAsync(int routeId)
