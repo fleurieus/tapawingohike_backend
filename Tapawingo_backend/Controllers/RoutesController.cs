@@ -16,11 +16,11 @@ namespace Tapawingo_backend.Controllers
 
         [HttpGet("editions/{editionId}/routes")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<RouteDto>))]
-        public async Task<IActionResult> GetRoutes(int editionId)
+        public async Task<IActionResult> GetRoutesOnEditionAsync(int editionId)
         {
             try
             {
-                var routes = await _routesService.GetRoutes(editionId);
+                var routes = await _routesService.GetRoutesOnEditionAsync(editionId);
                 return routes == null ?
                     Ok(new List<RouteDto>()) :
                     Ok(routes);
@@ -71,6 +71,16 @@ namespace Tapawingo_backend.Controllers
                     internalMessage = ex.Message
                 });
             }
+        }
+
+        [HttpPost("editions/{editionId}/routes")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(RouteDto))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateRouteOnEdition(int editionId, [FromBody] CreateRouteDto model)
+        {
+            var route = await _routesService.CreateRouteOnEditionAsync(editionId, model);
+            return new ObjectResult(route) { StatusCode = StatusCodes.Status201Created };
         }
 
         [HttpDelete("editions/{editionId}/routes/{routeId}")]

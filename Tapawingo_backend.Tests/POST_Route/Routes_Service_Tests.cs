@@ -9,8 +9,10 @@ using Tapawingo_backend.Repository;
 using Tapawingo_backend.Services;
 using AutoMapper;
 using Tapawingo_backend.Helper;
+using Microsoft.EntityFrameworkCore;
+using Tapawingo_backend.Dtos;
 
-namespace Tapawingo_backend.Tests.GET_Routes
+namespace Tapawingo_backend.Tests.POST_Route
 {
     [Collection("Database collection")]
     public class Routes_Service_Tests : TestBase
@@ -35,16 +37,24 @@ namespace Tapawingo_backend.Tests.GET_Routes
 
         //Good Weather
         [Fact]
-        public async void Get_All_Routes_On_Edition()
+        public async Task POST_Route()
         {
-            var routes = await _routesService.GetRoutesOnEditionAsync(2);
+            var editionId = _context.Editions.First().Id;
 
-            Assert.NotNull(routes);
-            Assert.Equal(2, routes.Count());
-            Assert.Equal(2, routes[0].Id);
-            Assert.Equal(3, routes[1].Id);
-            Assert.Equal("TestRoute2", routes[0].Name);
-            Assert.Equal("TestRoute3", routes[1].Name);
+            CreateRouteDto createRouteDto = new CreateRouteDto
+            {
+                Name = "test99"
+            };
+
+            var result = await _routesService.CreateRouteOnEditionAsync(editionId, createRouteDto);
+
+            Assert.NotNull(result);
+
+            var foundRoute = await _context.Routes.FirstOrDefaultAsync(r => r.Name == "test99");
+
+            Assert.NotNull(foundRoute);
+            Assert.Equal("test99", foundRoute.Name);
+            Assert.Equal(editionId, foundRoute.EditionId);
         }
         //
 
