@@ -24,25 +24,12 @@ namespace Tapawingo_backend.Tests.GET_Editions_By_Id
         [Fact]
         public void Get_Edition_By_Id()
         {
-            var edition = _editionsRepository.GetEditionById(1, 1);
+            var edition = _editionsRepository.GetEditionById(1);
 
             Assert.NotNull(edition);
             Assert.Equal("TestEdition1", edition.Name);
             Assert.Equal(1, edition.EventId);
             Assert.Equal(1, edition.Id);
-        }
-
-        //Bad weather
-        [Fact]
-        public void Get_Edition_By_Id_BadEventId()
-        {
-            Assert.Throws<ArgumentException>(() => _editionsRepository.GetEditionById(999, 1));
-        }
-
-        [Fact]
-        public void Get_Edition_By_Id_BadEditionId()
-        {
-            Assert.Throws<ArgumentException>(() => _editionsRepository.GetEditionById(1, 999));
         }
     }
 }

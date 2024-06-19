@@ -15,22 +15,20 @@ namespace Tapawingo_backend.Repository
             _context = context;
         }
 
-        public Edition GetEditionById(int eventId, int editionId)
+        public Edition GetEditionById(int editionId)
         {
-            var edition = GetAllEditions(eventId).FirstOrDefault(e => e.Id == editionId);
-            if (edition == null) throw new ArgumentException("Edition not found.");
-            return edition;
+            return _context.Editions.FirstOrDefault(e => e.Id == editionId);
         }
 
         public List<Edition> GetAllEditions(int eventId)
         {
             return _context.Editions.Where(e => e.EventId == eventId).ToList();
         }
-        public Edition CreateEdition(Edition newEdition)
+        public async Task<Edition> CreateEditionOnEventAsync(Edition edition)
         {
-            _context.Editions.Add(newEdition);
-            _context.SaveChanges();
-            return newEdition;
+            _context.Editions.Add(edition);
+            await _context.SaveChangesAsync();
+            return edition;
         }
 
         public bool EditionExists(int editionId)
@@ -64,11 +62,11 @@ namespace Tapawingo_backend.Repository
             return existingEdition;
         }
 
-        public async Task<bool> DeleteEditionAsync(int eventId, int editionId)
+        public async Task<bool> DeleteEditionAsync(int editionId)
         {
             try
             {
-                _context.Editions.Remove(GetEditionById(eventId, editionId));
+                _context.Editions.Remove(GetEditionById(editionId));
                 await _context.SaveChangesAsync();
                 return true;
             }

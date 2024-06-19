@@ -17,12 +17,12 @@ namespace Tapawingo_backend.Controllers
             _editionsService = editionsService;
         }
 
-        [HttpGet("events/{eventId}/editions/{edition_id}")]
-        public IActionResult GetEditionById(int event_id, int edition_id)
+        [HttpGet("events/{eventId}/editions/{editionId}")]
+        public IActionResult GetEditionById(int eventId, int editionId)
         {
             try
             {
-                var edition = _editionsService.GetEditionById(event_id, edition_id);
+                var edition = _editionsService.GetEditionById(eventId, editionId);
                 return Ok(edition);
             }
             catch (Exception ex)
@@ -35,11 +35,11 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpGet("events/{eventId}/editions")]
-        public IActionResult GetEditions(int event_id)
+        public IActionResult GetEditions(int eventId)
         {
             try
             {
-                var editions = _editionsService.GetAllEditions(event_id);
+                var editions = _editionsService.GetAllEditions(eventId);
                 return Ok(editions);
 
             }
@@ -53,12 +53,13 @@ namespace Tapawingo_backend.Controllers
             
         }
 
-        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPost("events/{eventId}/editions")]
-        public IActionResult CreateEdition([FromBody] CreateEditionDto model, int organisation_id, int eventId)
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(EditionDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateEditionOnEventAsync(int eventId, [FromBody] CreateEditionDto model)
         {
-            var twEvent = _editionsService.CreateEdition(model, organisation_id, eventId);
-            return twEvent;
+            var edition = await _editionsService.CreateEditionOnEventAsync(eventId, model);
+            return new ObjectResult(edition) { StatusCode = StatusCodes.Status201Created };
         }
 
         [HttpPatch("events/{eventId}/editions/{editionId}")]

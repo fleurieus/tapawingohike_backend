@@ -26,10 +26,16 @@ namespace Tapawingo_backend.Services
             try
             {
                 if (!_eventsRepository.EventExists(eventId))
-                {
                     throw new ArgumentException("Event not found");
-                }
-                return _mapper.Map<EditionDto>(_editionsRepository.GetEditionById(eventId, editionId));
+
+                if (!_editionsRepository.EditionExists(editionId))
+                    throw new BadHttpRequestException("Edition not found");
+
+                Edition edition = _editionsRepository.GetEditionById(editionId);
+                if (edition == null)
+                    throw new BadHttpRequestException("Edition does not exist on event");
+                else 
+                    return _mapper.Map<EditionDto>(edition);
             }
             catch (Exception ex)
             {
@@ -46,42 +52,20 @@ namespace Tapawingo_backend.Services
             return _mapper.Map<List<EditionDto>>(_editionsRepository.GetAllEditions(eventId));
         }
 
-        public IActionResult CreateEdition(CreateEditionDto model, int organisationId, int eventId)
+        public async Task<EditionDto> CreateEditionOnEventAsync(int eventId, CreateEditionDto createEditionDto)
         {
-            if (!_organisationsRepository.OrganisationExists(organisationId))
+            if (!_eventsRepository.EventExists(eventId))
+                throw new BadHttpRequestException("Event not found");
+
+            Edition edition = new Edition
             {
-                return new NotFoundObjectResult(new
-                {
-                    message = "Organisation not found"
-                });
-            }
+                EventId = eventId,
+                Name = createEditionDto.Name,
+                StartDate = createEditionDto.StartDate,
+                EndDate = createEditionDto.EndDate
+            };
 
-            if (!_eventsRepository.EventExists(eventId)) 
-            {
-                return new NotFoundObjectResult(new
-                {
-                    message = "Event not found"
-                });
-            }
-
-            if (string.IsNullOrEmpty(model.Name))
-            {
-                return new BadRequestObjectResult(new 
-                { 
-                    message = "Name is required"
-                });
-            }
-
-            var eventExists = _eventsRepository.GetEventByIdAndOrganisationId(eventId, organisationId);
-
-            if (eventExists == null)
-            {
-                throw new InvalidOperationException("Event does not exists for this organisation");
-            }
-
-            var editionEntity = _mapper.Map<Edition>(model);
-            editionEntity.EventId = eventId;
-            return new ObjectResult(_editionsRepository.CreateEdition(editionEntity));
+            return _mapper.Map<EditionDto>(await _editionsRepository.CreateEditionOnEventAsync(edition));
         }
 
         public async Task<EditionDto> UpdateEditionAsync(int eventId, int editionId, UpdateEditionDto model)
@@ -92,7 +76,7 @@ namespace Tapawingo_backend.Services
             if (!_editionsRepository.EditionExists(editionId))
                 throw new BadHttpRequestException("Edition not found");
 
-            Edition edition = _editionsRepository.GetEditionById(eventId, editionId);
+            Edition edition = _editionsRepository.GetEditionById(editionId);
 
             return _mapper.Map<EditionDto>(await _editionsRepository.UpdateEditionAsync(edition, model));
         }
@@ -111,7 +95,7 @@ namespace Tapawingo_backend.Services
                     message = "Edition not found"
                 });
 
-            bool editionDeleted = await _editionsRepository.DeleteEditionAsync(eventId, editionId);
+            bool editionDeleted = await _editionsRepository.DeleteEditionAsync(editionId);
             return editionDeleted ? new NoContentResult() : new BadRequestObjectResult(new
             {
                 message = "Edition could not be deleted"
