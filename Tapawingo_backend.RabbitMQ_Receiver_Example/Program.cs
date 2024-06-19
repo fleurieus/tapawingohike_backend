@@ -14,14 +14,8 @@ class Program
         var factory = new ConnectionFactory { HostName = "localhost" };
         using var connection = factory.CreateConnection();
         using var locationLogChannel = connection.CreateModel();
-        using var syncChannel = connection.CreateModel();
 
         locationLogChannel.QueueDeclare(queue: "locationlogs",
-                             durable: false,
-                             exclusive: false,
-                             autoDelete: false,
-                             arguments: null);
-        locationLogChannel.QueueDeclare(queue: "sync",
                              durable: false,
                              exclusive: false,
                              autoDelete: false,
@@ -29,29 +23,18 @@ class Program
 
         Console.WriteLine(" [*] Waiting for messages.");
 
-        var syncConsumer = new EventingBasicConsumer(syncChannel);
         var locationlogConsumer = new EventingBasicConsumer(locationLogChannel);
         locationlogConsumer.Received += async (model, ea) =>
         {
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
-            Console.WriteLine($" [LOCATIONLOG] Received {message}");
+            Console.WriteLine($" [RECEIVER - LOCATIONLOG] Received {message}");
 
             await SendApiCallAsync(message);
         };
         locationLogChannel.BasicConsume(queue: "locationlogs",
                              autoAck: true,
                              consumer: locationlogConsumer);
-
-        syncConsumer.Received += (model, ea) =>
-        {
-            var body = ea.Body.ToArray();
-            var message = Encoding.UTF8.GetString(body);
-            Console.WriteLine($" [SYNC] Received {message}");
-        };
-        syncChannel.BasicConsume(queue: "sync",
-            autoAck: true,
-            consumer: syncConsumer);
 
         Console.WriteLine(" Press [enter] to exit.");
         Console.ReadLine();
@@ -98,5 +81,4 @@ class Program
             Console.WriteLine($" [x] API call failed: {e.Message}");
         }
     }
-
 }
