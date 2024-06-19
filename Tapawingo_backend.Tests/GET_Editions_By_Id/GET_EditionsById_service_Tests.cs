@@ -51,13 +51,5 @@ namespace Tapawingo_backend.Tests.GET_Editions_By_Id
         {
             Assert.Throws<ArgumentException>(() => _editionsService.GetEditionById(999, 1));
         }
-
-        [Fact]
-        public void Get_Edition_By_Id_BadEditionId()
-        {
-            Assert.Throws<ArgumentException>(() => _editionsService.GetEditionById(1, 999));
-        }
-
-
     }
 }

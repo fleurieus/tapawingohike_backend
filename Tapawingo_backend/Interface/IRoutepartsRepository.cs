@@ -8,5 +8,6 @@ namespace Tapawingo_backend.Interface
         Task<Routepart> GetRoutepartOnRouteAsync(int routeId, int routepartId);
         bool RoutepartExists(int routepartId);
         Task<Routepart> CreateRoutePartAsync(Routepart newRoutepart);
+        Task<bool> DeleteRoutepartOnRouteAsync(int routeId, Routepart routepart);
     }
 }

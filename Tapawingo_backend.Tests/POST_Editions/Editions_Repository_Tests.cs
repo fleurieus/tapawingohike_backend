@@ -23,7 +23,7 @@ namespace Tapawingo_backend.Tests.POST_Editions
 
         //Good Weather
         [Fact]
-        public void Post_Edition()
+        public async Task Post_Edition()
         {
             var testName = "test";
             var testDate = DateTime.Now;
@@ -34,7 +34,7 @@ namespace Tapawingo_backend.Tests.POST_Editions
             edition.StartDate = testDate;
             edition.EndDate = testDate;
             edition.EventId = _context.Events.FirstOrDefault().Id;
-            _editionsRepository.CreateEdition(edition);
+            await _editionsRepository.CreateEditionOnEventAsync(edition);
 
             //There should only be one Edition with the testName
             var foundEdition = _context.Editions.FirstOrDefault(x => x.Name == testName);

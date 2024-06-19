@@ -38,5 +38,19 @@ namespace Tapawingo_backend.Repository
             await _context.SaveChangesAsync();
             return newRoutepart;
         }
+
+        public async Task<bool> DeleteRoutepartOnRouteAsync(int routeId, Routepart routepart)
+        {
+            try
+            {
+                _context.Routeparts.Remove(routepart);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

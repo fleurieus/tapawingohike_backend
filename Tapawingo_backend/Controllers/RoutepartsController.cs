@@ -40,5 +40,11 @@ namespace Tapawingo_backend.Controllers
                 new ObjectResult(routepart) { StatusCode = StatusCodes.Status201Created } :
                 NotFound(new { message = "Route not found" });
         }
+
+        [HttpDelete("routes/{routeId}/routeparts/{routepartId}")]
+        public async Task<IActionResult> DeleteRoutepartOnRouteAsync(int routeId, int routepartId)
+        {
+            return await _routepartsService.DeleteRoutepartOnRouteAsync(routeId, routepartId);
+        }
     }
 }

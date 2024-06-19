@@ -30,7 +30,7 @@ namespace Tapawingo_backend.Tests.DELETE_Edition
             var editions = _editionsRepository.GetAllEditions(1);
             Assert.Equal(2, editions.Count);
 
-            await _editionsRepository.DeleteEditionAsync(1, 2);
+            await _editionsRepository.DeleteEditionAsync(2);
 
             var editionsWithOneRemovedEdition = _editionsRepository.GetAllEditions(1);
             Assert.Single(editionsWithOneRemovedEdition);

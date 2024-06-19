@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Models;
@@ -109,6 +110,34 @@ namespace Tapawingo_backend.Services
             }
 
             return _mapper.Map<RoutepartDto>(createdRoutepart);
+        }
+
+        public async Task<IActionResult> DeleteRoutepartOnRouteAsync(int routeId, int routepartId)
+        {
+            if (!_routesRepository.RouteExists(routeId))
+                return new NotFoundObjectResult(new
+                {
+                    message = "Route not found"
+                });
+
+            if (!_routepartsRepository.RoutepartExists(routepartId))
+                return new NotFoundObjectResult(new
+                {
+                    message = "Routepart not found"
+                });
+
+            Routepart routepart = await _routepartsRepository.GetRoutepartOnRouteAsync(routeId, routepartId);
+            if (routepart == null)
+                return new NotFoundObjectResult(new
+                {
+                    message = "Routepart does not exist on route"
+                });
+
+            bool routepartDeleted = await _routepartsRepository.DeleteRoutepartOnRouteAsync(routeId, routepart);
+            return routepartDeleted ? new NoContentResult() : new BadRequestObjectResult(new
+            {
+                message = "Routepart could not be deleted on organisation"
+            });
         }
     }
 }

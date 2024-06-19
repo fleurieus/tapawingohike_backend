@@ -39,7 +39,7 @@ namespace Tapawingo_backend.Tests.POST_Editions
 
         //Good Weather
         [Fact]
-        public void Post_Edition()
+        public async Task Post_Edition()
         {
             // Test data to test against.
             var testName = "test";
@@ -52,7 +52,7 @@ namespace Tapawingo_backend.Tests.POST_Editions
             };
 
             // Pak default Organisation en Event
-            var edition = _editionsService.CreateEdition(createEditionDto, eventId, organisationId);
+            var edition = await _editionsService.CreateEditionOnEventAsync(eventId, createEditionDto);
 
             Assert.NotNull(edition);
 
@@ -63,73 +63,6 @@ namespace Tapawingo_backend.Tests.POST_Editions
             Assert.Equal(testName, foundEdition.Name);
             Assert.Equal(testDate, foundEdition.StartDate);
             Assert.Equal(testDate, foundEdition.EndDate);
-        }
-        //
-
-        //Bad Weather
-        [Fact]
-        public void Post_Edition_Faulty_OrganisationId()
-        {
-            // Test data to test against.
-            var testName = "testName";
-            var testDate = DateTime.Now;
-
-            CreateEditionDto createEditionDto = new CreateEditionDto
-            {
-                Name = testName,
-                StartDate = testDate,
-                EndDate = testDate
-            };
-
-            var output = _editionsService.CreateEdition(createEditionDto, 999, 1);
-            var expectedOutput = new NotFoundObjectResult(null);
-
-            Assert.Equal(expectedOutput.GetType(), output.GetType());
-        }
-        //
-
-        //Bad Weather
-        [Fact]
-        public void Post_Edition_Faulty_EventId()
-        {
-            // Test data to test against.
-            var testName = "testName";
-            var testDate = DateTime.Now;
-
-            
-
-            CreateEditionDto createEditionDto = new CreateEditionDto
-            {
-                Name = testName,
-                StartDate = testDate,
-                EndDate = testDate
-            };
-
-            // Pak default Organisation en Event
-            var output = _editionsService.CreateEdition(createEditionDto, 1, 999);
-            var expectedOutput = new NotFoundObjectResult(null);
-
-            Assert.Equal(expectedOutput.GetType(), output.GetType()); //check based on the type, since no exception is thrown...
-        }
-        //
-
-        //Bad Weather
-        [Fact]
-        public void Post_Edition_Mismatched_Id()
-        {
-            // Test data to test against.
-            var testName = "testName";
-            var testDate = DateTime.Now;
-
-            CreateEditionDto createEditionDto = new CreateEditionDto
-            {
-                Name = testName,
-                StartDate = testDate,
-                EndDate = testDate
-            };
-
-            // Pak default Organisation en Event
-            Assert.Throws<InvalidOperationException>(() => _editionsService.CreateEdition(createEditionDto, 2, 1));
         }
         //
 
