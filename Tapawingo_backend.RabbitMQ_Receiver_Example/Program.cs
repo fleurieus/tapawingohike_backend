@@ -13,9 +13,15 @@ class Program
     {
         var factory = new ConnectionFactory { HostName = "localhost" };
         using var connection = factory.CreateConnection();
-        using var channel = connection.CreateModel();
+        using var locationLogChannel = connection.CreateModel();
+        using var syncChannel = connection.CreateModel();
 
-        channel.QueueDeclare(queue: "locationlogs",
+        locationLogChannel.QueueDeclare(queue: "locationlogs",
+                             durable: false,
+                             exclusive: false,
+                             autoDelete: false,
+                             arguments: null);
+        locationLogChannel.QueueDeclare(queue: "sync",
                              durable: false,
                              exclusive: false,
                              autoDelete: false,
@@ -23,18 +29,29 @@ class Program
 
         Console.WriteLine(" [*] Waiting for messages.");
 
-        var consumer = new EventingBasicConsumer(channel);
-        consumer.Received += async (model, ea) =>
+        var syncConsumer = new EventingBasicConsumer(syncChannel);
+        var locationlogConsumer = new EventingBasicConsumer(locationLogChannel);
+        locationlogConsumer.Received += async (model, ea) =>
         {
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
-            Console.WriteLine($" [x] Received {message}");
+            Console.WriteLine($" [LOCATIONLOG] Received {message}");
 
             await SendApiCallAsync(message);
         };
-        channel.BasicConsume(queue: "locationlogs",
+        locationLogChannel.BasicConsume(queue: "locationlogs",
                              autoAck: true,
-                             consumer: consumer);
+                             consumer: locationlogConsumer);
+
+        syncConsumer.Received += (model, ea) =>
+        {
+            var body = ea.Body.ToArray();
+            var message = Encoding.UTF8.GetString(body);
+            Console.WriteLine($" [SYNC] Received {message}");
+        };
+        syncChannel.BasicConsume(queue: "sync",
+            autoAck: true,
+            consumer: syncConsumer);
 
         Console.WriteLine(" Press [enter] to exit.");
         Console.ReadLine();

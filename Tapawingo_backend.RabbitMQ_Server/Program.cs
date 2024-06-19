@@ -4,9 +4,15 @@ using RabbitMQ.Client;
 
 var factory = new ConnectionFactory { HostName = "localhost" };
 using var connection = factory.CreateConnection();
-using var channel = connection.CreateModel();
+using var locationlogChannel = connection.CreateModel();
+using var syncChannel = connection.CreateModel();
 
-channel.QueueDeclare(queue: "locationlogs",
+locationlogChannel.QueueDeclare(queue: "locationlogs",
+                     durable: false,
+                     exclusive: false,
+                     autoDelete: false,
+                     arguments: null);
+syncChannel.QueueDeclare(queue: "sync",
                      durable: false,
                      exclusive: false,
                      autoDelete: false,
@@ -23,16 +29,27 @@ while(true)
     double longitude = random.NextDouble() * 360 - 180;
     int team_id = 1;
 
-    Console.WriteLine(" Press [enter] to send new locationlog.");
+    //Console.WriteLine(" Press [enter] to send new locationlog.");
+    Console.WriteLine(" Press [enter] to send new sync.");
     Console.ReadLine();
 
-    string message = $"{team_id};{longitude};{latitude}";
+    string message = $"{team_id};synchronize";
     var body = Encoding.UTF8.GetBytes(message);
 
-    channel.BasicPublish(exchange: string.Empty,
-                         routingKey: "locationlogs", //queue name!
+    syncChannel.BasicPublish(exchange: string.Empty,
+                         routingKey: "sync", //queue name!
                          basicProperties: null,
                          body: body);
     Console.WriteLine($" [x] Sent {message}");
+
+    // // USE TO SEND LOCATIONLOG
+    //string message = $"{team_id};{longitude};{latitude}";
+    //var body = Encoding.UTF8.GetBytes(message);
+
+    //channel.BasicPublish(exchange: string.Empty,
+    //                     routingKey: "locationlogs", //queue name!
+    //                     basicProperties: null,
+    //                     body: body);
+    //Console.WriteLine($" [x] Sent {message}");
 }
 
