@@ -16,11 +16,11 @@ namespace Tapawingo_backend.Controllers
 
         [HttpGet("editions/{editionId}/routes")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<RouteDto>))]
-        public async Task<IActionResult> GetRoutes(int editionId)
+        public async Task<IActionResult> GetRoutesOnEditionAsync(int editionId)
         {
             try
             {
-                var routes = await _routesService.GetRoutes(editionId);
+                var routes = await _routesService.GetRoutesOnEditionAsync(editionId);
                 return routes == null ?
                     Ok(new List<RouteDto>()) :
                     Ok(routes);
@@ -47,11 +47,11 @@ namespace Tapawingo_backend.Controllers
         [HttpGet("editions/{editionId}/routes/{routeId}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RouteDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetRoute(int editionId, int routeId)
+        public async Task<IActionResult> GetRouteOnEdition(int editionId, int routeId)
         {
             try
             {
-                var route = await _routesService.GetRoutesById(editionId, routeId);
+                var route = await _routesService.GetRouteOnEditionAsync(editionId, routeId);
                 return route != null ?
                     Ok(route) :
                     NotFound(new { message = "Route not found" });
@@ -71,6 +71,23 @@ namespace Tapawingo_backend.Controllers
                     internalMessage = ex.Message
                 });
             }
+        }
+
+        [HttpPost("editions/{editionId}/routes")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(RouteDto))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateRouteOnEdition(int editionId, [FromBody] CreateRouteDto model)
+        {
+            var route = await _routesService.CreateRouteOnEditionAsync(editionId, model);
+            return new ObjectResult(route) { StatusCode = StatusCodes.Status201Created };
+        }
+
+        [HttpPatch("editions/{editionId}/routes/{routeId}")]
+        public async Task<IActionResult> UpdateRouteOnEdition(int editionId, int routeId, [FromBody] UpdateRouteDto updateRouteDto)
+        {
+            var response = await _routesService.UpdateRouteOnEditionAsync(editionId, routeId, updateRouteDto);
+            return Ok(response);
         }
 
         [HttpDelete("editions/{editionId}/routes/{routeId}")]

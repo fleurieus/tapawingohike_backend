@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
+using Tapawingo_backend.Models;
+using Tapawingo_backend.Repository;
 
 namespace Tapawingo_backend.Services
 {
@@ -19,13 +21,13 @@ namespace Tapawingo_backend.Services
             _editionsRepository = editionsRepository;
         }
 
-        public async Task<List<RouteDto>> GetRoutes(int editionId)
+        public async Task<List<RouteDto>> GetRoutesOnEditionAsync(int editionId)
         {
             if (!_editionsRepository.EditionExists(editionId)) throw new ArgumentException("Edition not found");
-            return _mapper.Map<List<RouteDto>>(await _routesRepository.GetRoutesAsync());
+            return _mapper.Map<List<RouteDto>>(await _routesRepository.GetRoutesOnEditionAsync(editionId));
         }
 
-        public async Task<RouteDto> GetRoutesById(int editionId, int routeId)
+        public async Task<RouteDto> GetRouteOnEditionAsync(int editionId, int routeId)
         {
             if (!_editionsRepository.EditionExists(editionId)) throw new ArgumentException("Edition not found");
             var foundRoute = await _routesRepository.GetRouteByIdAsync(routeId);
@@ -33,6 +35,35 @@ namespace Tapawingo_backend.Services
             if (foundRoute.EditionId != editionId) throw new ArgumentException("Route does not exist on Edition");
 
             return _mapper.Map<RouteDto>(foundRoute);
+        }
+
+        public async Task<RouteDto> CreateRouteOnEditionAsync(int editionId, CreateRouteDto createRouteDto)
+        {
+            if (!_editionsRepository.EditionExists(editionId))
+                throw new BadHttpRequestException("Edition not found");
+
+            TWRoute route = new TWRoute
+            {
+                EditionId = editionId,
+                Name = createRouteDto.Name,
+            };
+
+            return _mapper.Map<RouteDto>(await _routesRepository.CreateRouteOnEditionAsync(route));
+        }
+
+        public async Task<RouteDto> UpdateRouteOnEditionAsync(int editionId, int routeId, UpdateRouteDto model)
+        {
+            if (!_editionsRepository.EditionExists(editionId))
+                throw new BadHttpRequestException("Edition not found");
+
+            if (!_routesRepository.RouteExists(routeId))
+                throw new BadHttpRequestException("Route not found");
+
+            var route = await _routesRepository.GetRouteByIdAsync(routeId);
+            if (route.EditionId != editionId)
+                throw new BadHttpRequestException("Route does not exist on Edition");
+
+            return _mapper.Map<RouteDto>(await _routesRepository.UpdateRouteOnEditionAsync(route, model));
         }
 
         public async Task<bool> DeleteRouteById(int editionId, int routeId)

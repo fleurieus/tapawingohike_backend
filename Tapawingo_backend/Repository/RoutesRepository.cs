@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Tapawingo_backend.Data;
 using Tapawingo_backend.Dtos;
@@ -16,9 +17,9 @@ namespace Tapawingo_backend.Repository
             _context = context;
         }
 
-        public async Task<List<TWRoute>> GetRoutesAsync()
+        public async Task<List<TWRoute>> GetRoutesOnEditionAsync(int editionId)
         {
-            return await _context.Routes.ToListAsync();
+            return await _context.Routes.Where(route => route.EditionId == editionId).ToListAsync();
         }
 
         public async Task<TWRoute> GetRouteByIdAsync(int id)
@@ -35,6 +36,27 @@ namespace Tapawingo_backend.Repository
         {
             bool routeExists = _context.Routes.Any(e => e.Id == routeId);
             return routeExists;
+        }
+
+        public async Task<TWRoute> CreateRouteOnEditionAsync(TWRoute route)
+        {
+            _context.Routes.Add(route);
+            await _context.SaveChangesAsync();
+
+            return route;
+        }
+
+        public async Task<TWRoute> UpdateRouteOnEditionAsync(TWRoute existingRoute, UpdateRouteDto updatedRoute)
+        {
+            if (updatedRoute.Name != null)
+            {
+                existingRoute.Name = updatedRoute.Name;
+                _context.Routes.Update(existingRoute);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return existingRoute;
         }
 
         public async Task<bool> DeleteRouteByIdAsync(int routeId)
