@@ -10,6 +10,7 @@ class Program
         var factory = new ConnectionFactory { HostName = "localhost" };
         using var connection = factory.CreateConnection();
         using var sync_channel = connection.CreateModel();
+        using var log_channel = connection.CreateModel();
 
         // Declare a fanout exchange for broadcasting messages
         sync_channel.ExchangeDeclare(exchange: "sync_broadcast_exchange", type: ExchangeType.Fanout);
@@ -19,6 +20,12 @@ class Program
         sync_channel.QueueBind(queue: queueName,
                           exchange: "sync_broadcast_exchange",
                           routingKey: "");
+        log_channel.QueueDeclare(queue: "locationlogs",
+                     durable: false,
+                     exclusive: false,
+                     autoDelete: false,
+                     arguments: null);
+
 
         Console.WriteLine("Enter your team ID: ");
         int teamId = Convert.ToInt32(Console.ReadLine());
@@ -46,7 +53,17 @@ class Program
                 break;
             if (message.ToLower() == "log")
             {
+                Random random = new Random();
+                double latitude = random.NextDouble() * 180 - 90;
+                double longitude = random.NextDouble() * 360 - 180;
 
+                string log = $"{teamId};{longitude};{latitude}";
+                var body = Encoding.UTF8.GetBytes(log);
+                log_channel.BasicPublish(exchange: string.Empty,
+                                     routingKey: "locationlogs", //queue name!
+                                     basicProperties: null,
+                                     body: body);
+                Console.WriteLine($" [Client {clientId} SENT] {log}");
             }
             else
             {
