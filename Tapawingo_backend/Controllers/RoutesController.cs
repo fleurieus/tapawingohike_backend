@@ -47,11 +47,11 @@ namespace Tapawingo_backend.Controllers
         [HttpGet("editions/{editionId}/routes/{routeId}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RouteDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetRoute(int editionId, int routeId)
+        public async Task<IActionResult> GetRouteOnEdition(int editionId, int routeId)
         {
             try
             {
-                var route = await _routesService.GetRoutesById(editionId, routeId);
+                var route = await _routesService.GetRouteOnEditionAsync(editionId, routeId);
                 return route != null ?
                     Ok(route) :
                     NotFound(new { message = "Route not found" });
@@ -81,6 +81,13 @@ namespace Tapawingo_backend.Controllers
         {
             var route = await _routesService.CreateRouteOnEditionAsync(editionId, model);
             return new ObjectResult(route) { StatusCode = StatusCodes.Status201Created };
+        }
+
+        [HttpPatch("editions/{editionId}/routes/{routeId}")]
+        public async Task<IActionResult> UpdateRouteOnEdition(int editionId, int routeId, [FromBody] UpdateRouteDto updateRouteDto)
+        {
+            var response = await _routesService.UpdateRouteOnEditionAsync(editionId, routeId, updateRouteDto);
+            return Ok(response);
         }
 
         [HttpDelete("editions/{editionId}/routes/{routeId}")]

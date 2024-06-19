@@ -27,7 +27,7 @@ namespace Tapawingo_backend.Services
             return _mapper.Map<List<RouteDto>>(await _routesRepository.GetRoutesOnEditionAsync(editionId));
         }
 
-        public async Task<RouteDto> GetRoutesById(int editionId, int routeId)
+        public async Task<RouteDto> GetRouteOnEditionAsync(int editionId, int routeId)
         {
             if (!_editionsRepository.EditionExists(editionId)) throw new ArgumentException("Edition not found");
             var foundRoute = await _routesRepository.GetRouteByIdAsync(routeId);
@@ -49,6 +49,21 @@ namespace Tapawingo_backend.Services
             };
 
             return _mapper.Map<RouteDto>(await _routesRepository.CreateRouteOnEditionAsync(route));
+        }
+
+        public async Task<RouteDto> UpdateRouteOnEditionAsync(int editionId, int routeId, UpdateRouteDto model)
+        {
+            if (!_editionsRepository.EditionExists(editionId))
+                throw new BadHttpRequestException("Edition not found");
+
+            if (!_routesRepository.RouteExists(routeId))
+                throw new BadHttpRequestException("Route not found");
+
+            var route = await _routesRepository.GetRouteByIdAsync(routeId);
+            if (route.EditionId != editionId)
+                throw new BadHttpRequestException("Route does not exist on Edition");
+
+            return _mapper.Map<RouteDto>(await _routesRepository.UpdateRouteOnEditionAsync(route, model));
         }
 
         public async Task<bool> DeleteRouteById(int editionId, int routeId)
