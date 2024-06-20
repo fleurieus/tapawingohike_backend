@@ -34,7 +34,7 @@ namespace Tapawingo_backend.Services
 
             if (!_teamRepository.TeamExists(teamId))
                 throw new BadHttpRequestException("Team not found");
-
+            
             return _mapper.Map<TeamDto>(await _teamRepository.GetTeamOnEditionAsync(editionId, teamId));
         }
 

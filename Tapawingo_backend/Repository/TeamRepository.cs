@@ -22,8 +22,27 @@ namespace Tapawingo_backend.Repository
 
         public async Task<Team> GetTeamOnEditionAsync(int editionId, int teamId)
         {
-            return await _context.Teams.FirstOrDefaultAsync(t => t.EditionId == editionId && t.Id == teamId);
+            try
+            {
+                return await _context.Teams
+                .Include(t => t.TeamRouteparts
+                    .Where(trp => trp.TeamId == teamId))
+                    .ThenInclude(trp => trp.Routepart)
+                        .ThenInclude(rp => rp.Destinations)
+                .Include(t => t.TeamRouteparts
+                    .Where(trp => trp.TeamId == teamId))
+                    .ThenInclude(trp => trp.Routepart)
+                        .ThenInclude(rp => rp.Files)
+                .FirstOrDefaultAsync(t => t.EditionId == editionId && t.Id == teamId);
+            }
+            catch(Exception ex)
+            {
+                var e = ex;
+                return null;
+            }
+            
         }
+
 
         public bool TeamExists(int teamId)
         {
