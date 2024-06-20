@@ -17,7 +17,7 @@ namespace Tapawingo_backend.Controllers
             _eventsService = eventsService;
         }
 
-        [HttpGet("api/organisations/{organisationId}/Events")]
+        [HttpGet("organisations/{organisationId}/Events")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<EventDto>))]
         [ProducesResponseType(404)]
         public IActionResult GetEventsByOrganisationId(int organisationId)
@@ -28,7 +28,7 @@ namespace Tapawingo_backend.Controllers
                 NotFound("No events found for this organisation.");
         }
         
-        [HttpGet("api/organisations/{organisationId}/Events/{eventId}")]
+        [HttpGet("organisations/{organisationId}/Events/{eventId}")]
         [ProducesResponseType(200, Type = typeof(EventDto))]
         [ProducesResponseType(404)]
         public IActionResult GetEventById(int eventId, int organisationId)
@@ -39,7 +39,7 @@ namespace Tapawingo_backend.Controllers
                 NotFound("Event not found.");
         }
 
-        [HttpPost("api/organisations/{organisationId}/Events")]
+        [HttpPost("organisations/{organisationId}/Events")]
         [ProducesResponseType(200, Type = typeof(Event))]
         [ProducesResponseType(400)]
         [ProducesResponseType(409)]
@@ -50,7 +50,7 @@ namespace Tapawingo_backend.Controllers
             return response;
         }
         
-        [HttpPut("api/organisations/{organisationId}/Events/{eventId}")]
+        [HttpPut("organisations/{organisationId}/Events/{eventId}")]
         [ProducesResponseType(200, Type = typeof(Event))]
         [ProducesResponseType(400)]
         [ProducesResponseType(409)]
@@ -61,7 +61,7 @@ namespace Tapawingo_backend.Controllers
             return response;
         }
         
-        [HttpDelete("api/organisations/{organisationId}/events/{eventId}")]
+        [HttpDelete("organisations/{organisationId}/events/{eventId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         public IActionResult DeleteEvent(int eventId, int organisationId)

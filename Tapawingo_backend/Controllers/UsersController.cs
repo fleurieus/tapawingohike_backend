@@ -16,13 +16,13 @@ namespace Tapawingo_backend.Controllers
             _usersService = usersService;
         }
 
-        [HttpGet("api/organisations/{organisationId}/users")]
+        [HttpGet("organisations/{organisationId}/users")]
         public IActionResult GetUsersOnOrganisation(int organisationId)
         {
             return _usersService.GetUsersOnOrganisation(organisationId);
         }
 
-        [HttpGet("api/organisations/{organisationId}/user/{userId}")]
+        [HttpGet("organisations/{organisationId}/user/{userId}")]
         public async Task<IActionResult> GetUserOnOrganisation(int organisationId, string userId)
         {
             var response =  await _usersService.GetUserOnOrganisationAsync(organisationId, userId);
@@ -30,7 +30,7 @@ namespace Tapawingo_backend.Controllers
         }
 
         [Authorize(Policy = "SuperAdminOrOrganisationPolicy")]
-        [HttpPost("api/organisations/{organisationId}/users")]
+        [HttpPost("organisations/{organisationId}/users")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -40,14 +40,14 @@ namespace Tapawingo_backend.Controllers
             return new ObjectResult(user) { StatusCode = StatusCodes.Status201Created };
         }
 
-        [HttpPatch("api/organisations/{organisationId}/users/{userId}")]
+        [HttpPatch("organisations/{organisationId}/users/{userId}")]
         public async Task<IActionResult> UpdateUserOnOrganisation(int organisationId, string userId, [FromBody] UpdateUserDto userRegistrationDto)
         {
             var response = await _usersService.UpdateUserOnOrganisationAsync(organisationId, userId, userRegistrationDto);
             return Ok(response);
         }
 
-        [HttpDelete("api/organisations/{organisationId}/users/{userId}")]
+        [HttpDelete("organisations/{organisationId}/users/{userId}")]
         public async Task<IActionResult> DeleteUserOnOrganisationAsync(int organisationId, string userId)
         {
             return await _usersService.DeleteUserOnOrganisationAsync(organisationId, userId);
