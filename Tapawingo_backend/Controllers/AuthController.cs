@@ -8,7 +8,6 @@ using Tapawingo_backend.Models;
 namespace Tapawingo_backend.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
 
@@ -25,7 +24,7 @@ namespace Tapawingo_backend.Controllers
             _configuration = configuration;
         }
 
-        [HttpPost("Login")]
+        [HttpPost("auth/login")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(LoginResponse))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -35,7 +34,7 @@ namespace Tapawingo_backend.Controllers
             return Ok(response);
         }
 
-        [HttpPost("Refresh")]
+        [HttpPost("auth/refresh")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -46,7 +45,7 @@ namespace Tapawingo_backend.Controllers
         }
 
         [Authorize]
-        [HttpDelete("Revoke")]
+        [HttpDelete("auth/revoke")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

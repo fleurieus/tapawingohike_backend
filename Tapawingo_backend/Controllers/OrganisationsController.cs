@@ -5,7 +5,6 @@ using Tapawingo_backend.Services;
 namespace Tapawingo_backend.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
     public class OrganisationsController : ControllerBase
     {
         private readonly OrganisationsService _organisationsService;
@@ -15,7 +14,7 @@ namespace Tapawingo_backend.Controllers
             _organisationsService = organisationsService;
         }
 
-        [HttpGet]
+        [HttpGet("organisations/")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrganisationDto))]
         public IActionResult GetOrganisations()
         {
@@ -24,7 +23,7 @@ namespace Tapawingo_backend.Controllers
         }
 
         //TODO: ADD AUTHORIZATION RULE
-        [HttpGet("{id}")]
+        [HttpGet("organisations/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrganisationDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetOrganisation(int id)
@@ -36,7 +35,7 @@ namespace Tapawingo_backend.Controllers
         }
 
         //TODO: ADD AUTHORIZATION RULE
-        [HttpPost]
+        [HttpPost("organisations/")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(OrganisationDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -59,7 +58,7 @@ namespace Tapawingo_backend.Controllers
             return BadRequest("Cannot process this request.");
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("organisations/{id}")]
         public async Task<IActionResult> UpdateOrganisation(int id, [FromBody]UpdateOrganisationDto model) 
         {
             var updatedOrganisation = await _organisationsService.UpdateOrganisation(id, model);
@@ -71,7 +70,7 @@ namespace Tapawingo_backend.Controllers
                 Ok(updatedOrganisation);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("organisations/{id}")]
         public async Task<IActionResult> DeleteOrganisation(int id)
         {
             return await _organisationsService.DeleteOrganisationAsync(id);
