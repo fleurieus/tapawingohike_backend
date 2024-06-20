@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System.Text;
 
-namespace Tapawingo_backend.Tests.GET_Routepart
+namespace Tapawingo_backend.Tests.TEST_Routeparts.GET_Routepart
 {
     public class GETRoutepart_Service_Tests : TestBase
     {
@@ -37,7 +37,7 @@ namespace Tapawingo_backend.Tests.GET_Routepart
         [Fact]
         public async Task Get_Routepart_On_Route()
         {
-            var routePart = await _routepartsService.GetRoutepartOnRouteAsync(3,1);
+            var routePart = await _routepartsService.GetRoutepartOnRouteAsync(3, 1);
 
             Assert.NotNull(routePart);
             Assert.Equal("Routepart1", routePart.Name);

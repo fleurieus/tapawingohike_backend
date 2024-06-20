@@ -4,7 +4,7 @@ using Tapawingo_backend.Models;
 using Tapawingo_backend.Repository;
 using Tapawingo_backend.Services;
 
-namespace Tapawingo_backend.Tests.GET_Routeparts
+namespace Tapawingo_backend.Tests.TEST_Routeparts.GET_Routeparts
 {
     public class GETRouteparts_Repository_Tests : TestBase
     {

@@ -4,7 +4,7 @@ using Tapawingo_backend.Models;
 using Tapawingo_backend.Repository;
 using Tapawingo_backend.Services;
 
-namespace Tapawingo_backend.Tests.DELETE_Routepart
+namespace Tapawingo_backend.Tests.TEST_Routeparts.DELETE_Routepart
 {
     public class Routeparts_Repository_Tests : TestBase
     {

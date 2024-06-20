@@ -41,6 +41,13 @@ namespace Tapawingo_backend.Controllers
                 NotFound(new { message = "Route not found" });
         }
 
+        [HttpPut("routes/{routeId}/routeparts/{routepartId}")]
+        public async Task<IActionResult> UpdatRoutepartOnRouteAsync(int routeId, int routepartId, [FromForm] UpdateRoutepartDto UpdateRoutepartDto)
+        {
+            var response = await _routepartsService.UpdateRoutepartOnRouteAsync(routeId, routepartId, UpdateRoutepartDto);
+            return Ok(response);
+        }
+
         [HttpDelete("routes/{routeId}/routeparts/{routepartId}")]
         public async Task<IActionResult> DeleteRoutepartOnRouteAsync(int routeId, int routepartId)
         {

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System.Text;
 
-namespace Tapawingo_backend.Tests.POST_Routeparts
+namespace Tapawingo_backend.Tests.TEST_Routeparts.POST_Routeparts
 {
     public class Routeparts_Service_Tests : TestBase
     {
@@ -89,7 +89,7 @@ namespace Tapawingo_backend.Tests.POST_Routeparts
 
             CreateRoutepartDto createRoutepartDto = new CreateRoutepartDto
             {
-                Name = "test99",
+                Name = "test999",
                 RouteType = "Normal",
                 RoutepartZoom = false,
                 RoutepartFullscreen = true,
@@ -102,15 +102,15 @@ namespace Tapawingo_backend.Tests.POST_Routeparts
 
             Assert.NotNull(result);
 
+            var routepart = await _context.Routeparts.FirstOrDefaultAsync(r => r.Name == "test999");
             var foundDestination = await _context.Destinations.FirstOrDefaultAsync(d => d.Name == "testDestination");
-            var foundFile = await _context.Files.FirstAsync();
+            var foundFile = await _context.Files.FirstOrDefaultAsync(f => f.File == "dummy.txt");
+
 
             Assert.NotNull(foundDestination);
-            Assert.NotNull(foundFile);
-
+            Assert.NotNull(routepart.Files);
             Assert.Equal("Normal", foundDestination.DestinationType);
             Assert.False(foundDestination.ConfirmByUser);
-
 
             Assert.Equal("dummy.txt", foundFile.File);
             Assert.Equal(Encoding.UTF8.GetBytes("This is a dummy file"), foundFile.Data);

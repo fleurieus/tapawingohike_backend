@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System.Text;
 
-namespace Tapawingo_backend.Tests.GET_Routeparts
+namespace Tapawingo_backend.Tests.TEST_Routeparts.GET_Routeparts
 {
     public class GETRouteparts_Service_Tests : TestBase
     {

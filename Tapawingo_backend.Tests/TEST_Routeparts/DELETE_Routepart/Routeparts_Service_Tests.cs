@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using System.Text;
 using Tapawingo_backend.Models;
 
-namespace Tapawingo_backend.Tests.DELETE_Routepart
+namespace Tapawingo_backend.Tests.TEST_Routeparts.DELETE_Routepart
 {
     public class Routeparts_Service_Tests : TestBase
     {
