@@ -25,7 +25,10 @@ namespace Tapawingo_backend.Controllers
             var twEvents = _eventsService.GetEventsByOrganisationId(organisationId);
             return twEvents.Any() ? 
                 Ok(twEvents) : 
-                NotFound("No events found for this organisation.");
+                NotFound(new
+                {
+                    message = "No events found for this organisation."
+                });
         }
         
         [HttpGet("organisations/{organisationId}/Events/{eventId}")]
@@ -36,7 +39,10 @@ namespace Tapawingo_backend.Controllers
             var twEvent = _eventsService.GetEventByIdAndOrganisationId(eventId, organisationId);
             return twEvent != null ? 
                 Ok(twEvent) : 
-                NotFound("Event not found.");
+                NotFound(new
+                {
+                    message = "Event not found."
+                });
         }
 
         [HttpPost("organisations/{organisationId}/Events")]
@@ -67,7 +73,10 @@ namespace Tapawingo_backend.Controllers
         public IActionResult DeleteEvent(int eventId, int organisationId)
         {
             var response = _eventsService.DeleteEvent(eventId, organisationId);
-            return response != null ? NoContent() : NotFound("Event not found."); 
+            return response != null ? NoContent() : NotFound(new
+            {
+                message = "Event not found."
+            }); 
         }
     }
 }

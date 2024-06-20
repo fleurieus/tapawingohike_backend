@@ -34,18 +34,27 @@ namespace Tapawingo_backend.Services
         {
             if (!_organisationsRepository.OrganisationExists(organisationId))
             {
-                return new NotFoundObjectResult("Organisation does not exist");
+                return new NotFoundObjectResult(new
+                {
+                    message = "Organisation does not exist"
+                });
             }
 
             if (string.IsNullOrEmpty(model.Name))
             {
-                return new BadRequestObjectResult("Event name is required");
+                return new BadRequestObjectResult(new
+                {
+                    message = "Event name is required"
+                });
             }
 
             var eventExists = _eventsRepository.EventExistsForOrganisation(model.Name, organisationId);
             if (eventExists)
             {
-                return new ConflictObjectResult("Event already exists for this organisation");
+                return new ConflictObjectResult(new
+                {
+                    message = "Event already exists for this organisation"
+                });
             }
             var eventEntity = _mapper.Map<Event>(model);
             eventEntity.OrganisationId = organisationId;
@@ -58,12 +67,18 @@ namespace Tapawingo_backend.Services
             var eventEntity = _eventsRepository.GetEventByIdAndOrganisationId(eventId, organisationId);
             if (eventEntity == null)
             {
-                return new BadRequestObjectResult("Event does not exist");
+                return new BadRequestObjectResult(new
+                {
+                    message = "Event does not exist"
+                });
             }
     
             if (string.IsNullOrEmpty(model.Name))
             {
-                return new BadRequestObjectResult("Event name is required");
+                return new BadRequestObjectResult(new
+                {
+                    message = "Event name is required"
+                });
             }
 
             _mapper.Map(model, eventEntity);
