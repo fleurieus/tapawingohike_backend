@@ -150,7 +150,7 @@ namespace Tapawingo_backend.Services
                     message = "Event does not exist on this organisation"
                 });
             }
-            var eventEntity = _eventsRepository.GetEventByIdAndOrganisationId(eventId, organisationId);
+            var eventEntity = await _eventsRepository.GetEventByIdAndOrganisationId(eventId, organisationId);
 
             await _eventsRepository.DeleteEvent(eventEntity.Id);
             return new NoContentResult();
