@@ -34,7 +34,7 @@ namespace Tapawingo_backend.Tests.TEST_Users_on_organisation.PATCH_User_on_organ
         [Fact]
         public async Task Update_User_On_Organisation()
         {
-            var users = _usersRepository.GetUsersOnOrganisation(1);
+            var users = await _usersRepository.GetUsersOnOrganisation(1);
             var firstUser = users.First();
 
             UpdateUserDto updateUserDto = new UpdateUserDto

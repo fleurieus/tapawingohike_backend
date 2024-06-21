@@ -16,9 +16,9 @@ namespace Tapawingo_backend.Controllers
 
         [HttpGet("organisations/")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrganisationDto))]
-        public IActionResult GetOrganisations()
+        public async Task<IActionResult> GetOrganisations()
         {
-            var organisations = _organisationsService.GetOrganisations();
+            var organisations = await _organisationsService.GetOrganisations();
             return organisations == null ? Ok(new List<OrganisationDto>()) : Ok(organisations); //since the request issn't invalid, even a empty list gives a 200 status
         }
 
@@ -39,7 +39,7 @@ namespace Tapawingo_backend.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(OrganisationDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult CreateOrganisation([FromBody]CreateOrganisationDto model)
+        public async Task<IActionResult> CreateOrganisation([FromBody]CreateOrganisationDto model)
         {
             if(model.Name == null || model.Name.Length == 0 || model.Name.Equals(""))
             {
@@ -47,7 +47,7 @@ namespace Tapawingo_backend.Controllers
             }
 
             //only doing these 'extra' steps since we want to return a 201 status with the object.
-            var newOrganisation = _organisationsService.CreateOrganisation(model);
+            var newOrganisation = await _organisationsService.CreateOrganisation(model);
             if(newOrganisation != null)
             {
                 return new ObjectResult(newOrganisation)

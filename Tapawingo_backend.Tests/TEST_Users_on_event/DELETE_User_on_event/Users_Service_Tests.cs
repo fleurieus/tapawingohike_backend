@@ -51,13 +51,13 @@ namespace Tapawingo_backend.Tests.TEST_Users_on_event.DELETE_User_on_event
         [Fact]
         public async Task Delete_User_On_Event()
         {
-            var users = _usersRepository.GetUsersOnEvent(1);
+            var users = await _usersRepository.GetUsersOnEvent(1);
 
             var firstUser = users.First();
 
             await _usersRepository.DeleteUserOnEventAsync(1, firstUser.Id);
 
-            var usersAfterDeletion = _usersRepository.GetUsersOnEvent(1);
+            var usersAfterDeletion = await _usersRepository.GetUsersOnEvent(1);
 
             Assert.Equal(1, usersAfterDeletion.Count());
         }

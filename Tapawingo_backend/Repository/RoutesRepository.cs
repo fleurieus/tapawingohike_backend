@@ -32,9 +32,9 @@ namespace Tapawingo_backend.Repository
             return foundRoute;
         }
 
-        public bool RouteExists(int routeId)
+        public async Task<bool> RouteExists(int routeId)
         {
-            bool routeExists = _context.Routes.Any(e => e.Id == routeId);
+            bool routeExists = await _context.Routes.AnyAsync(e => e.Id == routeId);
             return routeExists;
         }
 

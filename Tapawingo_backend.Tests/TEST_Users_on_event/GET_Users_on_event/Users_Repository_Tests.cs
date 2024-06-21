@@ -31,9 +31,9 @@ namespace Tapawingo_backend.Tests.TEST_Users_on_event.GET_Users_on_event
 
         //Good Weather
         [Fact]
-        public void Get_All_Users_On_Event()
+        public async void Get_All_Users_On_Event()
         {
-            var users = _usersRepository.GetUsersOnEvent(1);
+            var users = await _usersRepository.GetUsersOnEvent(1);
 
             Assert.NotNull(users);
             Assert.Equal(2, users.Count());

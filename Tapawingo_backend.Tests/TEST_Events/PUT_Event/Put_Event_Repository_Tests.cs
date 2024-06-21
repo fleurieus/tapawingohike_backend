@@ -18,7 +18,7 @@ namespace Tapawingo_backend.Tests.TEST_Events.PUT_Event
         
         //Good Weather
         [Fact]
-        public void Put_Event()
+        public async void Put_Event()
         {
             var updatedEvent = new Event
             {
@@ -26,9 +26,9 @@ namespace Tapawingo_backend.Tests.TEST_Events.PUT_Event
                 Name = "TestEvent1Updated",
                 OrganisationId = 1
             };
-            _eventsRepository.UpdateEvent(1, updatedEvent);
+            await _eventsRepository.UpdateEvent(1, updatedEvent);
             
-            var twEvent = _eventsRepository.GetEventByIdAndOrganisationId(1, 1);
+            var twEvent = await _eventsRepository.GetEventByIdAndOrganisationId(1, 1);
             Assert.NotNull(twEvent);
             Assert.Equal(1, twEvent.Id);
             Assert.Equal("TestEvent1Updated", twEvent.Name);

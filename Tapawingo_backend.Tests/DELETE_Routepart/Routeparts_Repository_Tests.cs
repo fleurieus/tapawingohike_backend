@@ -28,7 +28,7 @@ namespace Tapawingo_backend.Tests.DELETE_Routepart
             Assert.True(deletion);
 
             //check that routepart is deletted
-            var deletionComplete = _routepartsRepository.RoutepartExists(2);
+            var deletionComplete = await _routepartsRepository.RoutepartExists(2);
 
             Assert.False(deletionComplete);
         }
