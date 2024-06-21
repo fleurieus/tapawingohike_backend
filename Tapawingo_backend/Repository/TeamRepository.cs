@@ -106,5 +106,13 @@ namespace Tapawingo_backend.Repository
                 return false;
             }
         }
+
+        public async Task<bool> TeamExistsOnEdition(int teamId, int editionId)
+        {
+            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
+            if(team == null)
+                return false;
+            return team.EditionId == editionId;
+        }
     }
 }

@@ -206,5 +206,17 @@ namespace Tapawingo_backend.Repository
                 return false;
             }
         }
+
+        public async Task<bool> UserExistsOnOrganisation(string userId, int organisationId)
+        {
+            var result = await _context.UserOrganisations.FirstOrDefaultAsync(uo => uo.UserId.Equals(userId) && uo.OrganisationId == organisationId);
+            return result != null;
+        }
+
+        public async Task<bool> UserExistsOnEvent(string userId, int eventId)
+        {
+            var result = await _context.UserEvents.FirstOrDefaultAsync(ue => ue.UserId.Equals(userId) && ue.EventId == eventId);
+            return result != null;
+        }
     }
 }

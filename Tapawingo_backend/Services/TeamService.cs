@@ -34,6 +34,8 @@ namespace Tapawingo_backend.Services
 
             if (!_teamRepository.TeamExists(teamId))
                 throw new BadHttpRequestException("Team not found");
+            if (!await _teamRepository.TeamExistsOnEdition(teamId, editionId))
+                throw new BadHttpRequestException("Team does not exist on edition");
 
             return _mapper.Map<TeamDto>(await _teamRepository.GetTeamOnEditionAsync(editionId, teamId));
         }
@@ -62,6 +64,8 @@ namespace Tapawingo_backend.Services
 
             if (!_teamRepository.TeamExists(teamId))
                 throw new BadHttpRequestException("Team not found");
+            if (!await _teamRepository.TeamExistsOnEdition(teamId, editionId))
+                throw new BadHttpRequestException("Team does not exist on edition");
 
             await _teamRepository.UpdateTeamOnEditionAsync(await _teamRepository.GetTeamOnEditionAsync(editionId, teamId), model);
 
@@ -80,6 +84,11 @@ namespace Tapawingo_backend.Services
                 return new NotFoundObjectResult(new
                 {
                     message = "Team not found"
+                });
+            if (!await _teamRepository.TeamExistsOnEdition(teamId, editionId))
+                return new ConflictObjectResult(new
+                {
+                    message = "Team does not exist on edition"
                 });
 
             bool teamDeleted = await _teamRepository.DeleteTeamOnEditionAsync(editionId, teamId);

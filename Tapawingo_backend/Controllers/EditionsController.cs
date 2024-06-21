@@ -18,11 +18,11 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpGet("events/{eventId}/editions/{editionId}")]
-        public IActionResult GetEditionById(int eventId, int editionId)
+        public async Task<IActionResult> GetEditionById(int eventId, int editionId)
         {
             try
             {
-                var edition = _editionsService.GetEditionById(eventId, editionId);
+                var edition = await _editionsService.GetEditionById(eventId, editionId);
                 return Ok(edition);
             }
             catch (Exception ex)

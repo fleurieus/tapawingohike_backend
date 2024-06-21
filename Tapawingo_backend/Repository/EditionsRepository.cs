@@ -75,5 +75,12 @@ namespace Tapawingo_backend.Repository
                 return false;
             }
         }
+
+        public async Task<bool> EventExistsOnEdition(int eventId, int editionId)
+        {
+            var edition = await _context.Editions.FirstOrDefaultAsync(e => e.Id == editionId);
+            if (edition == null) return false;
+            return edition.EventId == eventId;
+        }
     }
 }

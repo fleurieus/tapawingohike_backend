@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Models;
@@ -42,6 +43,10 @@ namespace Tapawingo_backend.Services
             if (!_userRepository.UserExists(userId))
                 throw new BadHttpRequestException("User not found");
 
+            if(!await _userRepository.UserExistsOnOrganisation(userId, organisationId))
+                throw new BadHttpRequestException("User does not exist on organisation");
+            
+
             return _mapper.Map<UserDto>(await _userRepository.GetUserOnOrganisationAsync(organisationId, userId));
         }
 
@@ -71,7 +76,8 @@ namespace Tapawingo_backend.Services
 
             if (await _userRepository.GetUserOnOrganisationAsync(organisationId, userId) == null)
                 throw new BadHttpRequestException("User not found");
-
+            if (!await _userRepository.UserExistsOnOrganisation(userId, organisationId))
+                throw new BadHttpRequestException("User does not exist on organisation");
             await _userRepository.UpdateUserOnOrganisationAsync(await _userRepository.GetUserOnOrganisationAsync(organisationId, userId), user);
 
             return _mapper.Map<UserDto>(await _userRepository.GetUserOnOrganisationAsync(organisationId, userId));
@@ -89,6 +95,11 @@ namespace Tapawingo_backend.Services
                 return new NotFoundObjectResult(new
                 {
                     message = "User not found"
+                });
+            if (!await _userRepository.UserExistsOnOrganisation(userId, organisationId))
+                return new ConflictObjectResult(new
+                {
+                    message = "user does not exist on organisation"
                 });
 
             bool userDeleted = await _userRepository.DeleteUserOnOrganisationAsync(organisationId, userId);
@@ -118,6 +129,8 @@ namespace Tapawingo_backend.Services
 
             if (!_userRepository.UserExists(userId))
                 throw new BadHttpRequestException("User not found");
+            if (!await _userRepository.UserExistsOnEvent(userId, eventId))
+                throw new BadHttpRequestException("User does not exist on event");
 
             return _mapper.Map<UserDto>(await _userRepository.GetUserOnEventAsync(eventId, userId));
         }
@@ -149,6 +162,8 @@ namespace Tapawingo_backend.Services
 
             if (await _userRepository.GetUserOnEventAsync(eventId, userId) == null)
                 throw new BadHttpRequestException("User not found");
+            if (!await _userRepository.UserExistsOnEvent(userId, eventId))
+                throw new BadHttpRequestException("User does not exist on event");
 
             await _userRepository.UpdateUserOnEventAsync(await _userRepository.GetUserOnEventAsync(eventId, userId), user);
 
@@ -167,6 +182,11 @@ namespace Tapawingo_backend.Services
                 return new NotFoundObjectResult(new
                 {
                     message = "User not found"
+                });
+            if (!await _userRepository.UserExistsOnEvent(userId, eventId))
+                return new ConflictObjectResult( new
+                {
+                    message = "User does not exist on event"
                 });
 
             bool userDeleted = await _userRepository.DeleteUserOnEventAsync(eventId, userId);

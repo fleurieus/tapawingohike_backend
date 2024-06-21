@@ -11,5 +11,6 @@ namespace Tapawingo_backend.Interface
         bool EditionExists(int editionId);
         Task<Edition> UpdateEditionAsync(Edition existingEdition, UpdateEditionDto updateEditionDto);
         Task<bool> DeleteEditionAsync(int editionId);
+        Task<bool> EventExistsOnEdition(int eventId, int editionId);
     }
 }

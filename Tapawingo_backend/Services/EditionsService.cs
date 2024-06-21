@@ -21,26 +21,20 @@ namespace Tapawingo_backend.Services
             _eventsRepository = eventsRepository;
         }
 
-        public EditionDto GetEditionById(int eventId, int editionId)
+        public async Task<EditionDto> GetEditionById(int eventId, int editionId)
         {
-            try
-            {
-                if (!_eventsRepository.EventExists(eventId))
-                    throw new ArgumentException("Event not found");
+            if (!_editionsRepository.EditionExists(editionId))
+                throw new BadHttpRequestException("Edition not found");
+            if (!_eventsRepository.EventExists(eventId))
+                throw new ArgumentException("Event not found");
+            if (!await _editionsRepository.EventExistsOnEdition(eventId, editionId))
+                throw new ArgumentException("Event does not exist on edition");
 
-                if (!_editionsRepository.EditionExists(editionId))
-                    throw new BadHttpRequestException("Edition not found");
-
-                Edition edition = _editionsRepository.GetEditionById(editionId);
-                if (edition == null)
-                    throw new BadHttpRequestException("Edition does not exist on event");
-                else 
-                    return _mapper.Map<EditionDto>(edition);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            Edition edition = _editionsRepository.GetEditionById(editionId);
+            if (edition == null)
+                throw new BadHttpRequestException("Edition does not exist on event");
+            else
+                return _mapper.Map<EditionDto>(edition);
         }
 
         public List<EditionDto> GetAllEditions(int eventId)
@@ -75,6 +69,8 @@ namespace Tapawingo_backend.Services
 
             if (!_editionsRepository.EditionExists(editionId))
                 throw new BadHttpRequestException("Edition not found");
+            if (!await _editionsRepository.EventExistsOnEdition(eventId, editionId))
+                throw new ArgumentException("Event does not exist on edition");
 
             Edition edition = _editionsRepository.GetEditionById(editionId);
 
@@ -94,6 +90,8 @@ namespace Tapawingo_backend.Services
                 {
                     message = "Edition not found"
                 });
+            if (!await _editionsRepository.EventExistsOnEdition(eventId, editionId))
+                throw new ArgumentException("Event does not exist on edition");
 
             bool editionDeleted = await _editionsRepository.DeleteEditionAsync(editionId);
             return editionDeleted ? new NoContentResult() : new BadRequestObjectResult(new
