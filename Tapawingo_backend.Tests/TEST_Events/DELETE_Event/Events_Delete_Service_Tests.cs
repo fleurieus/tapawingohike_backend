@@ -29,10 +29,10 @@ namespace Tapawingo_backend.Tests.TEST_Events.DELETE_Event
         
         //Good Weather
         [Fact]
-        public void Delete_Existing_Event()
+        public async void Delete_Existing_Event()
         { 
-            _eventsService.DeleteEvent(1, 1);
-            var twEvent = _eventsService.GetEventByIdAndOrganisationId(1, 1);
+            await _eventsService.DeleteEvent(1, 1);
+            var twEvent = await _eventsService.GetEventByIdAndOrganisationId(1, 1);
             var expectedResult = new NotFoundObjectResult(null);
             Assert.Equal(expectedResult.GetType(), twEvent.GetType());
         }
@@ -40,10 +40,10 @@ namespace Tapawingo_backend.Tests.TEST_Events.DELETE_Event
         
         //Bad Weather
         [Fact]
-        public void Delete_Non_Existing_Event()
+        public async void Delete_Non_Existing_Event()
         {
-            _eventsService.DeleteEvent(999, 999);
-            var twEvent = _eventsService.GetEventByIdAndOrganisationId(999, 999);
+            await _eventsService.DeleteEvent(999, 999);
+            var twEvent = await _eventsService.GetEventByIdAndOrganisationId(999, 999);
             var expectedResult = new NotFoundObjectResult(null);
             Assert.Equal(expectedResult.GetType(), twEvent.GetType());
         }

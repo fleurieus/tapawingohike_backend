@@ -34,9 +34,9 @@ namespace Tapawingo_backend.Tests.GET_Editions
 
         //Good weather
         [Fact]
-        public void Get_Editions_Linked_To_Existing_EventID()
+        public async void Get_Editions_Linked_To_Existing_EventID()
         {
-            var Event1Editions = _editionsService.GetAllEditions(1);
+            var Event1Editions = await _editionsService.GetAllEditions(1);
 
             Assert.NotNull(Event1Editions);
             Assert.Equal(2, Event1Editions.Count);
@@ -44,9 +44,9 @@ namespace Tapawingo_backend.Tests.GET_Editions
 
 
         //Bad weather
-        public void Get_Editions_Linked_To_NonExisting_EventID()
+        public async void Get_Editions_Linked_To_NonExisting_EventID()
         {
-            var Event1Editions = _editionsService.GetAllEditions(999);
+            var Event1Editions = await _editionsService.GetAllEditions(999);
 
             Assert.NotNull(Event1Editions);
             Assert.Empty(Event1Editions); //expect empty list

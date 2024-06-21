@@ -27,7 +27,7 @@ namespace Tapawingo_backend.Tests.TEST_Teams.GET_Teams
         [Fact]
         public async Task GET_teams()
         {
-            var teams = _teamsRepository.GetTeamsOnEdition(1);
+            var teams = await _teamsRepository.GetTeamsOnEdition(1);
 
             Assert.NotNull(teams);
             Assert.Equal(2, teams.Count());

@@ -29,9 +29,9 @@ namespace Tapawingo_backend.Tests.EventTests.GET_Events
         
         //Good Weather
         [Fact]
-        public void Get_Event_By_Id_And_OrganisationId()
+        public async void Get_Event_By_Id_And_OrganisationId()
         {
-            var twEvent = _eventsService.GetEventByIdAndOrganisationId(1, 1);
+            var twEvent = await _eventsService.GetEventByIdAndOrganisationId(1, 1);
             var expectedResult = new OkObjectResult(null);
 
             Assert.Equal(expectedResult.GetType(), twEvent.GetType());
@@ -40,9 +40,9 @@ namespace Tapawingo_backend.Tests.EventTests.GET_Events
         
         //Bad Weather
         [Fact]
-        public void Get_Non_Existing_Event_By_Id_And_OrganisationId()
+        public async void Get_Non_Existing_Event_By_Id_And_OrganisationId()
         {
-            var twEvent = _eventsService.GetEventByIdAndOrganisationId(999, 999);
+            var twEvent = await _eventsService.GetEventByIdAndOrganisationId(999, 999);
             var expectedResult = new NotFoundObjectResult(null);
 
             Assert.Equal(expectedResult.GetType(), twEvent.GetType());

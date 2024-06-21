@@ -33,7 +33,7 @@ namespace Tapawingo_backend.Tests.TEST_Users_on_event.GET_User_on_event
         [Fact]
         public async Task Get_User_On_event()
         {
-            var users = _usersRepository.GetUsersOnEvent(1);
+            var users = await _usersRepository.GetUsersOnEvent(1);
 
             var firstUser = users.First();
 

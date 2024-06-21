@@ -29,14 +29,14 @@ namespace Tapawingo_backend.Tests.TEST_Events.PUT_Event
 
         // Good Weather
         [Fact]
-        public void Put_Event()
+        public async void Put_Event()
         {
             var updatedEvent = new CreateEventDto()
             {
                 Name = "TestEvent1Updated"
             };
 
-            var result = _eventsService.UpdateEvent(updatedEvent, 1, 1) as ObjectResult;
+            var result = await _eventsService.UpdateEvent(updatedEvent, 1, 1) as ObjectResult;
 
             Assert.NotNull(result);
 
@@ -48,14 +48,14 @@ namespace Tapawingo_backend.Tests.TEST_Events.PUT_Event
 
         // Bad Weather
         [Fact]
-        public void Put_Event_With_Non_Existing_Event()
+        public async void Put_Event_With_Non_Existing_Event()
         {
             var updatedEvent = new CreateEventDto()
             {
                 Name = "TestEvent1Updated"
             };
 
-            var result = _eventsService.UpdateEvent(updatedEvent, 1, 999);
+            var result = await _eventsService.UpdateEvent(updatedEvent, 1, 999);
             var expectedResult = new NotFoundObjectResult(null);
 
             Assert.NotNull(result);
@@ -63,14 +63,14 @@ namespace Tapawingo_backend.Tests.TEST_Events.PUT_Event
         }
 
         [Fact]
-        public void Put_Event_With_No_Name()
+        public async void Put_Event_With_No_Name()
         {
             var updatedEvent = new CreateEventDto()
             {
                 Name = ""
             };
 
-            var result = _eventsService.UpdateEvent(updatedEvent, 1, 1) as BadRequestObjectResult;
+            var result = await _eventsService.UpdateEvent(updatedEvent, 1, 1) as BadRequestObjectResult;
 
             Assert.NotNull(result);
             Assert.Equal(400, result.StatusCode);

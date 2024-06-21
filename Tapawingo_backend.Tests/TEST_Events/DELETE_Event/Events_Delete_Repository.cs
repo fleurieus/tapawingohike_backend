@@ -18,10 +18,10 @@ namespace Tapawingo_backend.Tests.TEST_Events.DELETE_Event
         
         //Good Weather
         [Fact]
-        public void Delete_Existing_Event()
+        public async void Delete_Existing_Event()
         { 
-            _eventsRepository.DeleteEvent(1);
-            var twEvent = _eventsRepository.GetEventById(1);
+            await _eventsRepository.DeleteEvent(1);
+            var twEvent = await _eventsRepository.GetEventById(1);
             Assert.Null(twEvent);
         }
         
