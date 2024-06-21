@@ -35,11 +35,11 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpGet("events/{eventId}/editions")]
-        public IActionResult GetEditions(int eventId)
+        public async Task<IActionResult> GetEditions(int eventId)
         {
             try
             {
-                var editions = _editionsService.GetAllEditions(eventId);
+                var editions = await _editionsService.GetAllEditions(eventId);
                 return Ok(editions);
 
             }

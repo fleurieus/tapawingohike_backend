@@ -16,9 +16,9 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpGet("/editions/{editionId}/teams")]
-        public IActionResult GetTeamsOnEdition(int editionId)
+        public async Task<IActionResult> GetTeamsOnEdition(int editionId)
         {
-            var response =  _teamService.GetTeamsOnEdition(editionId);
+            var response =  await _teamService.GetTeamsOnEdition(editionId);
             return Ok(response);
         }
 

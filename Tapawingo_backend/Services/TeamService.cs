@@ -19,20 +19,20 @@ namespace Tapawingo_backend.Services
             _mapper = mapper;
         }
 
-        public List<TeamDto> GetTeamsOnEdition(int editionId)
+        public async Task<List<TeamDto>> GetTeamsOnEdition(int editionId)
         {
-            if (!_editionsRepository.EditionExists(editionId))
+            if (!await _editionsRepository.EditionExists(editionId))
                 throw new BadHttpRequestException("Edition not found");
 
-            return _mapper.Map<List<TeamDto>>(_teamRepository.GetTeamsOnEdition(editionId));
+            return _mapper.Map<List<TeamDto>>(await _teamRepository.GetTeamsOnEdition(editionId));
         }
 
         public async Task<TeamDto> GetTeamOnEditionAsync(int editionId, int teamId)
         {
-            if (!_editionsRepository.EditionExists(editionId))
+            if (!await _editionsRepository.EditionExists(editionId))
                 throw new BadHttpRequestException("Edition not found");
 
-            if (!_teamRepository.TeamExists(teamId))
+            if (!await _teamRepository.TeamExists(teamId))
                 throw new BadHttpRequestException("Team not found");
             if (!await _teamRepository.TeamExistsOnEdition(teamId, editionId))
                 throw new BadHttpRequestException("Team does not exist on edition");
@@ -42,7 +42,7 @@ namespace Tapawingo_backend.Services
 
         public async Task<TeamDto> CreateTeamOnEditionAsync(int editionId, CreateTeamDto model)
         {
-            if (!_editionsRepository.EditionExists(editionId))
+            if (!await _editionsRepository.EditionExists(editionId))
                 throw new BadHttpRequestException("Edition not found");
 
             // TODO check if team already exists with that name
@@ -59,10 +59,10 @@ namespace Tapawingo_backend.Services
 
         public async Task<TeamDto> UpdateTeamOnEditionAsync(int editionId, int teamId, UpdateTeamDto model)
         {
-            if (!_editionsRepository.EditionExists(editionId))
+            if (!await _editionsRepository.EditionExists(editionId))
                 throw new BadHttpRequestException("Edition not found");
 
-            if (!_teamRepository.TeamExists(teamId))
+            if (!await _teamRepository.TeamExists(teamId))
                 throw new BadHttpRequestException("Team not found");
             if (!await _teamRepository.TeamExistsOnEdition(teamId, editionId))
                 throw new BadHttpRequestException("Team does not exist on edition");
@@ -74,13 +74,13 @@ namespace Tapawingo_backend.Services
 
         public async Task<IActionResult> DeleteTeamOnEditionAsync(int editionId, int teamId)
         {
-            if (!_editionsRepository.EditionExists(editionId))
+            if (!await _editionsRepository.EditionExists(editionId))
                 return new NotFoundObjectResult(new
                 {
                     message = "Edition not found"
                 });
 
-            if (!_teamRepository.TeamExists(teamId))
+            if (!await _teamRepository.TeamExists(teamId))
                 return new NotFoundObjectResult(new
                 {
                     message = "Team not found"

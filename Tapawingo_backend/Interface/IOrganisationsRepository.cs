@@ -5,10 +5,10 @@ namespace Tapawingo_backend.Interface
 {
     public interface IOrganisationsRepository
     {
-        Organisation CreateOrganisation(CreateOrganisationDto model);
+        Task<Organisation> CreateOrganisation(CreateOrganisationDto model);
         Task<Organisation> GetOrganisationById(int id);
-        List<Organisation> GetAllOrganisations();
-        bool OrganisationExists(int id);
+        Task<List<Organisation>> GetAllOrganisations();
+        Task<bool> OrganisationExists(int id);
         Task<Organisation> UpdateOrganisationAsync(int id, UpdateOrganisationDto newOrganisation);
         Task<bool> DeleteOrganisationAsync(int id);
     }

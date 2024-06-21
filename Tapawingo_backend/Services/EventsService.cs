@@ -19,47 +19,47 @@ namespace Tapawingo_backend.Services
             _organisationsRepository = organisationRepository;
         }
 
-        public IActionResult GetEventsByOrganisationId(int organisationId)
+        public async Task<IActionResult> GetEventsByOrganisationId(int organisationId)
         {
-            if(!_organisationsRepository.OrganisationExists(organisationId))
+            if(!await _organisationsRepository.OrganisationExists(organisationId))
             {
                 return new NotFoundObjectResult(new
                 {
                     message = "Organisation not found"
                 });
             }
-            return new OkObjectResult(_mapper.Map<List<EventDto>>(_eventsRepository.GetEventsByOrganisationId(organisationId)));
+            return new OkObjectResult(_mapper.Map<List<EventDto>>(await _eventsRepository.GetEventsByOrganisationId(organisationId)));
         }
         
-        public IActionResult GetEventByIdAndOrganisationId(int eventId, int organisationId)
+        public async Task<IActionResult> GetEventByIdAndOrganisationId(int eventId, int organisationId)
         {
-            if (!_organisationsRepository.OrganisationExists(organisationId))
+            if (!await _organisationsRepository.OrganisationExists(organisationId))
             {
                 return new NotFoundObjectResult(new
                 {
                     message = "Organisation not found"
                 });
             }
-            if(!_eventsRepository.EventExists(eventId))
+            if(!await _eventsRepository.EventExists(eventId))
             {
                 return new NotFoundObjectResult(new
                 {
                     message = "Event not found"
                 });
             }
-            if(!_eventsRepository.EventExistsOnOrganisation(organisationId, eventId))
+            if(!await _eventsRepository.EventExistsOnOrganisation(organisationId, eventId))
             {
                 return new ConflictObjectResult(new
                 {
                     message = "Event does not exist on this organisation"
                 });
             }
-            return new OkObjectResult(_mapper.Map<EventDto>(_eventsRepository.GetEventByIdAndOrganisationId(eventId, organisationId)));
+            return new OkObjectResult(_mapper.Map<EventDto>(await _eventsRepository.GetEventByIdAndOrganisationId(eventId, organisationId)));
         }
 
-        public IActionResult CreateEvent(CreateEventDto model, int organisationId)
+        public async Task<IActionResult> CreateEvent(CreateEventDto model, int organisationId)
         {
-            if (!_organisationsRepository.OrganisationExists(organisationId))
+            if (!await _organisationsRepository.OrganisationExists(organisationId))
             {
                 return new NotFoundObjectResult(new
                 {
@@ -75,7 +75,7 @@ namespace Tapawingo_backend.Services
                 });
             }
 
-            var eventExists = _eventsRepository.EventExistsForOrganisation(model.Name, organisationId);
+            var eventExists = await _eventsRepository.EventExistsForOrganisation(model.Name, organisationId);
             if (eventExists)
             {
                 return new ConflictObjectResult(new
@@ -85,27 +85,27 @@ namespace Tapawingo_backend.Services
             }
             var eventEntity = _mapper.Map<Event>(model);
             eventEntity.OrganisationId = organisationId;
-            _eventsRepository.CreateEvent(eventEntity);
+            await _eventsRepository.CreateEvent(eventEntity);
             return new ObjectResult(_mapper.Map<EventDto>(eventEntity));
         }
 
-        public IActionResult UpdateEvent(CreateEventDto model, int organisationId, int eventId)
+        public async Task<IActionResult> UpdateEvent(CreateEventDto model, int organisationId, int eventId)
         {
-            if (!_organisationsRepository.OrganisationExists(organisationId))
+            if (!await _organisationsRepository.OrganisationExists(organisationId))
             {
                 return new NotFoundObjectResult(new
                 {
                     message = "Organisation not found"
                 });
             }
-            if (!_eventsRepository.EventExists(eventId))
+            if (!await _eventsRepository.EventExists(eventId))
             {
                 return new NotFoundObjectResult(new
                 {
                     message = "Event not found"
                 });
             }
-            if (!_eventsRepository.EventExistsOnOrganisation(organisationId, eventId))
+            if (!await _eventsRepository.EventExistsOnOrganisation(organisationId, eventId))
             {
                 return new ConflictObjectResult(new
                 {
@@ -120,30 +120,30 @@ namespace Tapawingo_backend.Services
                 });
             }
 
-            var eventEntity = _eventsRepository.GetEventByIdAndOrganisationId(eventId, organisationId);
+            var eventEntity = await _eventsRepository.GetEventByIdAndOrganisationId(eventId, organisationId);
 
             _mapper.Map(model, eventEntity);
-            _eventsRepository.UpdateEvent(eventId, eventEntity);
+            await _eventsRepository.UpdateEvent(eventId, eventEntity);
             return new ObjectResult(_mapper.Map<EventDto>(eventEntity));
         }
         
-        public IActionResult DeleteEvent(int eventId, int organisationId)
+        public async Task<IActionResult> DeleteEvent(int eventId, int organisationId)
         {
-            if (!_organisationsRepository.OrganisationExists(organisationId))
+            if (!await _organisationsRepository.OrganisationExists(organisationId))
             {
                 return new NotFoundObjectResult(new
                 {
                     message = "Organisation not found"
                 });
             }
-            if (!_eventsRepository.EventExists(eventId))
+            if (!await _eventsRepository.EventExists(eventId))
             {
                 return new NotFoundObjectResult(new
                 {
                     message = "Event not found"
                 });
             }
-            if (!_eventsRepository.EventExistsOnOrganisation(organisationId, eventId))
+            if (!await _eventsRepository.EventExistsOnOrganisation(organisationId, eventId))
             {
                 return new ConflictObjectResult(new
                 {
@@ -152,7 +152,7 @@ namespace Tapawingo_backend.Services
             }
             var eventEntity = _eventsRepository.GetEventByIdAndOrganisationId(eventId, organisationId);
 
-            _eventsRepository.DeleteEvent(eventEntity.Id);
+            await _eventsRepository.DeleteEvent(eventEntity.Id);
             return new NoContentResult();
         }
     }

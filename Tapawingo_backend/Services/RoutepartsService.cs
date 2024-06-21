@@ -26,16 +26,16 @@ namespace Tapawingo_backend.Services
 
         public async Task<List<RoutepartDto>> GetRoutepartsAsync(int route_id)
         {
-            if (!_routesRepository.RouteExists(route_id)) return null;
+            if (!await _routesRepository.RouteExists(route_id)) return null;
             return _mapper.Map<List<RoutepartDto>>(await _routepartsRepository.GetRoutepartsAsync(route_id));
         }
 
         public async Task<RoutepartDto> GetRoutepartOnRouteAsync(int routeId, int routepartId)
         {
-            if (!_routesRepository.RouteExists(routeId))
+            if (!await _routesRepository.RouteExists(routeId))
                 throw new BadHttpRequestException("Route not found");
 
-            if (!_routepartsRepository.RoutepartExists(routepartId))
+            if (!await _routepartsRepository.RoutepartExists(routepartId))
                 throw new BadHttpRequestException("Routepart not found");
 
             Routepart routepart = await _routepartsRepository.GetRoutepartOnRouteAsync(routeId, routepartId);
@@ -114,13 +114,13 @@ namespace Tapawingo_backend.Services
 
         public async Task<IActionResult> DeleteRoutepartOnRouteAsync(int routeId, int routepartId)
         {
-            if (!_routesRepository.RouteExists(routeId))
+            if (!await _routesRepository.RouteExists(routeId))
                 return new NotFoundObjectResult(new
                 {
                     message = "Route not found"
                 });
 
-            if (!_routepartsRepository.RoutepartExists(routepartId))
+            if (!await _routepartsRepository.RoutepartExists(routepartId))
                 return new NotFoundObjectResult(new
                 {
                     message = "Routepart not found"

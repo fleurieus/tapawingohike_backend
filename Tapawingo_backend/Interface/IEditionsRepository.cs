@@ -5,10 +5,10 @@ namespace Tapawingo_backend.Interface
 {
     public interface IEditionsRepository
     {
-        Edition GetEditionById(int editionId);
-        List<Edition> GetAllEditions(int editionId);
+        Task<Edition> GetEditionById(int editionId);
+        Task<List<Edition>> GetAllEditions(int editionId);
         Task<Edition> CreateEditionOnEventAsync(Edition edition);
-        bool EditionExists(int editionId);
+        Task<bool> EditionExists(int editionId);
         Task<Edition> UpdateEditionAsync(Edition existingEdition, UpdateEditionDto updateEditionDto);
         Task<bool> DeleteEditionAsync(int editionId);
         Task<bool> EventExistsOnEdition(int eventId, int editionId);

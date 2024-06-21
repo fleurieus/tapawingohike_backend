@@ -22,7 +22,7 @@ namespace Tapawingo_backend.Services
 
         public async Task<IActionResult> GetLocationlogsOnTeamAsync(int teamId)
         {
-            if (!_teamsRepository.TeamExists(teamId))
+            if (!await _teamsRepository.TeamExists(teamId))
                 return new NotFoundObjectResult(new
                 {
                     message = "Team not found"
@@ -34,7 +34,7 @@ namespace Tapawingo_backend.Services
 
         public async Task<LocationlogDto> CreateLocationlogOnTeamAsync(int teamId, CreateLocationlogDto createLocationlogDto)
         {
-            if (!_teamsRepository.TeamExists(teamId))
+            if (!await _teamsRepository.TeamExists(teamId))
                 throw new BadHttpRequestException("Team not found");
 
             Locationlog locationlog = new Locationlog

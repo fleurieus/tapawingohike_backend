@@ -17,9 +17,9 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpGet("organisations/{organisationId}/users")]
-        public IActionResult GetUsersOnOrganisation(int organisationId)
+        public async Task<IActionResult> GetUsersOnOrganisation(int organisationId)
         {
-            return _usersService.GetUsersOnOrganisation(organisationId);
+            return await _usersService.GetUsersOnOrganisation(organisationId);
         }
 
         [HttpGet("organisations/{organisationId}/user/{userId}")]
@@ -56,9 +56,9 @@ namespace Tapawingo_backend.Controllers
 
         // User on events
         [HttpGet("events/{eventId}/users")]
-        public IActionResult GetUsersOnEvent(int eventId)
+        public async Task<IActionResult> GetUsersOnEvent(int eventId)
         {
-            return _usersService.GetUsersOnEvent(eventId);
+            return await _usersService.GetUsersOnEvent(eventId);
         }
 
         [HttpGet("events/{eventId}/users/{userId}")]

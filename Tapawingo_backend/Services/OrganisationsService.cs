@@ -17,14 +17,14 @@ namespace Tapawingo_backend.Services
             _organisationsRepository = organisationsRepository;
         }
 
-        public List<OrganisationDto> GetOrganisations()
+        public async Task<List<OrganisationDto>> GetOrganisations()
         {
-            return _mapper.Map<List<OrganisationDto>>(_organisationsRepository.GetAllOrganisations());
+            return _mapper.Map<List<OrganisationDto>>(await _organisationsRepository.GetAllOrganisations());
         }
 
-        public OrganisationDto CreateOrganisation(CreateOrganisationDto organisationName)
+        public async Task<OrganisationDto> CreateOrganisation(CreateOrganisationDto organisationName)
         {
-            return _mapper.Map<OrganisationDto>(_organisationsRepository.CreateOrganisation(organisationName));
+            return _mapper.Map<OrganisationDto>(await _organisationsRepository.CreateOrganisation(organisationName));
         }
 
         public async Task<OrganisationDto> GetOrganisationById(int id)
