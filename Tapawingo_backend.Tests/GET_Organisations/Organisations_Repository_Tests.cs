@@ -23,9 +23,9 @@ namespace Tapawingo_backend.Tests.GET_Organisations
 
         //Good Weather
         [Fact]
-        public void Get_All_Existing_Organisations()
+        public async void Get_All_Existing_Organisations()
         {
-            var organisation = _organisationsRepository.GetAllOrganisations();
+            var organisation = await _organisationsRepository.GetAllOrganisations();
 
             Assert.NotNull(organisation);
             Assert.Equal(5, organisation.Count());

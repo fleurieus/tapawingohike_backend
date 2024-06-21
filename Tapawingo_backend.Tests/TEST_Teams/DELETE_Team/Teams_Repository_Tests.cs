@@ -27,12 +27,12 @@ namespace Tapawingo_backend.Tests.TEST_Teams.DELETE_Team
         [Fact]
         public async Task Delete_team()
         {
-            var teams = _teamsRepository.GetTeamsOnEdition(1);
+            var teams = await _teamsRepository.GetTeamsOnEdition(1);
             Assert.Equal(2, teams.Count);
 
             await _teamsRepository.DeleteTeamOnEditionAsync(1, 2);
 
-            var editionsWithOneRemovedTeam = _teamsRepository.GetTeamsOnEdition(1);
+            var editionsWithOneRemovedTeam = await _teamsRepository.GetTeamsOnEdition(1);
             Assert.Single(editionsWithOneRemovedTeam);
         }
 

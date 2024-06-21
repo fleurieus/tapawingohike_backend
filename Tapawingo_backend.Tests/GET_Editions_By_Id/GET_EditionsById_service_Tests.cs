@@ -36,9 +36,9 @@ namespace Tapawingo_backend.Tests.GET_Editions_By_Id
 
         //Good weather
         [Fact]
-        public void Get_Editions_Linked_To_Existing_EventID()
+        public async void Get_Editions_Linked_To_Existing_EventID()
         {
-            var edition = _editionsService.GetEditionById(1, 1);
+            var edition = await _editionsService.GetEditionById(1, 1);
 
             Assert.NotNull(edition);
             Assert.Equal("TestEdition1", edition.Name);
@@ -47,9 +47,9 @@ namespace Tapawingo_backend.Tests.GET_Editions_By_Id
 
         //Bad weather
         [Fact]
-        public void Get_Edition_By_Id_BadEventId()
+        public async void Get_Edition_By_Id_BadEventId()
         {
-            Assert.Throws<ArgumentException>(() => _editionsService.GetEditionById(999, 1));
+            await Assert.ThrowsAsync<ArgumentException>(() => _editionsService.GetEditionById(999, 1));
         }
     }
 }

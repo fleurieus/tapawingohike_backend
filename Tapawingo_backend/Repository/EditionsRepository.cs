@@ -15,14 +15,14 @@ namespace Tapawingo_backend.Repository
             _context = context;
         }
 
-        public Edition GetEditionById(int editionId)
+        public async Task<Edition> GetEditionById(int editionId)
         {
-            return _context.Editions.FirstOrDefault(e => e.Id == editionId);
+            return await _context.Editions.FirstOrDefaultAsync(e => e.Id == editionId);
         }
 
-        public List<Edition> GetAllEditions(int eventId)
+        public async Task<List<Edition>> GetAllEditions(int eventId)
         {
-            return _context.Editions.Where(e => e.EventId == eventId).ToList();
+            return await _context.Editions.Where(e => e.EventId == eventId).ToListAsync();
         }
         public async Task<Edition> CreateEditionOnEventAsync(Edition edition)
         {
@@ -31,9 +31,9 @@ namespace Tapawingo_backend.Repository
             return edition;
         }
 
-        public bool EditionExists(int editionId)
+        public async Task<bool> EditionExists(int editionId)
         {
-            bool editionExists = _context.Editions.Any(u => u.Id == editionId);
+            bool editionExists = await _context.Editions.AnyAsync(u => u.Id == editionId);
             return editionExists;
         }
 
@@ -66,7 +66,7 @@ namespace Tapawingo_backend.Repository
         {
             try
             {
-                _context.Editions.Remove(GetEditionById(editionId));
+                _context.Editions.Remove(await GetEditionById(editionId));
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -74,6 +74,13 @@ namespace Tapawingo_backend.Repository
             {
                 return false;
             }
+        }
+
+        public async Task<bool> EventExistsOnEdition(int eventId, int editionId)
+        {
+            var edition = await _context.Editions.FirstOrDefaultAsync(e => e.Id == editionId);
+            if (edition == null) return false;
+            return edition.EventId == eventId;
         }
     }
 }

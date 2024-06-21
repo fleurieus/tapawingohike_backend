@@ -21,9 +21,9 @@ namespace Tapawingo_backend.Repository
             _context = context;
         }
 
-        public ICollection<User> GetUsersOnOrganisation(int organisationId)
+        public async Task<ICollection<User>> GetUsersOnOrganisation(int organisationId)
         {
-            return _context.UserOrganisations.Where(uo => uo.OrganisationId == organisationId).Select(user => user.User).OrderBy(u => u.FirstName).ToList();
+            return await _context.UserOrganisations.Where(uo => uo.OrganisationId == organisationId).Select(user => user.User).OrderBy(u => u.FirstName).ToListAsync();
         }
 
         public async Task<User> GetUserOnOrganisationAsync(int organisationId, string userId)
@@ -34,14 +34,14 @@ namespace Tapawingo_backend.Repository
                                  .FirstOrDefaultAsync();
         }
 
-        public User GetUserByEmail(string email)
+        public async Task<User> GetUserByEmail(string email)
         {
-            return _context.Users.FirstOrDefault(u => u.Email == email);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public bool UserExists(string userGuid)
+        public async Task<bool> UserExists(string userGuid)
         {
-            bool userExists = _context.Users.Any(u => u.Id == userGuid);
+            bool userExists = await _context.Users.AnyAsync(u => u.Id == userGuid);
             return userExists;
         }
 
@@ -122,9 +122,9 @@ namespace Tapawingo_backend.Repository
         }
 
         // User on event
-        public ICollection<User> GetUsersOnEvent(int eventId)
+        public async Task<ICollection<User>> GetUsersOnEvent(int eventId)
         {
-            return _context.UserEvents.Where(uo => uo.EventId == eventId).Select(user => user.User).OrderBy(u => u.FirstName).ToList();
+            return await _context.UserEvents.Where(uo => uo.EventId == eventId).Select(user => user.User).OrderBy(u => u.FirstName).ToListAsync();
         }
 
         public async Task<User> GetUserOnEventAsync(int eventId, string userId)
@@ -205,6 +205,18 @@ namespace Tapawingo_backend.Repository
             {
                 return false;
             }
+        }
+
+        public async Task<bool> UserExistsOnOrganisation(string userId, int organisationId)
+        {
+            var result = await _context.UserOrganisations.FirstOrDefaultAsync(uo => uo.UserId.Equals(userId) && uo.OrganisationId == organisationId);
+            return result != null;
+        }
+
+        public async Task<bool> UserExistsOnEvent(string userId, int eventId)
+        {
+            var result = await _context.UserEvents.FirstOrDefaultAsync(ue => ue.UserId.Equals(userId) && ue.EventId == eventId);
+            return result != null;
         }
     }
 }

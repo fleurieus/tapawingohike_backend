@@ -15,9 +15,9 @@ namespace Tapawingo_backend.Repository
             _context = context;
         }
 
-        public ICollection<Team> GetTeamsOnEdition(int editionId)
+        public async Task<ICollection<Team>> GetTeamsOnEdition(int editionId)
         {
-            return _context.Teams.Where(t => t.EditionId == editionId).ToList();
+            return await _context.Teams.Where(t => t.EditionId == editionId).ToListAsync();
         }
 
         public async Task<Team> GetTeamOnEditionAsync(int editionId, int teamId)
@@ -25,9 +25,9 @@ namespace Tapawingo_backend.Repository
             return await _context.Teams.FirstOrDefaultAsync(t => t.EditionId == editionId && t.Id == teamId);
         }
 
-        public bool TeamExists(int teamId)
+        public async Task<bool> TeamExists(int teamId)
         {
-            bool teamExists = _context.Teams.Any(u => u.Id == teamId);
+            bool teamExists = await _context.Teams.AnyAsync(u => u.Id == teamId);
             return teamExists;
         }
 
@@ -44,8 +44,8 @@ namespace Tapawingo_backend.Repository
                 EditionId = editionId
             };
             
-            _context.Teams.Add(team);
-            _context.SaveChanges();
+            await _context.Teams.AddAsync(team);
+            await _context.SaveChangesAsync();
             
             return team;
         }
@@ -105,6 +105,14 @@ namespace Tapawingo_backend.Repository
             {
                 return false;
             }
+        }
+
+        public async Task<bool> TeamExistsOnEdition(int teamId, int editionId)
+        {
+            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Id == teamId);
+            if(team == null)
+                return false;
+            return team.EditionId == editionId;
         }
     }
 }

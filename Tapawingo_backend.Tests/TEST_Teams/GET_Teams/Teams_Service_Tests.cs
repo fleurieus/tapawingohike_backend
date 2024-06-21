@@ -38,9 +38,9 @@ namespace Tapawingo_backend.Tests.TEST_Teams.GET_Teams
 
         // Good Weather: Test for creating a team successfully
         [Fact]
-        public void Get_Teams()
+        public async void Get_Teams()
         {
-            var teams = _teamsService.GetTeamsOnEdition(1);
+            var teams = await _teamsService.GetTeamsOnEdition(1);
 
             Assert.NotNull(teams);
             Assert.Equal(2, teams.Count());

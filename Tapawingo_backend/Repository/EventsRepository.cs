@@ -1,4 +1,5 @@
-﻿using Tapawingo_backend.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Tapawingo_backend.Data;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Models;
 
@@ -13,52 +14,59 @@ public class EventsRepository : IEventsRepository
         _context = context;
     }
     
-    public List<Event> GetEventsByOrganisationId(int organisationId)
+    public async Task<List<Event>> GetEventsByOrganisationId(int organisationId)
     {
-        return _context.Events.Where(e => e.OrganisationId == organisationId).ToList();
+        return await _context.Events.Where(e => e.OrganisationId == organisationId).ToListAsync();
     }
     
-    public Event GetEventById(int eventId)
+    public async Task<Event> GetEventById(int eventId)
     {
-        return _context.Events.FirstOrDefault(e => e.Id == eventId);
+        return await _context.Events.FirstOrDefaultAsync(e => e.Id == eventId);
     }
     
-    public bool EventExists(int eventId)
+    public async Task<bool> EventExists(int eventId)
     {
-        bool eventExists = _context.Events.Any(e => e.Id == eventId);
+        bool eventExists = await _context.Events.AnyAsync(e => e.Id == eventId);
         return eventExists;
     }
-    public Event CreateEvent(Event newEvent)
+    public async Task<Event> CreateEvent(Event newEvent)
     {
         
-        _context.Events.Add(newEvent);
-        _context.SaveChanges();
+        await _context.Events.AddAsync(newEvent);
+        await _context.SaveChangesAsync();
         return newEvent;
     }
     
-    public Event UpdateEvent(int eventId, Event updatedEvent)
+    public async Task<Event> UpdateEvent(int eventId, Event updatedEvent)
     {
-        Event eventToUpdate = GetEventById(eventId);
+        Event eventToUpdate = await GetEventById(eventId);
         _context.Entry(eventToUpdate).CurrentValues.SetValues(updatedEvent);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return updatedEvent;
     }
     
-    public bool EventExistsForOrganisation(string eventName, int organisationId)
+    public async Task<bool> EventExistsForOrganisation(string eventName, int organisationId)
     {
-        return _context.Events.Any(e => e.Name == eventName && e.OrganisationId == organisationId);
+        return await _context.Events.AnyAsync(e => e.Name == eventName && e.OrganisationId == organisationId);
     }
  
-    public Event GetEventByIdAndOrganisationId(int eventId, int organisationId)
+    public async Task<Event> GetEventByIdAndOrganisationId(int eventId, int organisationId)
     {
-        return _context.Events.Where(e => e.Id == eventId && e.OrganisationId == organisationId).FirstOrDefault();
+        return await _context.Events.Where(e => e.Id == eventId && e.OrganisationId == organisationId).FirstOrDefaultAsync();
     }
     
-    public void DeleteEvent(int eventId)
+    public async Task DeleteEvent(int eventId)
     {
-        Event eventToDelete = GetEventById(eventId);
+        Event eventToDelete = await GetEventById(eventId);
         
         _context.Events.Remove(eventToDelete);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<bool> EventExistsOnOrganisation(int organisationId, int eventId)
+    {
+        var foundEvent = await _context.Events.FirstOrDefaultAsync(e => e.Id == eventId);
+        if (foundEvent == null) return false;
+        return foundEvent.OrganisationId == organisationId;
     }
 }

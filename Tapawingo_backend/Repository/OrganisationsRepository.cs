@@ -15,7 +15,7 @@ namespace Tapawingo_backend.Repository
             _context = context;
         }
 
-        public Organisation CreateOrganisation(CreateOrganisationDto createOrganisationDto) 
+        public async Task<Organisation> CreateOrganisation(CreateOrganisationDto createOrganisationDto) 
         {
             var newOrganisation = new Organisation()
             {
@@ -24,15 +24,15 @@ namespace Tapawingo_backend.Repository
                 ContactEmail = createOrganisationDto.ContactEmail,
             };
             //add the newly created element to the database without ID because it's auto-created.
-            _context.Organisations.Add(newOrganisation);
+            await _context.Organisations.AddAsync(newOrganisation);
             //Save changes actually saves it to the database and also it fills the rest of the object. Id is set after executing this.
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return newOrganisation;
         }
 
-        public List<Organisation> GetAllOrganisations()
+        public async Task<List<Organisation>> GetAllOrganisations()
         {
-            return _context.Organisations.ToList();
+            return await _context.Organisations.ToListAsync();
         }
 
         public async Task<Organisation> GetOrganisationById(int id)
@@ -45,9 +45,9 @@ namespace Tapawingo_backend.Repository
             return foundOrganisation;
         }
         
-        public bool OrganisationExists(int id)
+        public async Task<bool> OrganisationExists(int id)
         {
-            return _context.Organisations.Any(organisation => organisation.Id == id);
+            return await _context.Organisations.AnyAsync(organisation => organisation.Id == id);
         }
 
         public async Task<Organisation> UpdateOrganisationAsync(int id, UpdateOrganisationDto newOrganisation)

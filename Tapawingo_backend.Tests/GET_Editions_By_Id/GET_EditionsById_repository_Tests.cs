@@ -22,9 +22,9 @@ namespace Tapawingo_backend.Tests.GET_Editions_By_Id
 
         //Good weather
         [Fact]
-        public void Get_Edition_By_Id()
+        public async void Get_Edition_By_Id()
         {
-            var edition = _editionsRepository.GetEditionById(1);
+            var edition = await _editionsRepository.GetEditionById(1);
 
             Assert.NotNull(edition);
             Assert.Equal("TestEdition1", edition.Name);
