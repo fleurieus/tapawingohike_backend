@@ -33,7 +33,8 @@ namespace Tapawingo_backend.Tests.TEST_Events.DELETE_Event
         { 
             _eventsService.DeleteEvent(1, 1);
             var twEvent = _eventsService.GetEventByIdAndOrganisationId(1, 1);
-            Assert.Null(twEvent);
+            var expectedResult = new NotFoundObjectResult(null);
+            Assert.Equal(expectedResult.GetType(), twEvent.GetType());
         }
         //
         
@@ -43,7 +44,8 @@ namespace Tapawingo_backend.Tests.TEST_Events.DELETE_Event
         {
             _eventsService.DeleteEvent(999, 999);
             var twEvent = _eventsService.GetEventByIdAndOrganisationId(999, 999);
-            Assert.Null(twEvent);
+            var expectedResult = new NotFoundObjectResult(null);
+            Assert.Equal(expectedResult.GetType(), twEvent.GetType());
         }
         
         protected new void Dispose()

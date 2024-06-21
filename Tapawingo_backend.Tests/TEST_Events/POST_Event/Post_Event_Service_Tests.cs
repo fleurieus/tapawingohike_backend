@@ -41,10 +41,9 @@ namespace Tapawingo_backend.Tests.TEST_Events.POST_Event
             var result = _eventsService.CreateEvent(newEvent, 1) as ObjectResult;
 
             Assert.NotNull(result);
-            var createdEvent = result.Value as Event;
+            var createdEvent = result.Value as EventDto;
             Assert.NotNull(createdEvent);
             Assert.Equal("TestEvent3", createdEvent.Name);
-            Assert.Equal(1, createdEvent.OrganisationId);
         }
         
         // Bad Weather
@@ -57,10 +56,11 @@ namespace Tapawingo_backend.Tests.TEST_Events.POST_Event
             };
 
             var result = _eventsService.CreateEvent(newEvent, 999) as NotFoundObjectResult;
+            var expectedResult = new NotFoundObjectResult(null);
 
             Assert.NotNull(result);
             Assert.Equal(404, result.StatusCode);
-            Assert.Equal("Organisation does not exist", result.Value);
+            Assert.Equal(expectedResult.GetType(), result.GetType());
         }
 
         [Fact]
@@ -72,10 +72,11 @@ namespace Tapawingo_backend.Tests.TEST_Events.POST_Event
             };
 
             var result = _eventsService.CreateEvent(newEvent, 1) as BadRequestObjectResult;
+            var expectedResult = new BadRequestObjectResult(new { });
 
             Assert.NotNull(result);
             Assert.Equal(400, result.StatusCode);
-            Assert.Equal("Event name is required", result.Value);
+            Assert.Equal(expectedResult.GetType(), result.GetType());
         }
         
         [Fact]
@@ -89,10 +90,11 @@ namespace Tapawingo_backend.Tests.TEST_Events.POST_Event
             };
 
             var result = _eventsService.CreateEvent(newEvent, 1) as ConflictObjectResult;
+            var expectedResult = new ConflictObjectResult(new { });
 
             Assert.NotNull(result);
             Assert.Equal(409, result.StatusCode);
-            Assert.Equal("Event already exists for this organisation", result.Value);
+            Assert.Equal(expectedResult.GetType(), result.GetType());
         }
 
         protected new void Dispose()

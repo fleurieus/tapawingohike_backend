@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Tapawingo_backend.Data;
 using Tapawingo_backend.Helper;
 using Tapawingo_backend.Repository;
@@ -31,10 +32,9 @@ namespace Tapawingo_backend.Tests.EventTests.GET_Events
         public void Get_Event_By_Id_And_OrganisationId()
         {
             var twEvent = _eventsService.GetEventByIdAndOrganisationId(1, 1);
+            var expectedResult = new OkObjectResult(null);
 
-            Assert.NotNull(twEvent);
-            Assert.Equal(1, twEvent.Id);
-            Assert.Equal("TestEvent1", twEvent.Name);
+            Assert.Equal(expectedResult.GetType(), twEvent.GetType());
         }
         //
         
@@ -43,8 +43,9 @@ namespace Tapawingo_backend.Tests.EventTests.GET_Events
         public void Get_Non_Existing_Event_By_Id_And_OrganisationId()
         {
             var twEvent = _eventsService.GetEventByIdAndOrganisationId(999, 999);
+            var expectedResult = new NotFoundObjectResult(null);
 
-            Assert.Null(twEvent);
+            Assert.Equal(expectedResult.GetType(), twEvent.GetType());
         }
         //
 

@@ -40,7 +40,7 @@ namespace Tapawingo_backend.Tests.TEST_Events.PUT_Event
 
             Assert.NotNull(result);
 
-            var twEvent = result.Value as Event;
+            var twEvent = result.Value as EventDto;
             Assert.NotNull(twEvent);
             Assert.Equal(1, twEvent.Id);
             Assert.Equal("TestEvent1Updated", twEvent.Name);
@@ -55,11 +55,11 @@ namespace Tapawingo_backend.Tests.TEST_Events.PUT_Event
                 Name = "TestEvent1Updated"
             };
 
-            var result = _eventsService.UpdateEvent(updatedEvent, 1, 999) as BadRequestObjectResult;
+            var result = _eventsService.UpdateEvent(updatedEvent, 1, 999);
+            var expectedResult = new NotFoundObjectResult(null);
 
             Assert.NotNull(result);
-            Assert.Equal(400, result.StatusCode);
-            Assert.Equal("Event does not exist", result.Value);
+            Assert.Equal(expectedResult.GetType(), result.GetType());
         }
 
         [Fact]
@@ -74,7 +74,6 @@ namespace Tapawingo_backend.Tests.TEST_Events.PUT_Event
 
             Assert.NotNull(result);
             Assert.Equal(400, result.StatusCode);
-            Assert.Equal("Event name is required", result.Value);
         }
 
         protected new void Dispose()

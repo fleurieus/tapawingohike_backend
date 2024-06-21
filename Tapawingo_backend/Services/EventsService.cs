@@ -112,6 +112,13 @@ namespace Tapawingo_backend.Services
                     message = "Event does not exist on this organisation"
                 });
             }
+            if(model.Name == null || model.Name.Length == 0)
+            {
+                return new BadRequestObjectResult(new
+                {
+                    message = "Event name is required"
+                });
+            }
 
             var eventEntity = _eventsRepository.GetEventByIdAndOrganisationId(eventId, organisationId);
 
