@@ -22,13 +22,7 @@ namespace Tapawingo_backend.Controllers
         [ProducesResponseType(404)]
         public IActionResult GetEventsByOrganisationId(int organisationId)
         {
-            var twEvents = _eventsService.GetEventsByOrganisationId(organisationId);
-            return twEvents.Any() ? 
-                Ok(twEvents) : 
-                NotFound(new
-                {
-                    message = "No events found for this organisation."
-                });
+            return _eventsService.GetEventsByOrganisationId(organisationId);
         }
         
         [HttpGet("organisations/{organisationId}/Events/{eventId}")]
@@ -36,13 +30,7 @@ namespace Tapawingo_backend.Controllers
         [ProducesResponseType(404)]
         public IActionResult GetEventById(int eventId, int organisationId)
         {
-            var twEvent = _eventsService.GetEventByIdAndOrganisationId(eventId, organisationId);
-            return twEvent != null ? 
-                Ok(twEvent) : 
-                NotFound(new
-                {
-                    message = "Event not found."
-                });
+            return _eventsService.GetEventByIdAndOrganisationId(eventId, organisationId);
         }
 
         [HttpPost("organisations/{organisationId}/Events")]
@@ -72,11 +60,7 @@ namespace Tapawingo_backend.Controllers
         [ProducesResponseType(404)]
         public IActionResult DeleteEvent(int eventId, int organisationId)
         {
-            var response = _eventsService.DeleteEvent(eventId, organisationId);
-            return response != null ? NoContent() : NotFound(new
-            {
-                message = "Event not found."
-            }); 
+            return _eventsService.DeleteEvent(eventId, organisationId);
         }
     }
 }

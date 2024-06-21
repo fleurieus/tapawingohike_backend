@@ -61,4 +61,11 @@ public class EventsRepository : IEventsRepository
         _context.Events.Remove(eventToDelete);
         _context.SaveChanges();
     }
+
+    public bool EventExistsOnOrganisation(int organisationId, int eventId)
+    {
+        var foundEvent = _context.Events.FirstOrDefault(e => e.Id == eventId);
+        if (foundEvent == null) return false;
+        return foundEvent.OrganisationId == organisationId;
+    }
 }
