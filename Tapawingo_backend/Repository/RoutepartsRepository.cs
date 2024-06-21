@@ -28,9 +28,9 @@ namespace Tapawingo_backend.Repository
                 .FirstOrDefaultAsync(rp => rp.RouteId == routeId && rp.Id == routepartId);
         }
 
-        public bool RoutepartExists(int routepartId)
+        public async Task<bool> RoutepartExists(int routepartId)
         {
-            return _context.Routeparts.Any(rp => rp.Id == routepartId);
+            return await _context.Routeparts.AnyAsync(rp => rp.Id == routepartId);
         }
 
         public async Task<Routepart> CreateRoutePartAsync(Routepart newRoutepart)

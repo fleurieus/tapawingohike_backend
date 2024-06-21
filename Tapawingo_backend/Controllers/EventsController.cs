@@ -17,57 +17,50 @@ namespace Tapawingo_backend.Controllers
             _eventsService = eventsService;
         }
 
-        [HttpGet("api/organisations/{organisationId}/Events")]
+        [HttpGet("organisations/{organisationId}/Events")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<EventDto>))]
         [ProducesResponseType(404)]
-        public IActionResult GetEventsByOrganisationId(int organisationId)
+        public async Task<IActionResult> GetEventsByOrganisationId(int organisationId)
         {
-            var twEvents = _eventsService.GetEventsByOrganisationId(organisationId);
-            return twEvents.Any() ? 
-                Ok(twEvents) : 
-                NotFound("No events found for this organisation.");
+            return await _eventsService.GetEventsByOrganisationId(organisationId);
         }
         
-        [HttpGet("api/organisations/{organisationId}/Events/{eventId}")]
+        [HttpGet("organisations/{organisationId}/Events/{eventId}")]
         [ProducesResponseType(200, Type = typeof(EventDto))]
         [ProducesResponseType(404)]
-        public IActionResult GetEventById(int eventId, int organisationId)
+        public async Task<IActionResult> GetEventById(int eventId, int organisationId)
         {
-            var twEvent = _eventsService.GetEventByIdAndOrganisationId(eventId, organisationId);
-            return twEvent != null ? 
-                Ok(twEvent) : 
-                NotFound("Event not found.");
+            return await _eventsService.GetEventByIdAndOrganisationId(eventId, organisationId);
         }
 
-        [HttpPost("api/organisations/{organisationId}/Events")]
+        [HttpPost("organisations/{organisationId}/Events")]
         [ProducesResponseType(200, Type = typeof(Event))]
         [ProducesResponseType(400)]
         [ProducesResponseType(409)]
         [ProducesResponseType(404)]
-        public IActionResult CreateEvent([FromBody] CreateEventDto model, int organisationId)
+        public async Task<IActionResult> CreateEvent([FromBody] CreateEventDto model, int organisationId)
         {
-            var response = _eventsService.CreateEvent(model, organisationId);
+            var response = await _eventsService.CreateEvent(model, organisationId);
             return response;
         }
         
-        [HttpPut("api/organisations/{organisationId}/Events/{eventId}")]
+        [HttpPut("organisations/{organisationId}/Events/{eventId}")]
         [ProducesResponseType(200, Type = typeof(Event))]
         [ProducesResponseType(400)]
         [ProducesResponseType(409)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateEvent([FromBody] CreateEventDto model, int eventId, int organisationId)
+        public async Task<IActionResult> UpdateEvent([FromBody] CreateEventDto model, int eventId, int organisationId)
         {
-            var response = _eventsService.UpdateEvent(model, organisationId, eventId);
+            var response = await _eventsService.UpdateEvent(model, organisationId, eventId);
             return response;
         }
         
-        [HttpDelete("api/organisations/{organisationId}/events/{eventId}")]
+        [HttpDelete("organisations/{organisationId}/events/{eventId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult DeleteEvent(int eventId, int organisationId)
+        public async Task<IActionResult> DeleteEvent(int eventId, int organisationId)
         {
-            var response = _eventsService.DeleteEvent(eventId, organisationId);
-            return response != null ? NoContent() : NotFound("Event not found."); 
+            return await _eventsService.DeleteEvent(eventId, organisationId);
         }
     }
 }

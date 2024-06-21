@@ -22,6 +22,7 @@ namespace Tapawingo_backend.Helper
             CreateMap<Destination, DestinationDto>();
             CreateMap<TWFile, TWFileDto>();
             CreateMap<Locationlog, LocationlogDto>();
+            CreateMap<TeamRoutepart, TeamRoutepartDto>();
         }
     }
 }

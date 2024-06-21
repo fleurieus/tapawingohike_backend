@@ -37,7 +37,7 @@ namespace Tapawingo_backend.Tests.DELETE_Routes
         [Fact]
         public async void Delete_Route()
         {
-            var existingroute = _routesRepository.RouteExists(5);
+            var existingroute = await _routesRepository.RouteExists(5);
 
             Assert.True(existingroute);
 
@@ -47,7 +47,7 @@ namespace Tapawingo_backend.Tests.DELETE_Routes
 
             //check that route is deletted
 
-            var deletionComplete = _routesRepository.RouteExists(5);
+            var deletionComplete = await _routesRepository.RouteExists(5);
 
             Assert.False(deletionComplete);
         }
@@ -57,7 +57,7 @@ namespace Tapawingo_backend.Tests.DELETE_Routes
         [Fact]
         public async void Check_Combination_Error()
         {
-            var existingroute = _routesRepository.RouteExists(1);
+            var existingroute = await _routesRepository.RouteExists(1);
 
             Assert.True(existingroute);
 

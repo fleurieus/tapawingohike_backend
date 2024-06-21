@@ -33,7 +33,7 @@ namespace Tapawingo_backend.Tests.TEST_Users_on_organisation.GET_User_on_organis
         [Fact]
         public async Task Get_User_On_Organisation()
         {
-            var users = _usersRepository.GetUsersOnOrganisation(1);
+            var users = await _usersRepository.GetUsersOnOrganisation(1);
 
             var firstUser = users.First();
 

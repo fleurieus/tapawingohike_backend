@@ -51,13 +51,13 @@ namespace Tapawingo_backend.Tests.TEST_Users_on_organisation.DELETE_User_on_orga
         [Fact]
         public async Task Delete_User_On_Organisation()
         {
-            var users = _usersRepository.GetUsersOnOrganisation(1);
+            var users = await _usersRepository.GetUsersOnOrganisation(1);
 
             var firstUser = users.First();
 
             var user = await _usersRepository.DeleteUserOnOrganisationAsync(1, firstUser.Id);
 
-            var usersAfterDeletion = _usersRepository.GetUsersOnOrganisation(1);
+            var usersAfterDeletion = await _usersRepository.GetUsersOnOrganisation(1);
 
             Assert.Equal(1, usersAfterDeletion.Count());
         }

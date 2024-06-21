@@ -49,9 +49,9 @@ namespace Tapawingo_backend.Tests.TEST_Users_on_organisation.GET_Users_on_organi
 
         //Good Weather
         [Fact]
-        public void Get_All_Users_On_Organisation()
+        public async void Get_All_Users_On_Organisation()
         {
-            var users = _usersRepository.GetUsersOnOrganisation(1);
+            var users = await _usersRepository.GetUsersOnOrganisation(1);
 
             Assert.NotNull(users);
             Assert.Equal(2, users.Count());

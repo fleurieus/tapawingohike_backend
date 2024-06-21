@@ -19,16 +19,16 @@ namespace Tapawingo_backend.Tests.TEST_Events.POST_Event
         
         //Good Weather
         [Fact]
-        public void Post_Event()
+        public async void Post_Event()
         {
             var newEvent = new Event
             {
                 Name = "TestEvent4",
                 OrganisationId = 1
             };
-            _eventsRepository.CreateEvent(newEvent);
+            await _eventsRepository.CreateEvent(newEvent);
             
-            var twEvent = _eventsRepository.GetEventByIdAndOrganisationId(4, 1);
+            var twEvent = await _eventsRepository.GetEventByIdAndOrganisationId(4, 1);
             Assert.NotNull(twEvent);
             Assert.Equal(4, twEvent.Id);
             Assert.Equal("TestEvent4", twEvent.Name);

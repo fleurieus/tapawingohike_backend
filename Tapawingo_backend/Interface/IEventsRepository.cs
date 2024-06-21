@@ -5,12 +5,13 @@ namespace Tapawingo_backend.Interface
 {
     public interface IEventsRepository
     {
-        List<Event> GetEventsByOrganisationId(int organisationId);
-        Event CreateEvent(Event newEvent);
-        Event UpdateEvent(int eventId, Event updatedEvent);
-        bool EventExistsForOrganisation(string eventName, int organisationId);
-        bool EventExists(int eventId);
-        Event GetEventByIdAndOrganisationId(int eventId, int organisationId);
-        void DeleteEvent(int eventId);
+        Task<List<Event>> GetEventsByOrganisationId(int organisationId);
+        Task<Event> CreateEvent(Event newEvent);
+        Task<Event> UpdateEvent(int eventId, Event updatedEvent);
+        Task<bool> EventExistsForOrganisation(string eventName, int organisationId);
+        Task<bool> EventExists(int eventId);
+        Task<Event> GetEventByIdAndOrganisationId(int eventId, int organisationId);
+        Task DeleteEvent(int eventId);
+        Task<bool> EventExistsOnOrganisation(int organisationId, int eventId);
     }
 }

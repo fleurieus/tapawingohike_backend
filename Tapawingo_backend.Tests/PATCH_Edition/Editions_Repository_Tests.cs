@@ -26,7 +26,7 @@ namespace Tapawingo_backend.Tests.PATCH_Edition
         [Fact]
         public async Task PATCH_Edition()
         {
-            Edition existingEdition = _editionsRepository.GetEditionById(3);
+            Edition existingEdition = await _editionsRepository.GetEditionById(3);
             UpdateEditionDto updateEditionDto = new UpdateEditionDto
             {
                 Name = "ChangedName",

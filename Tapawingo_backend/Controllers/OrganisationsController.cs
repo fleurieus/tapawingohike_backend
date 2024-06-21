@@ -5,7 +5,6 @@ using Tapawingo_backend.Services;
 namespace Tapawingo_backend.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
     public class OrganisationsController : ControllerBase
     {
         private readonly OrganisationsService _organisationsService;
@@ -15,16 +14,16 @@ namespace Tapawingo_backend.Controllers
             _organisationsService = organisationsService;
         }
 
-        [HttpGet]
+        [HttpGet("organisations/")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrganisationDto))]
-        public IActionResult GetOrganisations()
+        public async Task<IActionResult> GetOrganisations()
         {
-            var organisations = _organisationsService.GetOrganisations();
+            var organisations = await _organisationsService.GetOrganisations();
             return organisations == null ? Ok(new List<OrganisationDto>()) : Ok(organisations); //since the request issn't invalid, even a empty list gives a 200 status
         }
 
         //TODO: ADD AUTHORIZATION RULE
-        [HttpGet("{id}")]
+        [HttpGet("organisations/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrganisationDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetOrganisation(int id)
@@ -36,11 +35,11 @@ namespace Tapawingo_backend.Controllers
         }
 
         //TODO: ADD AUTHORIZATION RULE
-        [HttpPost]
+        [HttpPost("organisations/")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(OrganisationDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult CreateOrganisation([FromBody]CreateOrganisationDto model)
+        public async Task<IActionResult> CreateOrganisation([FromBody]CreateOrganisationDto model)
         {
             if(model.Name == null || model.Name.Length == 0 || model.Name.Equals(""))
             {
@@ -48,7 +47,7 @@ namespace Tapawingo_backend.Controllers
             }
 
             //only doing these 'extra' steps since we want to return a 201 status with the object.
-            var newOrganisation = _organisationsService.CreateOrganisation(model);
+            var newOrganisation = await _organisationsService.CreateOrganisation(model);
             if(newOrganisation != null)
             {
                 return new ObjectResult(newOrganisation)
@@ -59,7 +58,7 @@ namespace Tapawingo_backend.Controllers
             return BadRequest("Cannot process this request.");
         }
 
-        [HttpPatch("{id}")]
+        [HttpPatch("organisations/{id}")]
         public async Task<IActionResult> UpdateOrganisation(int id, [FromBody]UpdateOrganisationDto model) 
         {
             var updatedOrganisation = await _organisationsService.UpdateOrganisation(id, model);
@@ -71,7 +70,7 @@ namespace Tapawingo_backend.Controllers
                 Ok(updatedOrganisation);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("organisations/{id}")]
         public async Task<IActionResult> DeleteOrganisation(int id)
         {
             return await _organisationsService.DeleteOrganisationAsync(id);

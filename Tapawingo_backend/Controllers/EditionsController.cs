@@ -18,11 +18,11 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpGet("events/{eventId}/editions/{editionId}")]
-        public IActionResult GetEditionById(int eventId, int editionId)
+        public async Task<IActionResult> GetEditionById(int eventId, int editionId)
         {
             try
             {
-                var edition = _editionsService.GetEditionById(eventId, editionId);
+                var edition = await _editionsService.GetEditionById(eventId, editionId);
                 return Ok(edition);
             }
             catch (Exception ex)
@@ -35,11 +35,11 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpGet("events/{eventId}/editions")]
-        public IActionResult GetEditions(int eventId)
+        public async Task<IActionResult> GetEditions(int eventId)
         {
             try
             {
-                var editions = _editionsService.GetAllEditions(eventId);
+                var editions = await _editionsService.GetAllEditions(eventId);
                 return Ok(editions);
 
             }

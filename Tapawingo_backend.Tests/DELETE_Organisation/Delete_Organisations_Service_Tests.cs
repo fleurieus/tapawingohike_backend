@@ -37,7 +37,7 @@ namespace Tapawingo_backend.Tests.DELETE_Organisations
         public async void Delete_Alonestanding_Organisation()
         {
             //check organisation still exists
-            var organisation = _organisationsRepository.OrganisationExists(4);
+            var organisation = await _organisationsRepository.OrganisationExists(4);
             Assert.True(organisation);
 
             //Delete this organisation
@@ -46,7 +46,7 @@ namespace Tapawingo_backend.Tests.DELETE_Organisations
             Assert.Equal(deleteOperationSuccessfull.GetType(), expectedResult.GetType());
 
             //check again if organisation exists
-            var organisation_check = _organisationsRepository.OrganisationExists(4);
+            var organisation_check = await _organisationsRepository.OrganisationExists(4);
             Assert.False(organisation_check);
         }
 
@@ -54,7 +54,7 @@ namespace Tapawingo_backend.Tests.DELETE_Organisations
         public async void Delete_Alonestanding_Organisation_With_Cascading()
         {
             //check organisation still exists
-            var organisation = _organisationsRepository.OrganisationExists(5);
+            var organisation = await _organisationsRepository.OrganisationExists(5);
             Assert.True(organisation);
             //check event still exists
             var event_exists = _context.Events.Any(e => e.Id == 3);
@@ -66,7 +66,7 @@ namespace Tapawingo_backend.Tests.DELETE_Organisations
             Assert.Equal(deleteOperationSuccessfull.GetType(), expectedResult.GetType());
 
             //check of both are deleted
-            var organisation_check = _organisationsRepository.OrganisationExists(5);
+            var organisation_check = await _organisationsRepository.OrganisationExists(5);
             Assert.False(organisation_check);
             var event_exists_check = _context.Events.Any(e => e.Id == 3);
             Assert.False(event_exists_check);

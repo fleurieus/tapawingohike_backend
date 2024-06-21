@@ -39,12 +39,12 @@ namespace Tapawingo_backend.Tests.DELETE_Edition
         [Fact]
         public async Task DELETE_Edition()
         {
-            var editions = _editionsService.GetAllEditions(1);
+            var editions = await _editionsService.GetAllEditions(1);
             Assert.Equal(2, editions.Count);
             
             await _editionsService.DeleteEditionAsync(1, 2);
 
-            var editionsWithOneRemovedEdition = _editionsService.GetAllEditions(1);
+            var editionsWithOneRemovedEdition = await _editionsService.GetAllEditions(1);
             Assert.Single(editionsWithOneRemovedEdition);
         }
     }
