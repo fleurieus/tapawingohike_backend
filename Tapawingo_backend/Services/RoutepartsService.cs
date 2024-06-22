@@ -114,10 +114,10 @@ namespace Tapawingo_backend.Services
 
         public async Task<RoutepartDto> UpdateRoutepartOnRouteAsync(int routeId, int routepartId, UpdateRoutepartDto updateRoutepartDto)
         {
-            if (!_routesRepository.RouteExists(routeId))
+            if (!await _routesRepository.RouteExists(routeId))
                 throw new BadHttpRequestException("Route not found");
 
-            if (!_routepartsRepository.RoutepartExists(routepartId))
+            if (!await _routepartsRepository.RoutepartExists(routepartId))
                 throw new BadHttpRequestException("Routepart not found");
 
             Routepart routepart = await _routepartsRepository.GetRoutepartOnRouteAsync(routeId, routepartId);
