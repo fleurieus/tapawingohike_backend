@@ -24,7 +24,8 @@ namespace Tapawingo_backend.Repository
         {
             try
             {
-                return await _context.Teams
+                
+                var team = await _context.Teams
                 .Include(t => t.TeamRouteparts
                     .Where(trp => trp.TeamId == teamId))
                     .ThenInclude(trp => trp.Routepart)
@@ -34,6 +35,27 @@ namespace Tapawingo_backend.Repository
                     .ThenInclude(trp => trp.Routepart)
                         .ThenInclude(rp => rp.Files)
                 .FirstOrDefaultAsync(t => t.EditionId == editionId && t.Id == teamId);
+
+                //find teamrouteparts based on active route
+                var activeRoute = await _context.Routes
+                    .Where(r => r.Active && r.EditionId == team.EditionId)
+                    .FirstOrDefaultAsync();
+                var teamRouteParts = new List<TeamRoutepart>();
+                if(activeRoute != null) // check needed in case this edition is not active route
+                {
+                    var routePartsForRouteIds = (await _context.Routeparts
+                        .Where(rp => rp.RouteId == activeRoute.Id)
+                        .ToListAsync())
+                        .Select(rp => rp.Id).ToList();
+                    teamRouteParts = await _context.TeamRouteparts
+                        .Where(trp => routePartsForRouteIds.Contains(trp.RoutepartId))
+                        .ToListAsync();
+                }
+                
+
+                team.TeamRouteparts = teamRouteParts;
+
+                return team;
             }
             catch(Exception ex)
             {
