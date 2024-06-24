@@ -65,5 +65,59 @@ namespace Tapawingo_backend.Repository
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<bool> GetActiveStatus(int editionId, int routeId)
+        {
+            var targetRoute = await _context.Routes.FirstOrDefaultAsync(r => r.EditionId == editionId && r.Id == routeId);
+            if (targetRoute == null) return false;
+            return targetRoute.Active;
+        }
+
+        public async Task<bool> DeactivateRoute(int editionId, int routeId)
+        {
+            //find target route
+            var targetRoute = await _context.Routes.FirstOrDefaultAsync(r => r.EditionId == editionId && r.Id == routeId);
+
+            //if null, can't update and send message
+            if (targetRoute == null) return false;
+
+            //set target route to true
+            targetRoute.Active = false;
+
+            //update the route
+            _context.Routes.Update(targetRoute);
+            await _context.SaveChangesAsync();
+
+            //send true
+            return true;
+        }
+
+        public async Task<bool> SetActiveRoute(int editionId, int routeId)
+        {
+            //find target route
+            var targetRoute = await _context.Routes.FirstOrDefaultAsync(r => r.EditionId == editionId && r.Id == routeId);
+
+            //if null, can't update and send message
+            if (targetRoute == null) return false;
+
+            //if not null set all other routes for this edition to isActive = false
+            var allRoutesOfEdition = await _context.Routes.Where(r => r.EditionId == editionId).ToListAsync();
+            foreach (var route in allRoutesOfEdition)
+            {
+                route.Active = false;
+                _context.Routes.Update(route);
+            }
+            await _context.SaveChangesAsync();
+
+            //set target route to true
+            targetRoute.Active = true;
+
+            //update the route
+            _context.Routes.Update(targetRoute);
+            await _context.SaveChangesAsync();
+
+            //send true
+            return true;
+        }
     }
 }
