@@ -52,9 +52,11 @@ namespace Tapawingo_backend.Repository
                         .ToListAsync();
                 }
                 
-
-                team.TeamRouteparts = teamRouteParts;
-
+                if(team != null)
+                {
+                    team.TeamRouteparts = teamRouteParts;
+                }
+                
                 return team;
             }
             catch(Exception ex)
