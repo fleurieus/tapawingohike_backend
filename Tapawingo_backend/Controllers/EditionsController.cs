@@ -17,6 +17,7 @@ namespace Tapawingo_backend.Controllers
             _editionsService = editionsService;
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("events/{eventId}/editions/{editionId}")]
         public async Task<IActionResult> GetEditionById(int eventId, int editionId)
         {
@@ -34,6 +35,7 @@ namespace Tapawingo_backend.Controllers
             }
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("events/{eventId}/editions")]
         public async Task<IActionResult> GetEditions(int eventId)
         {
@@ -53,6 +55,7 @@ namespace Tapawingo_backend.Controllers
             
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPost("events/{eventId}/editions")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(EditionDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -62,6 +65,7 @@ namespace Tapawingo_backend.Controllers
             return new ObjectResult(edition) { StatusCode = StatusCodes.Status201Created };
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPatch("events/{eventId}/editions/{editionId}")]
         public async Task<IActionResult> UpdateEditionAsync(int eventId, int editionId, [FromBody] UpdateEditionDto model)
         {
@@ -69,6 +73,7 @@ namespace Tapawingo_backend.Controllers
             return Ok(response);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpDelete("events/{eventId}/editions/{editionId}")]
         public async Task<IActionResult> DeleteEditionAsync(int eventId, int editionId)
         {

@@ -16,12 +16,14 @@ namespace Tapawingo_backend.Controllers
             _usersService = usersService;
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMPolicy")]
         [HttpGet("organisations/{organisationId}/users")]
         public async Task<IActionResult> GetUsersOnOrganisation(int organisationId)
         {
             return await _usersService.GetUsersOnOrganisation(organisationId);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMPolicy")]
         [HttpGet("organisations/{organisationId}/user/{userId}")]
         public async Task<IActionResult> GetUserOnOrganisation(int organisationId, string userId)
         {
@@ -29,7 +31,7 @@ namespace Tapawingo_backend.Controllers
             return Ok(response);
         }
 
-        [Authorize(Policy = "SuperAdminOrOrganisationPolicy")]
+        [Authorize(Policy = "SuperAdminOrOrganisationMPolicy")]
         [HttpPost("organisations/{organisationId}/users")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -40,6 +42,7 @@ namespace Tapawingo_backend.Controllers
             return new ObjectResult(user) { StatusCode = StatusCodes.Status201Created };
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMPolicy")] 
         [HttpPatch("organisations/{organisationId}/users/{userId}")]
         public async Task<IActionResult> UpdateUserOnOrganisation(int organisationId, string userId, [FromBody] UpdateUserDto userRegistrationDto)
         {
@@ -47,6 +50,7 @@ namespace Tapawingo_backend.Controllers
             return Ok(response);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMPolicy")]
         [HttpDelete("organisations/{organisationId}/users/{userId}")]
         public async Task<IActionResult> DeleteUserOnOrganisationAsync(int organisationId, string userId)
         {
@@ -55,12 +59,14 @@ namespace Tapawingo_backend.Controllers
 
 
         // User on events
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUPolicy")]
         [HttpGet("events/{eventId}/users")]
         public async Task<IActionResult> GetUsersOnEvent(int eventId)
         {
             return await _usersService.GetUsersOnEvent(eventId);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUPolicy")]
         [HttpGet("events/{eventId}/users/{userId}")]
         public async Task<IActionResult> GetUserOnEvent(int eventId, string userId)
         {
@@ -79,6 +85,7 @@ namespace Tapawingo_backend.Controllers
             return new ObjectResult(user) { StatusCode = StatusCodes.Status201Created };
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUPolicy")]
         [HttpPatch("events/{eventId}/users/{userId}")]
         public async Task<IActionResult> UpdateUserOnEvent(int eventId, string userId, [FromBody] UpdateUserOnEventDto userRegistrationDto)
         {
@@ -86,6 +93,7 @@ namespace Tapawingo_backend.Controllers
             return Ok(response);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUPolicy")]
         [HttpDelete("events/{eventId}/users/{userId}")]
         public async Task<IActionResult> DeleteUserOnEventAsync(int eventId, string userId)
         {

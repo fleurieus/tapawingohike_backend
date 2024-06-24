@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Data;
@@ -59,7 +60,9 @@ namespace Tapawingo_backend.Repository
             var result = await _userManager.CreateAsync(newUser, model.Password);
             if (!result.Succeeded)
             {
-                throw new Exception("User creation failed.");
+                var errors = result.Errors.Select(e => e.Description);
+                var errorMessage = string.Join(", ", errors);
+                throw new Exception($"message: {errorMessage}");
             }
 
             // Add user to organisation
@@ -67,17 +70,20 @@ namespace Tapawingo_backend.Repository
             await _context.SaveChangesAsync();
 
             // Add claim that gives user acces to organisation
-            var userClaim = new Claim("OrganisationRole", $"{organisationId}:OrganisationUser");
+            var userClaim = new Claim("Claim", $"{organisationId}:OrganisationUser");
 
             if (model.IsManager)
             {
-                userClaim = new Claim("OrganisationRole", $"{organisationId}:OrganisationManager");
+                userClaim = new Claim("Claim", $"{organisationId}:OrganisationManager");
             }
 
             var claimResult = await _userManager.AddClaimAsync(newUser, userClaim);
             if (!claimResult.Succeeded)
             {
-                throw new Exception("Something went worng adding claim to user.");
+
+                var errors = result.Errors.Select(e => e.Description);
+                var errorMessage = string.Join(", ", errors);
+                throw new Exception($"message: {errorMessage}");
             }
 
             return newUser;
@@ -157,7 +163,7 @@ namespace Tapawingo_backend.Repository
             await _context.SaveChangesAsync();
 
             // Add claim that gives user acces to event
-            var userClaim = new Claim("EventRole", $"{eventId}:EventUser");
+            var userClaim = new Claim("Claim", $"{eventId}:EventUser");
 
 
             var claimResult = await _userManager.AddClaimAsync(newUser, userClaim);
