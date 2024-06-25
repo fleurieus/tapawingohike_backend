@@ -24,16 +24,10 @@ namespace Tapawingo_backend.Repository
 
             if(teamroutepart != null)
             {
-                if (teamroutepart.IsFinished && !finished)
-                {
-                    //already finished, reset completedtime
-                    teamroutepart.CompletedTime = DateTime.MinValue;
-                }
-                else
+                if(teamroutepart.CompletedTime ==  DateTime.MinValue)
                 {
                     teamroutepart.CompletedTime = DateTime.Now;
                 }
-                
                 teamroutepart.IsFinished = finished;
 
                 _context.TeamRouteparts.Update(teamroutepart);

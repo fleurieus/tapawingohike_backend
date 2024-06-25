@@ -54,7 +54,7 @@ namespace Tapawingo_backend.Tests.PATCH_Teamroutepart
             Assert.Equal(1, resetTeamroutepart.TeamId);
             Assert.Equal(1, resetTeamroutepart.RoutepartId);
             Assert.False(resetTeamroutepart.IsFinished);
-            Assert.Equal(DateTime.MinValue, resetTeamroutepart.CompletedTime);
+            Assert.NotEqual(DateTime.MinValue, resetTeamroutepart.CompletedTime);
         }
     }
 }
