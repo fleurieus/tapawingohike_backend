@@ -60,7 +60,7 @@ namespace Tapawingo_backend.Services
                 RoutepartZoom = createRoutepart.RoutepartZoom,
                 RoutepartFullscreen = createRoutepart.RoutepartFullscreen,
                 Order = route.Routeparts.Count + 1,
-                Final = createRoutepart.Final,
+                Final = true
             };
 
             var createdRoutepart = await _routepartsRepository.CreateRoutePartAsync(newRoutepart);

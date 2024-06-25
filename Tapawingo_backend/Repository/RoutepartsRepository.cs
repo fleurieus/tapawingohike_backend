@@ -35,6 +35,13 @@ namespace Tapawingo_backend.Repository
 
         public async Task<Routepart> CreateRoutePartAsync(Routepart newRoutepart)
         {
+            //set final of all the others to false, set final to this on true
+            foreach (var routepart in await GetRoutepartsAsync(newRoutepart.RouteId))
+            {
+                routepart.Final = false;
+            }
+            await _context.SaveChangesAsync();
+
             _context.Routeparts.Add(newRoutepart);
             await _context.SaveChangesAsync();
             return newRoutepart;
