@@ -17,6 +17,7 @@ namespace Tapawingo_backend.Tests.TEST_Teams.GET_Team
     {
         private readonly TeamRepository _teamRepository;
         private readonly TeamService _teamsService;
+        private readonly RoutepartsRepository _routepartsRepository;
         private readonly EditionsRepository _editionsRepository;
         private readonly DataContext _context;
         private readonly IMapper _mapper;
@@ -26,6 +27,7 @@ namespace Tapawingo_backend.Tests.TEST_Teams.GET_Team
             _context = Context;
             _teamRepository = new TeamRepository(_context);
             _editionsRepository = new EditionsRepository(_context);
+            _routepartsRepository = new RoutepartsRepository(_context);
 
             var config = new MapperConfiguration(cfg =>
             {
@@ -33,7 +35,7 @@ namespace Tapawingo_backend.Tests.TEST_Teams.GET_Team
             });
             _mapper = config.CreateMapper();
 
-            _teamsService = new TeamService(_teamRepository, _editionsRepository, _mapper);
+            _teamsService = new TeamService(_teamRepository, _editionsRepository, _routepartsRepository, _mapper);
         }
 
         // Good Weather: Test for creating a team successfully

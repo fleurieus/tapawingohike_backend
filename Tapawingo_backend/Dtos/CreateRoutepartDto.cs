@@ -10,7 +10,6 @@ namespace Tapawingo_backend.Dtos
         public required string RouteType { get; set; }
         public bool RoutepartZoom { get; set; }
         public bool RoutepartFullscreen { get; set; }
-        public bool Final {  get; set; }
         [FromForm(Name = "destinations")]
         public string? DestinationsJson { get; set; }
         public List<CreateDestinationDto>? Destinations

@@ -45,7 +45,6 @@ namespace Tapawingo_backend.Tests.TEST_Routeparts.POST_Routeparts
                 RouteType = "Normal",
                 RoutepartZoom = false,
                 RoutepartFullscreen = true,
-                Final = false,
                 DestinationsJson = null,
                 Files = null
             };
@@ -60,7 +59,7 @@ namespace Tapawingo_backend.Tests.TEST_Routeparts.POST_Routeparts
             Assert.Equal("Normal", foundRoutepart.RouteType);
             Assert.False(foundRoutepart.RoutepartZoom);
             Assert.True(foundRoutepart.RoutepartFullscreen);
-            Assert.False(foundRoutepart.Final);
+            Assert.True(foundRoutepart.Final);
             Assert.Equal(routeId, foundRoutepart.RouteId);
         }
         //
@@ -93,7 +92,6 @@ namespace Tapawingo_backend.Tests.TEST_Routeparts.POST_Routeparts
                 RouteType = "Normal",
                 RoutepartZoom = false,
                 RoutepartFullscreen = true,
-                Final = false,
                 DestinationsJson = "[{\"Name\":\"testDestination\",\"Latitude\":1.0,\"Longitude\":1.0,\"Radius\":1,\"DestinationType\":\"Normal\",\"ConfirmByUser\":false,\"HideForUser\":false}]",
                 Files = new List<IFormFile> { formFile }
             };
@@ -127,7 +125,6 @@ namespace Tapawingo_backend.Tests.TEST_Routeparts.POST_Routeparts
                 RouteType = "Normal",
                 RoutepartZoom = false,
                 RoutepartFullscreen = true,
-                Final = false,
                 DestinationsJson = null,
                 Files = null
             };

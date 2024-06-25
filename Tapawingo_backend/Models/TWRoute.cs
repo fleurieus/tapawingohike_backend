@@ -6,6 +6,7 @@
         public int EditionId { get; set; }
         public Edition Edition { get; set; }
         public string Name { get; set; }
+        public bool Active { get; set; }
         public ICollection<Routepart> Routeparts { get; set; }
     }
 }

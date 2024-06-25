@@ -60,10 +60,11 @@ namespace Tapawingo_backend.Services
                 RoutepartZoom = createRoutepart.RoutepartZoom,
                 RoutepartFullscreen = createRoutepart.RoutepartFullscreen,
                 Order = route.Routeparts.Count + 1,
-                Final = createRoutepart.Final,
+                Final = true
             };
 
             var createdRoutepart = await _routepartsRepository.CreateRoutePartAsync(newRoutepart);
+            await _routepartsRepository.SyncTeamRoutePartsBasedOnRoutepart(routeId, createdRoutepart.Id);
 
             // Add destinations if provided
             if (createRoutepart.Destinations != null && createRoutepart.Destinations.Any())
@@ -108,6 +109,7 @@ namespace Tapawingo_backend.Services
                     }
                 }
             }
+
 
             return _mapper.Map<RoutepartDto>(createdRoutepart);
         }

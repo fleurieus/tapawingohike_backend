@@ -11,5 +11,7 @@ namespace Tapawingo_backend.Interface
         Task<Routepart> CreateRoutePartAsync(Routepart newRoutepart);
         Task<Routepart> UpdateRoutepartOnRouteAsync(Routepart existingRoutepart, UpdateRoutepartDto updateRoutepartDto);
         Task<bool> DeleteRoutepartOnRouteAsync(int routeId, Routepart routepart);
+        Task SyncTeamRoutePartsBasedOnTeam(int editionId, int teamId);
+        Task SyncTeamRoutePartsBasedOnRoutepart(int routeId, int routepartId);
     }
 }

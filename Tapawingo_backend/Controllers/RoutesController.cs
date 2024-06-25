@@ -119,5 +119,11 @@ namespace Tapawingo_backend.Controllers
                 });
             }
         }
+
+        [HttpPatch("editions/{editionId}/routes/{routeId}/active")]
+        public async Task<IActionResult> SetRouteActive(int editionId, int routeId)
+        {
+            return await _routesService.SetActiveRoute(editionId, routeId);
+        }
     }
 }

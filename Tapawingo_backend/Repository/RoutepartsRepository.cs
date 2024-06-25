@@ -35,6 +35,13 @@ namespace Tapawingo_backend.Repository
 
         public async Task<Routepart> CreateRoutePartAsync(Routepart newRoutepart)
         {
+            //set final of all the others to false, set final to this on true
+            foreach (var routepart in await GetRoutepartsAsync(newRoutepart.RouteId))
+            {
+                routepart.Final = false;
+            }
+            await _context.SaveChangesAsync();
+
             _context.Routeparts.Add(newRoutepart);
             await _context.SaveChangesAsync();
             return newRoutepart;
@@ -164,6 +171,69 @@ namespace Tapawingo_backend.Repository
             catch (Exception ex)
             {
                 return false;
+            }
+        }
+
+        public async Task SyncTeamRoutePartsBasedOnTeam(int editionId, int teamId)
+        {
+            //check if route parts exist
+            var routes = await _context.Routes.Where(r => r.EditionId == editionId).ToListAsync();
+            if(routes.Count > 0)
+            {
+                foreach (var route in routes) 
+                {
+                    //check if any routeparts exist
+                    var routeParts = await _context.Routeparts.Where(rp => rp.RouteId == route.Id).ToListAsync();
+
+                    if(routeParts.Count > 0)
+                    {
+                        foreach (var routepart in routeParts)
+                        {
+                            //if route parts exist, each route part to this team in teamrouteparts table
+
+                            //check if the combination exists already
+
+                            _context.TeamRouteparts.Add(new TeamRoutepart
+                            {
+                                RoutepartId = routepart.Id,
+                                TeamId = teamId,
+                                IsFinished = false
+                            });
+                        }
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }
+        }
+
+        public async Task SyncTeamRoutePartsBasedOnRoutepart(int routeId, int routepartId)
+        {
+            //collect edition id
+            var route = await _context.Routes.FirstOrDefaultAsync(r => r.Id == routeId);
+            if(route != null)
+            {
+                var editionId = route.EditionId;
+
+                //check if any teams are connected to edition
+                var connectedTeams = _context.Teams.Where(t => t.EditionId == editionId).ToList();
+                
+                if(connectedTeams.Count > 0)
+                {
+                    //if teams are connected to edition, add a row for each team with this routepart
+                    var routePart = await _context.Routeparts.FirstOrDefaultAsync(rp => rp.Id == routepartId);
+
+                    foreach (var team in connectedTeams)
+                    {
+                        //check if the combination exists
+                        _context.TeamRouteparts.Add(new TeamRoutepart
+                        {
+                            RoutepartId = routePart.Id,
+                            TeamId = team.Id,
+                            IsFinished = false
+                        });
+                        await _context.SaveChangesAsync();
+                    }
+                }
             }
         }
     }
