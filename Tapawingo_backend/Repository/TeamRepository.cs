@@ -48,7 +48,7 @@ namespace Tapawingo_backend.Repository
                         .ToListAsync())
                         .Select(rp => rp.Id).ToList();
                     teamRouteParts = await _context.TeamRouteparts
-                        .Where(trp => routePartsForRouteIds.Contains(trp.RoutepartId))
+                        .Where(trp => routePartsForRouteIds.Contains(trp.RoutepartId) && trp.TeamId == team.Id)
                         .ToListAsync();
                 }
                 
