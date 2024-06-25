@@ -164,8 +164,36 @@ namespace Tapawingo_backend.Repository
         {
             try
             {
+                //delete the routepart from the database
                 _context.Routeparts.Remove(routepart);
                 await _context.SaveChangesAsync();
+
+                //get current list of routeparts
+                var currentRouteparts = await _context.Routeparts
+                    .Where(rp => rp.RouteId == routeId)
+                    .OrderBy(rp => rp.Order)
+                    .ToListAsync();
+
+                //find out new order
+                for (int i = 0; i < currentRouteparts.Count; i++)
+                {
+                    //change order now
+                    currentRouteparts[i].Order = i + 1;
+
+                    //set new final
+                    if (i + 1 == currentRouteparts.Count)
+                    {
+                        currentRouteparts[i].Final = true;
+                    }
+                    else
+                    {
+                        currentRouteparts[i].Final = false;
+                    }
+                }
+
+                _context.Routeparts.UpdateRange(currentRouteparts);
+                await _context.SaveChangesAsync();
+                
                 return true;
             }
             catch (Exception ex)

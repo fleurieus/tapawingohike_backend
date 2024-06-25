@@ -132,6 +132,9 @@ namespace Tapawingo_backend.Tests
             context.SaveChanges();
 
             //////teamrouteparts
+            var teamroutepart1 = new TeamRoutepart { TeamId = team1.Id, RoutepartId = routepart1.Id, IsFinished = false, CompletedTime = DateTime.MinValue };
+            context.TeamRouteparts.Add(teamroutepart1);
+            context.SaveChanges();
 
             //////userevents
             //////userorganisations
