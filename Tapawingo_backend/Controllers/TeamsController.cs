@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Models;
@@ -15,6 +16,7 @@ namespace Tapawingo_backend.Controllers
             _teamService = teamService;
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("/editions/{editionId}/teams")]
         public async Task<IActionResult> GetTeamsOnEdition(int editionId)
         {
@@ -22,6 +24,7 @@ namespace Tapawingo_backend.Controllers
             return Ok(response);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("/editions/{editionId}/teams/{teamId}")]
         public async Task<IActionResult> GetTeamOnEditionAsync(int editionId, int teamId)
         {
@@ -29,6 +32,7 @@ namespace Tapawingo_backend.Controllers
             return Ok(response);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPost("/editions/{editionId}/teams")]
         public async Task<IActionResult> CreateTeamOnEdition(int editionId, CreateTeamDto model)
         {
@@ -36,6 +40,7 @@ namespace Tapawingo_backend.Controllers
             return Ok(response);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPatch("/editions/{editionId}/teams/{teamId}")]
         public async Task<IActionResult> UpdateTeamOnEdition(int editionId, int teamId, [FromBody] UpdateTeamDto model)
         {
@@ -43,6 +48,7 @@ namespace Tapawingo_backend.Controllers
             return Ok(response);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpDelete("/editions/{editionId}/teams/{teamId}")]
         public async Task<IActionResult> DeleteTeamOnEditionAsync(int editionId, int teamId)
         {
