@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
+using Tapawingo_backend.Data;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
 using Tapawingo_backend.Models;
@@ -14,13 +16,15 @@ namespace Tapawingo_backend.Services
         private readonly IMapper _mapper;
         private readonly IOrganisationsRepository _organisationsRepository;
         private readonly IEventsRepository _eventsRepository;
+        private readonly DataContext _context;
 
-        public UsersService(IUserRepository userRepository, IMapper mapper, IOrganisationsRepository organisationsRepository, IEventsRepository eventsRepository)
+        public UsersService(IUserRepository userRepository, IMapper mapper, IOrganisationsRepository organisationsRepository, IEventsRepository eventsRepository, DataContext dataContext)
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _organisationsRepository = organisationsRepository;
             _eventsRepository = eventsRepository;
+            _context = dataContext;
         }
 
         public async Task<IActionResult> GetUsersOnOrganisation(int organisationId)
@@ -30,12 +34,27 @@ namespace Tapawingo_backend.Services
                 {
                     message = "Organisation not found"
                 });
-            
-            var users = _mapper.Map<List<UserDto>>(await _userRepository.GetUsersOnOrganisation(organisationId));
-            return new OkObjectResult(users);
+
+            var users = await _userRepository.GetUsersOnOrganisation(organisationId);
+
+            var usersWithRole = new List<UserOnOrganisationDto>();
+            foreach (var user in users)
+            {
+                var userOnOrganisation = await _context.UserOrganisations.FirstOrDefaultAsync(uo => uo.UserId == user.Id && uo.OrganisationId == organisationId);
+                usersWithRole.Add(new UserOnOrganisationDto
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    IsManager = userOnOrganisation.IsManager
+                });
+            }
+
+            return new OkObjectResult(usersWithRole);
         }
 
-        public async Task<UserDto> GetUserOnOrganisationAsync(int organisationId, string userId)
+        public async Task<UserOnOrganisationDto> GetUserOnOrganisationAsync(int organisationId, string userId)
         {
             if (!await _organisationsRepository.OrganisationExists(organisationId))
                 throw new BadHttpRequestException("Organisation not found");
@@ -45,12 +64,23 @@ namespace Tapawingo_backend.Services
 
             if(!await _userRepository.UserExistsOnOrganisation(userId, organisationId))
                 throw new BadHttpRequestException("User does not exist on organisation");
-            
 
-            return _mapper.Map<UserDto>(await _userRepository.GetUserOnOrganisationAsync(organisationId, userId));
+            var user = await _userRepository.GetUserOnOrganisationAsync(organisationId, userId);
+
+            var userOnOrganisation = await _context.UserOrganisations.FirstOrDefaultAsync(uo => uo.UserId == userId && uo.OrganisationId == organisationId);
+            var userWithRole = new UserOnOrganisationDto()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                IsManager = userOnOrganisation.IsManager
+            };
+
+            return userWithRole;
         }
 
-        public async Task<UserDto> CreateUserOnOrganisation(int organisationId, CreateUserDto model)
+        public async Task<UserOnOrganisationDto> CreateUserOnOrganisation(int organisationId, CreateUserDto model)
         {
             if (!await _organisationsRepository.OrganisationExists(organisationId))
                 throw new BadHttpRequestException("Organisation not found");
@@ -62,14 +92,25 @@ namespace Tapawingo_backend.Services
 
             try
             {
-                return _mapper.Map<UserDto>(await _userRepository.CreateUserOnOrganisation(organisationId, model));
+                var newUser = _mapper.Map<UserDto>(await _userRepository.CreateUserOnOrganisation(organisationId, model));
+                var userOnOrganisation = await _context.UserOrganisations.FirstOrDefaultAsync(uo => uo.UserId == newUser.Id && uo.OrganisationId == organisationId);
+                var userWithRole = new UserOnOrganisationDto()
+                {
+                    Id = newUser.Id,
+                    FirstName = newUser.FirstName,
+                    LastName = newUser.LastName,
+                    Email = newUser.Email,
+                    IsManager = userOnOrganisation.IsManager
+                };
+
+                return userWithRole;
             } catch (Exception e)
             {
                 throw new BadHttpRequestException(e.Message);
             }
         }
 
-        public async Task<UserDto> UpdateUserOnOrganisationAsync(int organisationId, string userId, UpdateUserDto user)
+        public async Task<UserOnOrganisationDto> UpdateUserOnOrganisationAsync(int organisationId, string userId, UpdateUserDto user)
         {
             if (!await _organisationsRepository.OrganisationExists(organisationId))
                 throw new BadHttpRequestException("Organisation not found");
@@ -80,7 +121,18 @@ namespace Tapawingo_backend.Services
                 throw new BadHttpRequestException("User does not exist on organisation");
             await _userRepository.UpdateUserOnOrganisationAsync(await _userRepository.GetUserOnOrganisationAsync(organisationId, userId), user);
 
-            return _mapper.Map<UserDto>(await _userRepository.GetUserOnOrganisationAsync(organisationId, userId));
+            var updatedUser = await _userRepository.GetUserOnOrganisationAsync(organisationId, userId);
+            var userOnOrganisation = await _context.UserOrganisations.FirstOrDefaultAsync(uo => uo.UserId == userId && uo.OrganisationId == organisationId);
+            var userWithRole = new UserOnOrganisationDto()
+            {
+                Id = updatedUser.Id,
+                FirstName = updatedUser.FirstName,
+                LastName = updatedUser.LastName,
+                Email = updatedUser.Email,
+                IsManager = userOnOrganisation.IsManager
+            };
+
+            return userWithRole;
         }
 
         public async Task<IActionResult> DeleteUserOnOrganisationAsync(int organisationId, string userId)

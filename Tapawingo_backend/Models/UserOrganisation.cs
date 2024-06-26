@@ -11,5 +11,6 @@ namespace Tapawingo_backend.Models
         [JsonIgnore]
         public User User { get; set; }
         public Organisation Organisation { get; set; }
+        public bool IsManager { get; set; }
     }
 }

@@ -29,7 +29,7 @@ namespace Tapawingo_backend.Controllers
             return Ok(response);
         }
 
-        [Authorize(Policy = "SuperAdminOrOrganisationPolicy")]
+
         [HttpPost("organisations/{organisationId}/users")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -41,9 +41,9 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpPatch("organisations/{organisationId}/users/{userId}")]
-        public async Task<IActionResult> UpdateUserOnOrganisation(int organisationId, string userId, [FromBody] UpdateUserDto userRegistrationDto)
+        public async Task<IActionResult> UpdateUserOnOrganisation(int organisationId, string userId, [FromBody] UpdateUserDto updateUserDto)
         {
-            var response = await _usersService.UpdateUserOnOrganisationAsync(organisationId, userId, userRegistrationDto);
+            var response = await _usersService.UpdateUserOnOrganisationAsync(organisationId, userId, updateUserDto);
             return Ok(response);
         }
 
