@@ -25,7 +25,7 @@ namespace Tapawingo_backend.Tests.GET_Organisations
             //Create a repository that works on the TEST DATABASE!!
             _organisationsRepository = new OrganisationsRepository( _context );
             //Create a instance of the IMapper.
-            _organisationsService = new OrganisationsService(_organisationsRepository, new MapperConfiguration(cfg =>
+            _organisationsService = new OrganisationsService(_organisationsRepository, _context, new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<MappingProfiles>();
             }).CreateMapper());
@@ -35,7 +35,7 @@ namespace Tapawingo_backend.Tests.GET_Organisations
         [Fact]
         public async void Get_All_Existing_Organisations()
         {
-            var organisation = await _organisationsService.GetOrganisations();
+            var organisation = await _organisationsService.GetOrganisations("SuperAdmin");
 
             Assert.NotNull(organisation);
             Assert.Equal(5, organisation.Count());

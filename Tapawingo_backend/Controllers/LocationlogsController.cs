@@ -17,12 +17,14 @@ namespace Tapawingo_backend.Controllers
             _locationlogsService = locationlogsService;
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("teams/{teamId}/locationlogs")]
         public async Task<IActionResult> GetLocationlogsOnTeam(int teamId)
         {
             return await _locationlogsService.GetLocationlogsOnTeamAsync(teamId);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPost("teams/{teamId}/locationlogs")]
         [ProducesResponseType(200, Type = typeof(Locationlog))]
         [ProducesResponseType(400)]

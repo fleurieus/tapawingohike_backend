@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Services;
 
@@ -14,6 +15,7 @@ namespace Tapawingo_backend.Controllers
             _routesService = routesService;
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("editions/{editionId}/routes")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<RouteDto>))]
         public async Task<IActionResult> GetRoutesOnEditionAsync(int editionId)
@@ -43,7 +45,7 @@ namespace Tapawingo_backend.Controllers
         }
 
 
-        //TODO: ADD AUTHORIZATION RULE
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("editions/{editionId}/routes/{routeId}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RouteDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -73,6 +75,7 @@ namespace Tapawingo_backend.Controllers
             }
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPost("editions/{editionId}/routes")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(RouteDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -83,6 +86,7 @@ namespace Tapawingo_backend.Controllers
             return new ObjectResult(route) { StatusCode = StatusCodes.Status201Created };
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPatch("editions/{editionId}/routes/{routeId}")]
         public async Task<IActionResult> UpdateRouteOnEdition(int editionId, int routeId, [FromBody] UpdateRouteDto updateRouteDto)
         {
@@ -90,6 +94,7 @@ namespace Tapawingo_backend.Controllers
             return Ok(response);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpDelete("editions/{editionId}/routes/{routeId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

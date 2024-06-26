@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Models;
 using Tapawingo_backend.Services;
@@ -14,6 +15,7 @@ namespace Tapawingo_backend.Controllers
             _routepartsService = routepartsService;
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("routes/{routeId}/routeparts")]
         public async Task<IActionResult> GetRouteParts(int routeId)
         {
@@ -23,6 +25,7 @@ namespace Tapawingo_backend.Controllers
                 new OkObjectResult(route_parts);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("routes/{routeId}/routeparts/{routepartId}")]
         public async Task<IActionResult> GetRoutepartOnRoute(int routeId, int routepartId)
         {
@@ -30,6 +33,7 @@ namespace Tapawingo_backend.Controllers
             return Ok(response);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPost("routes/{routeId}/routeparts")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RoutepartDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -41,6 +45,7 @@ namespace Tapawingo_backend.Controllers
                 NotFound(new { message = "Route not found" });
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPut("routes/{routeId}/routeparts/{routepartId}")]
         public async Task<IActionResult> UpdatRoutepartOnRouteAsync(int routeId, int routepartId, [FromForm] UpdateRoutepartDto UpdateRoutepartDto)
         {
@@ -48,6 +53,7 @@ namespace Tapawingo_backend.Controllers
             return Ok(response);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpDelete("routes/{routeId}/routeparts/{routepartId}")]
         public async Task<IActionResult> DeleteRoutepartOnRouteAsync(int routeId, int routepartId)
         {
