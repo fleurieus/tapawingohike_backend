@@ -15,13 +15,14 @@ namespace Tapawingo_backend.Controllers
             _organisationsService = organisationsService;
         }
 
-        [Authorize(Policy = "SuperAdminPolicy")]
+        [Authorize]
         [HttpGet("organisations/")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrganisationDto))]
         public async Task<IActionResult> GetOrganisations()
         {
-            var organisations = await _organisationsService.GetOrganisations();
-            return organisations == null ? Ok(new List<OrganisationDto>()) : Ok(organisations); //since the request issn't invalid, even a empty list gives a 200 status
+            var userClaim = User.Claims.ToArray()[5].Value;
+            var organisations = await _organisationsService.GetOrganisations(userClaim);
+            return organisations == null ? Ok(new List<OrganisationDto>()) : Ok(organisations);
         }
 
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]

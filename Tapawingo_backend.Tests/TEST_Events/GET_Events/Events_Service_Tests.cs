@@ -31,7 +31,7 @@ namespace Tapawingo_backend.Tests.TEST_Events.GET_Events
         [Fact]
         public async void Get_Existing_Events_By_Organisation_Id()
         { 
-            var twEvents = await _eventsService.GetEventsByOrganisationId(1);
+            var twEvents = await _eventsService.GetEventsByOrganisationId(1, "SuperAdmin");
             var expectedResult = new OkObjectResult(null);
             Assert.Equal(expectedResult.GetType(), twEvents.GetType());
         }
@@ -41,7 +41,7 @@ namespace Tapawingo_backend.Tests.TEST_Events.GET_Events
         [Fact]
         public async void Get_Non_Existing_Events_By_Organisation_Id()
         {
-            var twEvents = await _eventsService.GetEventsByOrganisationId(999);
+            var twEvents = await _eventsService.GetEventsByOrganisationId(999, null);
             var expectedResult = new NotFoundObjectResult(null);
             Assert.Equal(expectedResult.GetType(), twEvents.GetType());
         }

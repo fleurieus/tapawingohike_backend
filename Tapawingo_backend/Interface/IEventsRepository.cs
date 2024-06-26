@@ -5,7 +5,7 @@ namespace Tapawingo_backend.Interface
 {
     public interface IEventsRepository
     {
-        Task<List<Event>> GetEventsByOrganisationId(int organisationId);
+        Task<List<Event>> GetEventsByOrganisationId(int organisationId, int? eventId);
         Task<Event> CreateEvent(Event newEvent);
         Task<Event> UpdateEvent(int eventId, Event updatedEvent);
         Task<bool> EventExistsForOrganisation(string eventName, int organisationId);

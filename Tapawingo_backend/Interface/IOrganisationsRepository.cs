@@ -7,7 +7,7 @@ namespace Tapawingo_backend.Interface
     {
         Task<Organisation> CreateOrganisation(CreateOrganisationDto model);
         Task<Organisation> GetOrganisationById(int id);
-        Task<List<Organisation>> GetAllOrganisations();
+        Task<List<Organisation>> GetAllOrganisations(int? organisationId);
         Task<bool> OrganisationExists(int id);
         Task<Organisation> UpdateOrganisationAsync(int id, UpdateOrganisationDto newOrganisation);
         Task<bool> DeleteOrganisationAsync(int id);

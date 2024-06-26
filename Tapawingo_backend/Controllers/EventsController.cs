@@ -17,13 +17,14 @@ namespace Tapawingo_backend.Controllers
             _eventsService = eventsService;
         }
 
-        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
+        [Authorize]
         [HttpGet("organisations/{organisationId}/Events")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<EventDto>))]
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetEventsByOrganisationId(int organisationId)
         {
-            return await _eventsService.GetEventsByOrganisationId(organisationId);
+            var userClaim = User.Claims.ToArray()[5].Value;
+            return await _eventsService.GetEventsByOrganisationId(organisationId, userClaim);
         }
 
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
