@@ -15,6 +15,9 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpPatch("teamrouteparts/teams/{teamId}/routeparts/{routepartId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> UpdateTeamroutepart(int teamId, int routepartId, UpdateTeamroutepartDto model)
         {
             return await _teamroutepartsService.UpdateTeamRoutepart(teamId, routepartId, model.IsFinished);

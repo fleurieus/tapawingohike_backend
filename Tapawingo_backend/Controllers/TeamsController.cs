@@ -18,38 +18,106 @@ namespace Tapawingo_backend.Controllers
 
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("/editions/{editionId}/teams")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetTeamsOnEdition(int editionId)
         {
-            var response =  await _teamService.GetTeamsOnEdition(editionId);
-            return Ok(response);
+            try
+            {
+                var response =  await _teamService.GetTeamsOnEdition(editionId);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
         }
 
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("/editions/{editionId}/teams/{teamId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetTeamOnEditionAsync(int editionId, int teamId)
         {
-            var response = await _teamService.GetTeamOnEditionAsync(editionId, teamId);
-            return Ok(response);
+            try
+            {
+                var response = await _teamService.GetTeamOnEditionAsync(editionId, teamId);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
+            
         }
 
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPost("/editions/{editionId}/teams")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateTeamOnEdition(int editionId, CreateTeamDto model)
         {
-            var response = await _teamService.CreateTeamOnEditionAsync(editionId, model);
-            return Ok(response);
+            try
+            {
+                var response = await _teamService.CreateTeamOnEditionAsync(editionId, model);
+                return Ok(response);
+            }
+            catch (BadHttpRequestException ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
+            catch (ArgumentException ex)
+            {
+                return new BadRequestObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
         }
 
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPatch("/editions/{editionId}/teams/{teamId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateTeamOnEdition(int editionId, int teamId, [FromBody] UpdateTeamDto model)
         {
-            var response = await _teamService.UpdateTeamOnEditionAsync(editionId, teamId, model);
-            return Ok(response);
+            try
+            {
+                var response = await _teamService.UpdateTeamOnEditionAsync(editionId, teamId, model);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
         }
 
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpDelete("/editions/{editionId}/teams/{teamId}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> DeleteTeamOnEditionAsync(int editionId, int teamId)
         {
             return await _teamService.DeleteTeamOnEditionAsync(editionId, teamId);

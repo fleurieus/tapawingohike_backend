@@ -18,6 +18,8 @@ namespace Tapawingo_backend.Controllers
 
         [Authorize(Policy = "SuperAdminOrOrganisationMPolicy")]
         [HttpGet("organisations/{organisationId}/users")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUsersOnOrganisation(int organisationId)
         {
             return await _usersService.GetUsersOnOrganisation(organisationId);
@@ -25,10 +27,22 @@ namespace Tapawingo_backend.Controllers
 
         [Authorize(Policy = "SuperAdminOrOrganisationMPolicy")]
         [HttpGet("organisations/{organisationId}/user/{userId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserOnOrganisation(int organisationId, string userId)
         {
-            var response =  await _usersService.GetUserOnOrganisationAsync(organisationId, userId);
-            return Ok(response);
+            try
+            {
+                var response =  await _usersService.GetUserOnOrganisationAsync(organisationId, userId);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new
+                {
+                    message = ex.Message
+                });
+            }
         }
 
         [Authorize(Policy = "SuperAdminOrOrganisationMPolicy")]
@@ -36,14 +50,34 @@ namespace Tapawingo_backend.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateUserOnOrganisation(int organisationId, [FromBody] CreateUserDto model)
         {
-            var user = await _usersService.CreateUserOnOrganisation(organisationId, model);
-            return new ObjectResult(user) { StatusCode = StatusCodes.Status201Created };
+            try
+            {
+                var user = await _usersService.CreateUserOnOrganisation(organisationId, model);
+                return new ObjectResult(user) { StatusCode = StatusCodes.Status201Created };
+            }
+            catch(BadHttpRequestException ex)
+            {
+                return new BadRequestObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
+            catch(ArgumentException ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
         }
 
         [Authorize(Policy = "SuperAdminOrOrganisationMPolicy")] 
         [HttpPatch("organisations/{organisationId}/users/{userId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateUserOnOrganisation(int organisationId, string userId, [FromBody] UpdateUserDto userRegistrationDto)
         {
             var response = await _usersService.UpdateUserOnOrganisationAsync(organisationId, userId, userRegistrationDto);
@@ -52,6 +86,10 @@ namespace Tapawingo_backend.Controllers
 
         [Authorize(Policy = "SuperAdminOrOrganisationMPolicy")]
         [HttpDelete("organisations/{organisationId}/users/{userId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> DeleteUserOnOrganisationAsync(int organisationId, string userId)
         {
             return await _usersService.DeleteUserOnOrganisationAsync(organisationId, userId);
@@ -61,6 +99,8 @@ namespace Tapawingo_backend.Controllers
         // User on events
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUPolicy")]
         [HttpGet("events/{eventId}/users")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUsersOnEvent(int eventId)
         {
             return await _usersService.GetUsersOnEvent(eventId);
@@ -68,10 +108,21 @@ namespace Tapawingo_backend.Controllers
 
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUPolicy")]
         [HttpGet("events/{eventId}/users/{userId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetUserOnEvent(int eventId, string userId)
         {
-            var response = await _usersService.GetUserOnEventAsync(eventId, userId);
-            return Ok(response);
+            try
+            {
+                var response = await _usersService.GetUserOnEventAsync(eventId, userId);
+                return Ok(response);
+            }
+            catch (Exception ex) {
+                return new NotFoundObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
         }
 
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUPolicy")]
@@ -79,22 +130,56 @@ namespace Tapawingo_backend.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateUserOnEvent(int eventId, [FromBody] CreateUserOnEventDto model)
         {
-            var user = await _usersService.CreateUserOnEvent(eventId, model);
-            return new ObjectResult(user) { StatusCode = StatusCodes.Status201Created };
+            try
+            {
+                var user = await _usersService.CreateUserOnEvent(eventId, model);
+                return new ObjectResult(user) { StatusCode = StatusCodes.Status201Created };
+            }
+            catch (ArgumentException ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return new BadRequestObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
         }
 
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUPolicy")]
         [HttpPatch("events/{eventId}/users/{userId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateUserOnEvent(int eventId, string userId, [FromBody] UpdateUserOnEventDto userRegistrationDto)
         {
-            var response = await _usersService.UpdateUserOnEventAsync(eventId, userId, userRegistrationDto);
-            return Ok(response);
+            try
+            {
+                var response = await _usersService.UpdateUserOnEventAsync(eventId, userId, userRegistrationDto);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
         }
 
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUPolicy")]
         [HttpDelete("events/{eventId}/users/{userId}")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> DeleteUserOnEventAsync(int eventId, string userId)
         {
             return await _usersService.DeleteUserOnEventAsync(eventId, userId);

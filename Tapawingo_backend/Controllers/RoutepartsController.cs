@@ -17,6 +17,8 @@ namespace Tapawingo_backend.Controllers
 
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("routes/{routeId}/routeparts")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetRouteParts(int routeId)
         {
             var route_parts = await _routepartsService.GetRoutepartsAsync(routeId);
@@ -27,15 +29,28 @@ namespace Tapawingo_backend.Controllers
 
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("routes/{routeId}/routeparts/{routepartId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetRoutepartOnRoute(int routeId, int routepartId)
         {
-            var response = await _routepartsService.GetRoutepartOnRouteAsync(routeId, routepartId);
-            return Ok(response);
+            try
+            {
+                var response = await _routepartsService.GetRoutepartOnRouteAsync(routeId, routepartId);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
+            
         }
 
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPost("routes/{routeId}/routeparts")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RoutepartDto))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(RoutepartDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateRoutepartAsync(int routeId, [FromForm] CreateRoutepartDto model)
         {
@@ -47,14 +62,30 @@ namespace Tapawingo_backend.Controllers
 
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPut("routes/{routeId}/routeparts/{routepartId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdatRoutepartOnRouteAsync(int routeId, int routepartId, [FromForm] UpdateRoutepartDto UpdateRoutepartDto)
         {
-            var response = await _routepartsService.UpdateRoutepartOnRouteAsync(routeId, routepartId, UpdateRoutepartDto);
-            return Ok(response);
+            try
+            {
+                var response = await _routepartsService.UpdateRoutepartOnRouteAsync(routeId, routepartId, UpdateRoutepartDto);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
+            
         }
 
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpDelete("routes/{routeId}/routeparts/{routepartId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteRoutepartOnRouteAsync(int routeId, int routepartId)
         {
             return await _routepartsService.DeleteRoutepartOnRouteAsync(routeId, routepartId);
