@@ -75,5 +75,48 @@ namespace Tapawingo_backend.Services
 
             return await _routesRepository.DeleteRouteByIdAsync(routeId);
         }
+
+        public async Task<IActionResult> SetActiveRoute(int editionId, int routeId)
+        {
+            if (!await _editionsRepository.EditionExists(editionId)) return new BadRequestObjectResult(new
+            {
+                message = "Edition not found"
+            });
+            if (!await _routesRepository.RouteExists(routeId)) return new BadRequestObjectResult(new
+            {
+                message = $"Route does not exist"
+            });
+            if ((await _routesRepository.GetRouteByIdAsync(routeId)).EditionId != editionId) return new BadRequestObjectResult(new
+            {
+                message = "Route does not exist on Edition"
+            });
+
+            var targetRotue = await _routesRepository.GetRouteByIdAsync(routeId);
+
+            //check if the route is active
+            if(await _routesRepository.GetActiveStatus(editionId, routeId))
+            {
+                //route is already active, so deactive it
+                var deactivated = await _routesRepository.DeactivateRoute(editionId, routeId);
+                return deactivated ? new OkObjectResult(new
+                {
+                    message = $"Route \'{targetRotue.Name}\' is now deactivated"
+                }) : new BadRequestObjectResult(new
+                {
+                    message = $"Route '{targetRotue.Name}\' could not been deactivated"
+                });
+            }else
+            {
+                var activated = await _routesRepository.SetActiveRoute(editionId, routeId);
+                return activated ? new OkObjectResult(new
+                {
+                    message = $"Route '{targetRotue.Name}\' is now active."
+                }) : new BadRequestObjectResult(new
+                {
+                    message = $"Route '{targetRotue.Name}\' could not be activated."
+                });
+            }
+            
+        }
     }
 }

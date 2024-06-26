@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System.Text;
 
-namespace Tapawingo_backend.Tests.GET_Routepart
+namespace Tapawingo_backend.Tests.TEST_Routeparts.GET_Routeparts
 {
-    public class GETRoutepart_Service_Tests : TestBase
+    public class GETRouteparts_Service_Tests : TestBase
     {
         private readonly RoutepartsRepository _routepartsRepository;
         private readonly RoutepartsService _routepartsService;
@@ -19,7 +19,7 @@ namespace Tapawingo_backend.Tests.GET_Routepart
         private readonly FileRepository _fileRepository;
         private readonly DataContext _context;
 
-        public GETRoutepart_Service_Tests(DatabaseFixture fixture) : base(fixture)
+        public GETRouteparts_Service_Tests(DatabaseFixture fixture) : base(fixture)
         {
             _context = Context;
             _routepartsRepository = new RoutepartsRepository(_context);
@@ -35,14 +35,22 @@ namespace Tapawingo_backend.Tests.GET_Routepart
 
         //Goodweather
         [Fact]
-        public async Task Get_Routepart_On_Route()
+        public async Task Get_Routeparts_Of_Existing_Route()
         {
-            var routePart = await _routepartsService.GetRoutepartOnRouteAsync(3,1);
+            var routeParts = await _routepartsService.GetRoutepartsAsync(3);
 
-            Assert.NotNull(routePart);
-            Assert.Equal("Routepart1", routePart.Name);
-            Assert.Equal("normal", routePart.RouteType);
-            Assert.False(routePart.RoutepartZoom);
+            Assert.NotNull(routeParts);
+            Assert.Equal(2, routeParts.Count);
+        }
+        //
+
+        //Bad weather
+        [Fact]
+        public async Task Get_Routeparts_Of_Nonexisting_Route()
+        {
+            var routeParts = await _routepartsService.GetRoutepartsAsync(999);
+
+            Assert.Null(routeParts);
         }
         //
     }

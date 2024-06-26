@@ -11,5 +11,8 @@ namespace Tapawingo_backend.Interface
         Task<TWRoute> CreateRouteOnEditionAsync(TWRoute route);
         Task<TWRoute> UpdateRouteOnEditionAsync(TWRoute existingRoute, UpdateRouteDto updatedRoute);
         Task<bool> DeleteRouteByIdAsync(int routeId);
+        Task<bool> SetActiveRoute(int editionId, int routeId);
+        Task<bool> GetActiveStatus(int editionId, int routeId);
+        Task<bool> DeactivateRoute(int editionId, int routeId);
     }
 }

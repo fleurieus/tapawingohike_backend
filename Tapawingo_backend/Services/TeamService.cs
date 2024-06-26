@@ -10,12 +10,14 @@ namespace Tapawingo_backend.Services
     {
         private readonly ITeamRepository _teamRepository;
         private readonly IEditionsRepository _editionsRepository;
+        private readonly IRoutepartsRepository _routepartsRepository;
         private readonly IMapper _mapper;
 
-        public TeamService(ITeamRepository teamRepository, IEditionsRepository editionsRepository, IMapper mapper)
+        public TeamService(ITeamRepository teamRepository, IEditionsRepository editionsRepository, IRoutepartsRepository routepartsRepository, IMapper mapper)
         {
             _teamRepository = teamRepository;
             _editionsRepository = editionsRepository;
+            _routepartsRepository = routepartsRepository;
             _mapper = mapper;
         }
 
@@ -49,7 +51,9 @@ namespace Tapawingo_backend.Services
 
             try
             {
-                return _mapper.Map<TeamDto>(await _teamRepository.CreateTeamOnEditionAsync(editionId, model));
+                var team = await _teamRepository.CreateTeamOnEditionAsync(editionId, model);
+                await _routepartsRepository.SyncTeamRoutePartsBasedOnTeam(editionId, team.Id);
+                return _mapper.Map<TeamDto>(team);
             }
             catch (Exception e)
             {

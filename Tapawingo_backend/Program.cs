@@ -17,6 +17,7 @@ using Tapawingo_backend.Services;
 using Tapawingo_backend.Helper;
 using static Tapawingo_backend.Helper.CustomAuthRequirements;
 using Microsoft.AspNetCore.Authorization;
+using Tapawingo_backend.Dtos;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +40,7 @@ builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<RoutesService>();
 builder.Services.AddScoped<RoutepartsService>();
 builder.Services.AddScoped<LocationlogsService>();
+builder.Services.AddScoped<TeamroutepartsService>();
 builder.Services.AddScoped<IRoutesRepository, RoutesRepository>();
 builder.Services.AddScoped<IUserRepository, UsersRepository>();
 builder.Services.AddScoped<ITeamRepository, TeamRepository>();
@@ -48,6 +50,7 @@ builder.Services.AddScoped<IRoutepartsRepository, RoutepartsRepository>();
 builder.Services.AddScoped<IDestinationRepository, DestinationRepository>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
 builder.Services.AddScoped<ILocationlogsRepository, LocationlogsRepository>();
+builder.Services.AddScoped<ITeamroutepartsRepository, TeamroutepartsRepository>();
 
 // Add database connection
 builder.Services.AddDbContext<DataContext>(options =>

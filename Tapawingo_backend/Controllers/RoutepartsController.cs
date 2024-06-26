@@ -46,6 +46,14 @@ namespace Tapawingo_backend.Controllers
         }
 
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
+        [HttpPut("routes/{routeId}/routeparts/{routepartId}")]
+        public async Task<IActionResult> UpdatRoutepartOnRouteAsync(int routeId, int routepartId, [FromForm] UpdateRoutepartDto UpdateRoutepartDto)
+        {
+            var response = await _routepartsService.UpdateRoutepartOnRouteAsync(routeId, routepartId, UpdateRoutepartDto);
+            return Ok(response);
+        }
+
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpDelete("routes/{routeId}/routeparts/{routepartId}")]
         public async Task<IActionResult> DeleteRoutepartOnRouteAsync(int routeId, int routepartId)
         {

@@ -119,8 +119,22 @@ namespace Tapawingo_backend.Tests
             context.Routeparts.Add(routepart2);
             context.SaveChanges();
 
-            //////routes
+            var destination1 = new Destination { Name = "Destination1", Latitude = 1, Longitude = 1, Radius = 1, DestinationType = "normal", ConfirmByUser = false, HideForUser = false, RoutepartId = routepart1.Id };
+            var destination2 = new Destination { Name = "Destination2", Latitude = 1, Longitude = 1, Radius = 1, DestinationType = "normal", ConfirmByUser = false, HideForUser = false, RoutepartId = routepart1.Id };
+            context.Destinations.Add(destination1);
+            context.Destinations.Add(destination2);
+            context.SaveChanges();
+
+            var file1 = new TWFile { File = "blob1.png", ContentType = "Image/png", Data = Encoding.UTF8.GetBytes("BLOB"), RoutepartId = routepart1.Id };
+            var file2 = new TWFile { File = "blob2.png", ContentType = "Image/png", Data = Encoding.UTF8.GetBytes("BLOB"), RoutepartId = routepart1.Id };
+            context.Files.Add(file1);
+            context.Files.Add(file2);
+            context.SaveChanges();
+
             //////teamrouteparts
+            var teamroutepart1 = new TeamRoutepart { TeamId = team1.Id, RoutepartId = routepart1.Id, IsFinished = false, CompletedTime = DateTime.MinValue };
+            context.TeamRouteparts.Add(teamroutepart1);
+            context.SaveChanges();
 
             //////userevents
             //////userorganisations

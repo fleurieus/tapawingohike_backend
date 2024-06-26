@@ -7,11 +7,10 @@ using Tapawingo_backend.Dtos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System.Text;
-using Tapawingo_backend.Models;
 
-namespace Tapawingo_backend.Tests.DELETE_Routepart
+namespace Tapawingo_backend.Tests.TEST_Routeparts.GET_Routepart
 {
-    public class Routeparts_Service_Tests : TestBase
+    public class GETRoutepart_Service_Tests : TestBase
     {
         private readonly RoutepartsRepository _routepartsRepository;
         private readonly RoutepartsService _routepartsService;
@@ -20,7 +19,7 @@ namespace Tapawingo_backend.Tests.DELETE_Routepart
         private readonly FileRepository _fileRepository;
         private readonly DataContext _context;
 
-        public Routeparts_Service_Tests(DatabaseFixture fixture) : base(fixture)
+        public GETRoutepart_Service_Tests(DatabaseFixture fixture) : base(fixture)
         {
             _context = Context;
             _routepartsRepository = new RoutepartsRepository(_context);
@@ -36,14 +35,14 @@ namespace Tapawingo_backend.Tests.DELETE_Routepart
 
         //Goodweather
         [Fact]
-        public async Task Delete_Routepart()
+        public async Task Get_Routepart_On_Route()
         {
-            await _routepartsService.DeleteRoutepartOnRouteAsync(3, 2);
+            var routePart = await _routepartsService.GetRoutepartOnRouteAsync(3, 1);
 
-            //check that route is deleted
-            var deletionComplete = await _routepartsRepository.RoutepartExists(2);
-
-            Assert.False(deletionComplete);
+            Assert.NotNull(routePart);
+            Assert.Equal("Routepart1", routePart.Name);
+            Assert.Equal("normal", routePart.RouteType);
+            Assert.False(routePart.RoutepartZoom);
         }
         //
     }
