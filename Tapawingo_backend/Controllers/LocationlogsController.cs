@@ -18,20 +18,31 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpGet("teams/{teamId}/locationlogs")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetLocationlogsOnTeam(int teamId)
         {
             return await _locationlogsService.GetLocationlogsOnTeamAsync(teamId);
         }
 
         [HttpPost("teams/{teamId}/locationlogs")]
-        [ProducesResponseType(200, Type = typeof(Locationlog))]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(409)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Locationlog))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateLocationlog(int teamId, [FromBody] CreateLocationlogDto model)
         {
-            var response = await _locationlogsService.CreateLocationlogOnTeamAsync(teamId, model);
-            return Ok(response);
+            try
+            {
+                var response = await _locationlogsService.CreateLocationlogOnTeamAsync(teamId, model);
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
+            
         }
     }
 }

@@ -46,7 +46,6 @@ namespace Tapawingo_backend.Controllers
                 return BadRequest("Cannot create organisation without name.");
             }
 
-            //only doing these 'extra' steps since we want to return a 201 status with the object.
             var newOrganisation = await _organisationsService.CreateOrganisation(model);
             if(newOrganisation != null)
             {
@@ -59,6 +58,8 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpPatch("organisations/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateOrganisation(int id, [FromBody]UpdateOrganisationDto model) 
         {
             var updatedOrganisation = await _organisationsService.UpdateOrganisation(id, model);
@@ -71,6 +72,9 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpDelete("organisations/{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteOrganisation(int id)
         {
             return await _organisationsService.DeleteOrganisationAsync(id);

@@ -57,7 +57,7 @@ namespace Tapawingo_backend.Services
             }
             catch (Exception e)
             {
-                throw new BadHttpRequestException(e.Message);
+                throw new ArgumentException(e.Message);
             }
         }
 

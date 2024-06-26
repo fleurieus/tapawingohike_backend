@@ -18,26 +18,26 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpGet("organisations/{organisationId}/Events")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<EventDto>))]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EventDto>))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetEventsByOrganisationId(int organisationId)
         {
             return await _eventsService.GetEventsByOrganisationId(organisationId);
         }
         
         [HttpGet("organisations/{organisationId}/Events/{eventId}")]
-        [ProducesResponseType(200, Type = typeof(EventDto))]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EventDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetEventById(int eventId, int organisationId)
         {
             return await _eventsService.GetEventByIdAndOrganisationId(eventId, organisationId);
         }
 
         [HttpPost("organisations/{organisationId}/Events")]
-        [ProducesResponseType(200, Type = typeof(Event))]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(409)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Event))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateEvent([FromBody] CreateEventDto model, int organisationId)
         {
             var response = await _eventsService.CreateEvent(model, organisationId);
@@ -45,10 +45,10 @@ namespace Tapawingo_backend.Controllers
         }
         
         [HttpPut("organisations/{organisationId}/Events/{eventId}")]
-        [ProducesResponseType(200, Type = typeof(Event))]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(409)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Event))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateEvent([FromBody] CreateEventDto model, int eventId, int organisationId)
         {
             var response = await _eventsService.UpdateEvent(model, organisationId, eventId);
@@ -56,8 +56,9 @@ namespace Tapawingo_backend.Controllers
         }
         
         [HttpDelete("organisations/{organisationId}/events/{eventId}")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> DeleteEvent(int eventId, int organisationId)
         {
             return await _eventsService.DeleteEvent(eventId, organisationId);

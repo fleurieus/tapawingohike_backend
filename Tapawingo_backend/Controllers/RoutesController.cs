@@ -16,6 +16,8 @@ namespace Tapawingo_backend.Controllers
 
         [HttpGet("editions/{editionId}/routes")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<RouteDto>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetRoutesOnEditionAsync(int editionId)
         {
             try
@@ -46,6 +48,7 @@ namespace Tapawingo_backend.Controllers
         //TODO: ADD AUTHORIZATION RULE
         [HttpGet("editions/{editionId}/routes/{routeId}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RouteDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetRouteOnEdition(int editionId, int routeId)
         {
@@ -67,8 +70,7 @@ namespace Tapawingo_backend.Controllers
             {
                 return BadRequest(new
                 {
-                    message = "This message could not been handled",
-                    internalMessage = ex.Message
+                    message = ex.Message
                 });
             }
         }
@@ -76,18 +78,40 @@ namespace Tapawingo_backend.Controllers
         [HttpPost("editions/{editionId}/routes")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(RouteDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateRouteOnEdition(int editionId, [FromBody] CreateRouteDto model)
         {
-            var route = await _routesService.CreateRouteOnEditionAsync(editionId, model);
-            return new ObjectResult(route) { StatusCode = StatusCodes.Status201Created };
+            try
+            {
+                var route = await _routesService.CreateRouteOnEditionAsync(editionId, model);
+                return new ObjectResult(route) { StatusCode = StatusCodes.Status201Created };
+            }
+            catch (Exception ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
         }
 
         [HttpPatch("editions/{editionId}/routes/{routeId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateRouteOnEdition(int editionId, int routeId, [FromBody] UpdateRouteDto updateRouteDto)
         {
-            var response = await _routesService.UpdateRouteOnEditionAsync(editionId, routeId, updateRouteDto);
-            return Ok(response);
+            try
+            {
+                var response = await _routesService.UpdateRouteOnEditionAsync(editionId, routeId, updateRouteDto);
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
         }
 
         [HttpDelete("editions/{editionId}/routes/{routeId}")]
@@ -114,13 +138,15 @@ namespace Tapawingo_backend.Controllers
             {
                 return BadRequest(new
                 {
-                    message = "This message could not been handled",
-                    internalMessage = ex.Message
+                    message = ex.Message
                 });
             }
         }
 
         [HttpPatch("editions/{editionId}/routes/{routeId}/active")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> SetRouteActive(int editionId, int routeId)
         {
             return await _routesService.SetActiveRoute(editionId, routeId);
