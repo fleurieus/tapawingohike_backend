@@ -19,7 +19,7 @@ namespace Tapawingo_backend.Tests.TEST_Events.GET_Events
         [Fact]
         public async void Get_Existing_Events_By_Organisation_Id()
         { 
-            var twEvents = await _eventsRepository.GetEventsByOrganisationId(1);
+            var twEvents = await _eventsRepository.GetEventsByOrganisationId(1, null);
             Assert.NotNull(twEvents);
             Assert.Equal(2, twEvents.Count);
             Assert.Equal(1, twEvents[0].Id);
@@ -33,7 +33,7 @@ namespace Tapawingo_backend.Tests.TEST_Events.GET_Events
         [Fact]
         public async void Get_Non_Existing_Events_By_Organisation_Id()
         {
-            var twEvents = await _eventsRepository.GetEventsByOrganisationId(999);
+            var twEvents = await _eventsRepository.GetEventsByOrganisationId(999, null);
 
             Assert.Empty(twEvents);
         }

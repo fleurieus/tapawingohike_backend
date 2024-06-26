@@ -17,7 +17,10 @@ namespace Tapawingo_backend.Controllers
             _editionsService = editionsService;
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("events/{eventId}/editions/{editionId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetEditionById(int eventId, int editionId)
         {
             try
@@ -27,14 +30,17 @@ namespace Tapawingo_backend.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new
+                return NotFound(new
                 {
                     message = ex.Message
                 });
             }
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("events/{eventId}/editions")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetEditions(int eventId)
         {
             try
@@ -45,7 +51,7 @@ namespace Tapawingo_backend.Controllers
             }
             catch (Exception ex) 
             {
-                return BadRequest(new
+                return NotFound(new
                 {
                     message = ex.Message
                 });
@@ -53,26 +59,67 @@ namespace Tapawingo_backend.Controllers
             
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPost("events/{eventId}/editions")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(EditionDto))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CreateEditionOnEventAsync(int eventId, [FromBody] CreateEditionDto model)
         {
-            var edition = await _editionsService.CreateEditionOnEventAsync(eventId, model);
-            return new ObjectResult(edition) { StatusCode = StatusCodes.Status201Created };
+            try
+            {
+                var edition = await _editionsService.CreateEditionOnEventAsync(eventId, model);
+                return new ObjectResult(edition) { StatusCode = StatusCodes.Status201Created };
+            }
+            catch (Exception ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
+            
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPatch("events/{eventId}/editions/{editionId}")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(EditionDto))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateEditionAsync(int eventId, int editionId, [FromBody] UpdateEditionDto model)
         {
-            var response = await _editionsService.UpdateEditionAsync(eventId, editionId, model);
-            return Ok(response);
+            try
+            {
+                var response = await _editionsService.UpdateEditionAsync(eventId, editionId, model);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
+            
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpDelete("events/{eventId}/editions/{editionId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteEditionAsync(int eventId, int editionId)
         {
-            return await _editionsService.DeleteEditionAsync(eventId, editionId);
+            try
+            {
+                return await _editionsService.DeleteEditionAsync(eventId, editionId);
+            }
+            catch (Exception ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
+            
         }
     }
 }

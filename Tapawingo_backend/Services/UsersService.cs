@@ -83,7 +83,7 @@ namespace Tapawingo_backend.Services
         public async Task<UserOnOrganisationDto> CreateUserOnOrganisation(int organisationId, CreateUserDto model)
         {
             if (!await _organisationsRepository.OrganisationExists(organisationId))
-                throw new BadHttpRequestException("Organisation not found");
+                throw new ArgumentException("Organisation not found");
 
             var existingUser = await _userRepository.GetUserByEmail(model.Email);
 
@@ -190,7 +190,7 @@ namespace Tapawingo_backend.Services
         public async Task<UserDto> CreateUserOnEvent(int eventId, CreateUserOnEventDto model)
         {
             if (!await _eventsRepository.EventExists(eventId))
-                throw new BadHttpRequestException("Event not found");
+                throw new ArgumentException("Event not found");
 
             var existingUser = await _userRepository.GetUserByEmail(model.Email);
 

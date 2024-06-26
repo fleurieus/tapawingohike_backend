@@ -20,7 +20,7 @@ namespace Tapawingo_backend.Helper
 
             await _userManager.CreateAsync(admin, "Password!1");
 
-            var claim = new Claim("SuperAdminRole", "SuperAdmin");
+            var claim = new Claim("Claim", "SuperAdmin");
 
             await _userManager.AddClaimAsync(admin, claim);
         }

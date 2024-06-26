@@ -78,15 +78,15 @@ namespace Tapawingo_backend.Services
 
         public async Task<IActionResult> SetActiveRoute(int editionId, int routeId)
         {
-            if (!await _editionsRepository.EditionExists(editionId)) return new BadRequestObjectResult(new
+            if (!await _editionsRepository.EditionExists(editionId)) return new NotFoundObjectResult(new
             {
                 message = "Edition not found"
             });
-            if (!await _routesRepository.RouteExists(routeId)) return new BadRequestObjectResult(new
+            if (!await _routesRepository.RouteExists(routeId)) return new NotFoundObjectResult(new
             {
                 message = $"Route does not exist"
             });
-            if ((await _routesRepository.GetRouteByIdAsync(routeId)).EditionId != editionId) return new BadRequestObjectResult(new
+            if ((await _routesRepository.GetRouteByIdAsync(routeId)).EditionId != editionId) return new NotFoundObjectResult(new
             {
                 message = "Route does not exist on Edition"
             });

@@ -1,25 +1,46 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Tapawingo_backend.Data;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
+using Tapawingo_backend.Models;
 
 namespace Tapawingo_backend.Services
 {
     public class OrganisationsService
     {
         private readonly IOrganisationsRepository _organisationsRepository;
+        private readonly DataContext _context;
         private readonly IMapper _mapper;
 
-        public OrganisationsService(IOrganisationsRepository organisationsRepository, IMapper mapper)
+        public OrganisationsService(IOrganisationsRepository organisationsRepository, DataContext dataContext, IMapper mapper)
         {
             _mapper = mapper;
             _organisationsRepository = organisationsRepository;
+            _context = dataContext;
         }
 
-        public async Task<List<OrganisationDto>> GetOrganisations()
+        public async Task<List<OrganisationDto>> GetOrganisations(string userClaim)
         {
-            return _mapper.Map<List<OrganisationDto>>(await _organisationsRepository.GetAllOrganisations());
+            if (userClaim == "SuperAdmin")
+            {
+                return _mapper.Map<List<OrganisationDto>>(await _organisationsRepository.GetAllOrganisations(null));
+            }
+            else
+            {
+                var userClaimArr = userClaim.Split(":");
+                if (userClaimArr[1] == "EventUser")
+                {
+                    var organisationId = _context.Events.Find(int.Parse(userClaimArr[0])).OrganisationId;
+                    return _mapper.Map<List<OrganisationDto>>(await _organisationsRepository.GetAllOrganisations(organisationId));
+                }
+                else
+                {
+                    var organisationId = int.Parse(userClaimArr[0]);
+                    return _mapper.Map<List<OrganisationDto>>(await _organisationsRepository.GetAllOrganisations(organisationId));
+                }
+            }
         }
 
         public async Task<OrganisationDto> CreateOrganisation(CreateOrganisationDto organisationName)
