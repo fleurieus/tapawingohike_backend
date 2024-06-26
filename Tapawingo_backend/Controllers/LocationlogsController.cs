@@ -17,6 +17,7 @@ namespace Tapawingo_backend.Controllers
             _locationlogsService = locationlogsService;
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("teams/{teamId}/locationlogs")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -25,6 +26,7 @@ namespace Tapawingo_backend.Controllers
             return await _locationlogsService.GetLocationlogsOnTeamAsync(teamId);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPost("teams/{teamId}/locationlogs")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Locationlog))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

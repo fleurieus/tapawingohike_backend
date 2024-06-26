@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
@@ -19,7 +20,7 @@ namespace Tapawingo_backend.Services
             _organisationsRepository = organisationRepository;
         }
 
-        public async Task<IActionResult> GetEventsByOrganisationId(int organisationId)
+        public async Task<IActionResult> GetEventsByOrganisationId(int organisationId, string userClaim)
         {
             if(!await _organisationsRepository.OrganisationExists(organisationId))
             {
@@ -28,7 +29,24 @@ namespace Tapawingo_backend.Services
                     message = "Organisation not found"
                 });
             }
-            return new OkObjectResult(_mapper.Map<List<EventDto>>(await _eventsRepository.GetEventsByOrganisationId(organisationId)));
+
+            if (userClaim == "SuperAdmin")
+            {
+                return new OkObjectResult(_mapper.Map<List<EventDto>>(await _eventsRepository.GetEventsByOrganisationId(organisationId, null)));
+            }
+            else
+            {
+                var userClaimArr = userClaim.Split(":");
+                if (userClaimArr[1] == "EventUser")
+                {
+                    var eventId = int.Parse(userClaimArr[0]);
+                    return new OkObjectResult(_mapper.Map<List<EventDto>>(await _eventsRepository.GetEventsByOrganisationId(organisationId, eventId)));
+                }
+                else
+                {
+                    return new OkObjectResult(_mapper.Map<List<EventDto>>(await _eventsRepository.GetEventsByOrganisationId(organisationId, null)));
+                }
+            }
         }
         
         public async Task<IActionResult> GetEventByIdAndOrganisationId(int eventId, int organisationId)

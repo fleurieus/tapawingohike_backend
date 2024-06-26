@@ -17,14 +17,17 @@ namespace Tapawingo_backend.Controllers
             _eventsService = eventsService;
         }
 
+        [Authorize]
         [HttpGet("organisations/{organisationId}/Events")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EventDto>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetEventsByOrganisationId(int organisationId)
         {
-            return await _eventsService.GetEventsByOrganisationId(organisationId);
+            var userClaim = User.Claims.ToArray()[5].Value;
+            return await _eventsService.GetEventsByOrganisationId(organisationId, userClaim);
         }
-        
+
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("organisations/{organisationId}/Events/{eventId}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EventDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -33,6 +36,7 @@ namespace Tapawingo_backend.Controllers
             return await _eventsService.GetEventByIdAndOrganisationId(eventId, organisationId);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUPolicy")]
         [HttpPost("organisations/{organisationId}/Events")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Event))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -43,7 +47,8 @@ namespace Tapawingo_backend.Controllers
             var response = await _eventsService.CreateEvent(model, organisationId);
             return response;
         }
-        
+
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPut("organisations/{organisationId}/Events/{eventId}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Event))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -54,7 +59,8 @@ namespace Tapawingo_backend.Controllers
             var response = await _eventsService.UpdateEvent(model, organisationId, eventId);
             return response;
         }
-        
+
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUPolicy")]
         [HttpDelete("organisations/{organisationId}/events/{eventId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

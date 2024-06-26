@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Models;
 using Tapawingo_backend.Services;
@@ -14,6 +15,7 @@ namespace Tapawingo_backend.Controllers
             _routepartsService = routepartsService;
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("routes/{routeId}/routeparts")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -25,6 +27,7 @@ namespace Tapawingo_backend.Controllers
                 new OkObjectResult(route_parts);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("routes/{routeId}/routeparts/{routepartId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -45,6 +48,7 @@ namespace Tapawingo_backend.Controllers
             
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPost("routes/{routeId}/routeparts")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(RoutepartDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -56,6 +60,7 @@ namespace Tapawingo_backend.Controllers
                 NotFound(new { message = "Route not found" });
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPut("routes/{routeId}/routeparts/{routepartId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -76,6 +81,7 @@ namespace Tapawingo_backend.Controllers
             
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpDelete("routes/{routeId}/routeparts/{routepartId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -18,6 +18,7 @@ using Tapawingo_backend.Helper;
 using static Tapawingo_backend.Helper.CustomAuthRequirements;
 using Microsoft.AspNetCore.Authorization;
 using Tapawingo_backend.Dtos;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -127,81 +128,316 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("SuperAdminPolicy", policy =>
-        policy.RequireClaim("SuperAdminRole"));
-
-    options.AddPolicy("OrganisationPolicy", policy =>
-        policy.Requirements.Add(new CustomAuthRequirements.OrganizationRequirement(string.Empty)));
-
-
-    options.AddPolicy("SuperAdminOrOrganisationPolicy", policy =>
         policy.RequireAssertion(context =>
-            context.User.HasClaim(c => c.Type == "SuperAdminRole") ||
+            CheckSuperAdminRequirement(context)));
+
+    options.AddPolicy("SuperAdminOrOrganisationMPolicy", policy =>
+        policy.RequireAssertion(context =>
+            CheckSuperAdminRequirement(context) ||
             CheckOrganizationManagerRequirement(context)));
 
     options.AddPolicy("SuperAdminOrOrganisationMOrUPolicy", policy =>
     policy.RequireAssertion(context =>
-        context.User.HasClaim(c => c.Type == "SuperAdminRole") ||
+        CheckSuperAdminRequirement(context) ||
         CheckOrganizationManagerRequirement(context) ||
         CheckOrganizationUserRequirement(context)));
 
     options.AddPolicy("SuperAdminOrOrganisationMOrUOrEventUserPolicy", policy =>
     policy.RequireAssertion(context =>
-        context.User.HasClaim(c => c.Type == "SuperAdminRole") ||
+        CheckSuperAdminRequirement(context) ||
         CheckOrganizationManagerRequirement(context) ||
         CheckOrganizationUserRequirement(context) ||
         CheckEventUserRequirement(context)));
 });
 
-// Method to check OrganizationRequirement
+bool CheckSuperAdminRequirement(AuthorizationHandlerContext context)
+{
+    return HasClaim(context.User, "SuperAdmin");
+}
+
 bool CheckOrganizationManagerRequirement(AuthorizationHandlerContext context)
 {
-    if (context.Resource is HttpContext httpContext)
+    if (TryGetRouteValue(context, "organisationId", out var orgId))
     {
-        if (httpContext.Request.RouteValues.TryGetValue("organisationId", out var orgId))
+        return HasClaim(context.User, $"{orgId}:OrganisationManager");
+    }
+
+    if (TryGetRouteValue(context, "eventId", out var evId))
+    {
+        var dbContext = GetDbContext(context);
+        var organisationId = dbContext.Events.Where(e => e.Id == Convert.ToInt32(evId))
+                                             .Select(e => e.OrganisationId)
+                                             .FirstOrDefault();
+        if (organisationId != 0 && HasClaim(context.User, $"{organisationId}:OrganisationManager"))
         {
-            var expectedClaim = $"{orgId}:OrganisationManager";
-            var organizationClaim = context.User.FindFirst(c => c.Type == "OrganisationRole" && c.Value.Equals(expectedClaim));
-            if (organizationClaim != null)
-            {
-                return true;
-            }
+            return true;
         }
     }
+
+    if (TryGetRouteValue(context, "editionId", out var editionId) && IsEditionRoute(context))
+    {
+        var dbContext = GetDbContext(context);
+        var eventOrganisationId = dbContext.Editions.Where(ed => ed.Id == Convert.ToInt32(editionId))
+                                                    .Join(dbContext.Events,
+                                                          ed => ed.EventId,
+                                                          ev => ev.Id,
+                                                          (ed, ev) => ev.OrganisationId)
+                                                    .FirstOrDefault();
+
+        if (eventOrganisationId != 0 && HasClaim(context.User, $"{eventOrganisationId}:OrganisationManager"))
+        {
+            return true;
+        }
+    }
+
+    if (TryGetRouteValue(context, "routeId", out var routeId) && IsRoutePartsRoute(context))
+    {
+        var dbContext = GetDbContext(context);
+        var route = dbContext.Routes.Where(rp => rp.Id == Convert.ToInt32(routeId)).FirstOrDefault();
+
+        var OrganisationId = dbContext.Editions.Where(ed => ed.Id == Convert.ToInt32(route.EditionId))
+                                                    .Join(dbContext.Events,
+                                                          ed => ed.EventId,
+                                                          ev => ev.Id,
+                                                          (ed, ev) => ev.OrganisationId)
+                                                    .FirstOrDefault();
+
+        if (OrganisationId != 0 && HasClaim(context.User, $"{OrganisationId}:OrganisationManager"))
+        {
+            return true;
+        }
+    }
+
+    if (TryGetRouteValue(context, "teamId", out var teamId) && IsTeamLocationLogsRoute(context))
+    {
+        var dbContext = GetDbContext(context);
+        var editionIdOnTeamId = dbContext.Teams.Where(t => t.Id == Convert.ToInt32(teamId))
+                                       .Select(t => t.EditionId)
+                                       .FirstOrDefault();
+
+        var OrganisationId = dbContext.Editions.Where(ed => ed.Id == Convert.ToInt32(editionIdOnTeamId))
+                                                    .Join(dbContext.Events,
+                                                          ed => ed.EventId,
+                                                          ev => ev.Id,
+                                                          (ed, ev) => ev.OrganisationId)
+                                                    .FirstOrDefault();
+
+        if (OrganisationId != 0 && HasClaim(context.User, $"{OrganisationId}:OrganisationManager"))
+        {
+            return true;
+        }
+    }
+
     return false;
 }
 
 bool CheckOrganizationUserRequirement(AuthorizationHandlerContext context)
 {
-    if (context.Resource is HttpContext httpContext)
+    if (TryGetRouteValue(context, "organisationId", out var orgId) &&
+        HasClaim(context.User, $"{orgId}:OrganisationUser"))
     {
-        if (httpContext.Request.RouteValues.TryGetValue("organisationId", out var orgId))
+        return true;
+    }
+
+    if (TryGetRouteValue(context, "eventId", out var evId))
+    {
+        var dbContext = GetDbContext(context);
+        var organisationId = dbContext.Events.Where(e => e.Id == Convert.ToInt32(evId))
+                                             .Select(e => e.OrganisationId)
+                                             .FirstOrDefault();
+        if (organisationId != 0 && HasClaim(context.User, $"{organisationId}:OrganisationUser"))
         {
-            var expectedClaim = $"{orgId}:OrganisationUser";
-            var organizationClaim = context.User.FindFirst(c => c.Type == "OrganisationRole" && c.Value.Equals(expectedClaim));
-            if (organizationClaim != null)
-            {
-                return true;
-            }
+            return true;
         }
     }
+
+    if (TryGetRouteValue(context, "editionId", out var editionId) && IsEditionRoute(context))
+    {
+        var dbContext = GetDbContext(context);
+        var eventOrganisationId = dbContext.Editions.Where(ed => ed.Id == Convert.ToInt32(editionId))
+                                                    .Join(dbContext.Events,
+                                                          ed => ed.EventId,
+                                                          ev => ev.Id,
+                                                          (ed, ev) => ev.OrganisationId)
+                                                    .FirstOrDefault();
+
+        if (eventOrganisationId != 0 && HasClaim(context.User, $"{eventOrganisationId}:OrganisationUser"))
+        {
+            return true;
+        }
+    }
+
+    if (TryGetRouteValue(context, "routeId", out var routeId) && IsRoutePartsRoute(context))
+    {
+        var dbContext = GetDbContext(context);
+        var route = dbContext.Routes.Where(rp => rp.Id == Convert.ToInt32(routeId)).FirstOrDefault();
+
+        var OrganisationId = dbContext.Editions.Where(ed => ed.Id == Convert.ToInt32(route.EditionId))
+                                                    .Join(dbContext.Events,
+                                                          ed => ed.EventId,
+                                                          ev => ev.Id,
+                                                          (ed, ev) => ev.OrganisationId)
+                                                    .FirstOrDefault();
+
+        if (OrganisationId != 0 && HasClaim(context.User, $"{OrganisationId}:OrganisationUser"))
+        {
+            return true;
+        }
+    }
+
+    if (TryGetRouteValue(context, "teamId", out var teamId) && IsTeamLocationLogsRoute(context))
+    {
+        var dbContext = GetDbContext(context);
+        var editionIdOnTeamId = dbContext.Teams.Where(t => t.Id == Convert.ToInt32(teamId))
+                                       .Select(t => t.EditionId)
+                                       .FirstOrDefault();
+
+        var OrganisationId = dbContext.Editions.Where(ed => ed.Id == Convert.ToInt32(editionIdOnTeamId))
+                                                    .Join(dbContext.Events,
+                                                          ed => ed.EventId,
+                                                          ev => ev.Id,
+                                                          (ed, ev) => ev.OrganisationId)
+                                                    .FirstOrDefault();
+
+        if (OrganisationId != 0 && HasClaim(context.User, $"{OrganisationId}:OrganisationUser"))
+        {
+            return true;
+        }
+    }
+
     return false;
 }
 
 bool CheckEventUserRequirement(AuthorizationHandlerContext context)
 {
-    if (context.Resource is HttpContext httpContext)
+    if (TryGetRouteValue(context, "eventId", out var evId) &&
+        HasClaim(context.User, $"{evId}:EventUser"))
     {
-        if (httpContext.Request.RouteValues.TryGetValue("eventId", out var evId))
+        return true;
+    }
+
+    if (TryGetRouteValue(context, "organisationId", out var orgId))
+    {
+        var dbContext = GetDbContext(context);
+        var userEventIds = context.User.Claims.Where(c => c.Type == "Claim" && c.Value.Contains("EventUser"))
+                                              .Select(c => Convert.ToInt32(c.Value.Split(':')[0]));
+
+        foreach (var userEventId in userEventIds)
         {
-            var expectedClaim = $"{evId}:EventUser";
-            var organizationClaim = context.User.FindFirst(c => c.Type == "EventRole" && c.Value.Equals(expectedClaim));
-            if (organizationClaim != null)
+            var eventOrgId = dbContext.Events.Where(e => e.Id == userEventId)
+                                             .Select(e => e.OrganisationId)
+                                             .FirstOrDefault();
+            if (eventOrgId == Convert.ToInt32(orgId))
             {
                 return true;
             }
         }
     }
+
+    if (TryGetRouteValue(context, "editionId", out var editionId) && IsEditionRoute(context))
+    {
+        var dbContext = GetDbContext(context);
+        var eventId = dbContext.Editions.Where(ed => ed.Id == Convert.ToInt32(editionId))
+                                        .Select(ed => ed.EventId)
+                                        .FirstOrDefault();
+
+        if (eventId != 0 && HasClaim(context.User, $"{eventId}:EventUser"))
+        {
+            return true;
+        }
+    }
+
+    if (TryGetRouteValue(context, "routeId", out var routeId) && IsRoutePartsRoute(context))
+    {
+        var dbContext = GetDbContext(context);
+        var route = dbContext.Routes.Where(rp => rp.Id == Convert.ToInt32(routeId)).FirstOrDefault();
+
+        var eventId = dbContext.Editions.Where(ed => ed.Id == route.EditionId)
+                                        .Select(ed => ed.EventId)
+                                        .FirstOrDefault();
+
+        if (eventId != 0 && HasClaim(context.User, $"{eventId}:EventUser"))
+        {
+            return true;
+        }
+    }
+
+    if (TryGetRouteValue(context, "teamId", out var teamId) && IsTeamLocationLogsRoute(context))
+    {
+        var dbContext = GetDbContext(context);
+        var editionIdOnTeamId = dbContext.Teams.Where(t => t.Id == Convert.ToInt32(teamId))
+                                       .Select(t => t.EditionId)
+                                       .FirstOrDefault();
+
+        var eventId = dbContext.Editions.Where(ed => ed.Id == editionIdOnTeamId)
+                                        .Select(ed => ed.EventId)
+                                        .FirstOrDefault();
+
+        if (eventId != 0 && HasClaim(context.User, $"{eventId}:EventUser"))
+        {
+            return true;
+        }
+    }
+
     return false;
+}
+
+bool TryGetRouteValue(AuthorizationHandlerContext context, string key, out string value)
+{
+    value = null;
+    if (context.Resource is HttpContext httpContext)
+    {
+        if (httpContext.Request.RouteValues.TryGetValue(key, out var routeValue))
+        {
+            value = routeValue.ToString();
+            return true;
+        }
+    }
+    return false;
+}
+
+bool HasClaim(ClaimsPrincipal user, string expectedClaim)
+{
+    return user.HasClaim(c => c.Type == "Claim" && c.Value.Equals(expectedClaim));
+}
+
+bool IsEditionRoute(AuthorizationHandlerContext context)
+{
+    if (context.Resource is HttpContext httpContext)
+    {
+        var path = httpContext.Request.Path.Value;
+        return path != null && path.Contains("/editions/") && (path.Contains("/routes") || path.Contains("/teams"));
+    }
+    return false;
+}
+
+bool IsRoutePartsRoute(AuthorizationHandlerContext context)
+{
+    if (context.Resource is HttpContext httpContext)
+    {
+        var path = httpContext.Request.Path.Value;
+        return path != null && path.Contains("/routes/") && path.Contains("/routeparts");
+    }
+    return false;
+}
+
+bool IsTeamLocationLogsRoute(AuthorizationHandlerContext context)
+{
+    if (context.Resource is HttpContext httpContext)
+    {
+        var path = httpContext.Request.Path.Value;
+        return path != null && path.Contains("/teams/") && path.Contains("/locationlogs");
+    }
+    return false;
+}
+
+DataContext GetDbContext(AuthorizationHandlerContext context)
+{
+    if (context.Resource is HttpContext httpContext)
+    {
+        return httpContext.RequestServices.GetRequiredService<DataContext>();
+    }
+    throw new InvalidOperationException("Unable to get DbContext from the current context.");
 }
 
 builder.Services.AddSingleton<IAuthorizationHandler, OrganizationHandler>();

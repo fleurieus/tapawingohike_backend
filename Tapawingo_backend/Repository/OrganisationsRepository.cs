@@ -30,9 +30,16 @@ namespace Tapawingo_backend.Repository
             return newOrganisation;
         }
 
-        public async Task<List<Organisation>> GetAllOrganisations()
+        public async Task<List<Organisation>> GetAllOrganisations(int? organisationId)
         {
-            return await _context.Organisations.ToListAsync();
+            if(organisationId != null)
+            {
+                return await _context.Organisations.Where(organisation => organisation.Id == organisationId).ToListAsync();
+            }
+            else
+            {
+                return await _context.Organisations.ToListAsync();
+            }
         }
 
         public async Task<Organisation> GetOrganisationById(int id)

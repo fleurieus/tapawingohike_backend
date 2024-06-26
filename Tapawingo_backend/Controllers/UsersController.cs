@@ -16,6 +16,7 @@ namespace Tapawingo_backend.Controllers
             _usersService = usersService;
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMPolicy")]
         [HttpGet("organisations/{organisationId}/users")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -24,6 +25,7 @@ namespace Tapawingo_backend.Controllers
             return await _usersService.GetUsersOnOrganisation(organisationId);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMPolicy")]
         [HttpGet("organisations/{organisationId}/user/{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -43,7 +45,7 @@ namespace Tapawingo_backend.Controllers
             }
         }
 
-        [Authorize(Policy = "SuperAdminOrOrganisationPolicy")]
+        [Authorize(Policy = "SuperAdminOrOrganisationMPolicy")]
         [HttpPost("organisations/{organisationId}/users")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserDto))]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -72,6 +74,7 @@ namespace Tapawingo_backend.Controllers
             }
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMPolicy")] 
         [HttpPatch("organisations/{organisationId}/users/{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -81,6 +84,7 @@ namespace Tapawingo_backend.Controllers
             return Ok(response);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMPolicy")]
         [HttpDelete("organisations/{organisationId}/users/{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -93,6 +97,7 @@ namespace Tapawingo_backend.Controllers
 
 
         // User on events
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUPolicy")]
         [HttpGet("events/{eventId}/users")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -101,6 +106,7 @@ namespace Tapawingo_backend.Controllers
             return await _usersService.GetUsersOnEvent(eventId);
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUPolicy")]
         [HttpGet("events/{eventId}/users/{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -148,6 +154,7 @@ namespace Tapawingo_backend.Controllers
             }
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUPolicy")]
         [HttpPatch("events/{eventId}/users/{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -167,6 +174,7 @@ namespace Tapawingo_backend.Controllers
             }
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUPolicy")]
         [HttpDelete("events/{eventId}/users/{userId}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

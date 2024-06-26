@@ -17,6 +17,7 @@ namespace Tapawingo_backend.Controllers
             _editionsService = editionsService;
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("events/{eventId}/editions/{editionId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -36,6 +37,7 @@ namespace Tapawingo_backend.Controllers
             }
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("events/{eventId}/editions")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -57,6 +59,7 @@ namespace Tapawingo_backend.Controllers
             
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPost("events/{eventId}/editions")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(EditionDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -77,6 +80,7 @@ namespace Tapawingo_backend.Controllers
             
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpPatch("events/{eventId}/editions/{editionId}")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(EditionDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -97,6 +101,7 @@ namespace Tapawingo_backend.Controllers
             
         }
 
+        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpDelete("events/{eventId}/editions/{editionId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

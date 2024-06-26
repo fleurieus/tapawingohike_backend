@@ -25,7 +25,7 @@ namespace Tapawingo_backend.Tests.GET_Organisations
         [Fact]
         public async void Get_All_Existing_Organisations()
         {
-            var organisation = await _organisationsRepository.GetAllOrganisations();
+            var organisation = await _organisationsRepository.GetAllOrganisations(null);
 
             Assert.NotNull(organisation);
             Assert.Equal(5, organisation.Count());

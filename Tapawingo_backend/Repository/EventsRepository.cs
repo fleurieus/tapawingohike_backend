@@ -14,9 +14,16 @@ public class EventsRepository : IEventsRepository
         _context = context;
     }
     
-    public async Task<List<Event>> GetEventsByOrganisationId(int organisationId)
+    public async Task<List<Event>> GetEventsByOrganisationId(int organisationId, int? eventId)
     {
-        return await _context.Events.Where(e => e.OrganisationId == organisationId).ToListAsync();
+        if (eventId != null)
+        {
+            return await _context.Events.Where(e => e.OrganisationId == organisationId && e.Id == eventId).ToListAsync();
+        }
+        else
+        {
+            return await _context.Events.Where(e => e.OrganisationId == organisationId).ToListAsync();
+        }
     }
     
     public async Task<Event> GetEventById(int eventId)
