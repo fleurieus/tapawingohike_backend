@@ -62,6 +62,9 @@ namespace Tapawingo_backend.Controllers
 
         [Authorize(Policy = "SuperAdminOrOrganisationMPolicy")]
         [HttpPatch("organisations/{organisationId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateOrganisation(int organisationId, [FromBody]UpdateOrganisationDto model) 
         {
             var updatedOrganisation = await _organisationsService.UpdateOrganisation(organisationId, model);
@@ -75,6 +78,9 @@ namespace Tapawingo_backend.Controllers
 
         [Authorize(Policy = "SuperAdminPolicy")]
         [HttpDelete("organisations/{organisationId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteOrganisation(int organisationId)
         {
             return await _organisationsService.DeleteOrganisationAsync(organisationId);
