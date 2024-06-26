@@ -115,6 +115,21 @@ namespace Tapawingo_backend.Repository
                 currectIsManager.IsManager = (bool)user.IsManager;
                 _context.Users.Update(existingUser);
                 _context.SaveChanges();
+
+                var claims = await _userManager.GetClaimsAsync(existingUser);
+                var claimToRemove = claims.FirstOrDefault(c => c.Type == "Claim");
+                await _userManager.RemoveClaimAsync(existingUser, claimToRemove);
+                if ((bool)user.IsManager)
+                {
+                    var userClaim = new Claim("Claim", $"{currectIsManager.OrganisationId}:OrganisationManager");
+                    await _userManager.AddClaimAsync(existingUser, userClaim);
+                }
+                else
+                { 
+                   var userClaim = new Claim("Claim", $"{currectIsManager.OrganisationId}:OrganisationUser");
+                    await _userManager.AddClaimAsync(existingUser, userClaim);
+                }
+
             }
 
             return existingUser;
