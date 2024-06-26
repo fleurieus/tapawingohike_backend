@@ -66,7 +66,7 @@ namespace Tapawingo_backend.Repository
             }
 
             // Add user to organisation
-            _context.UserOrganisations.Add(new UserOrganisation { OrganisationId = organisationId, UserId = newUser.Id });
+            _context.UserOrganisations.Add(new UserOrganisation { OrganisationId = organisationId, UserId = newUser.Id, IsManager = model.IsManager});
             await _context.SaveChangesAsync();
 
             // Add claim that gives user acces to organisation
@@ -106,6 +106,13 @@ namespace Tapawingo_backend.Repository
             if (user.LastName != null)
             {
                 existingUser.LastName = user.LastName;
+                _context.Users.Update(existingUser);
+                _context.SaveChanges();
+            }
+            if (user.IsManager != null)
+            {
+                var currectIsManager = await _context.UserOrganisations.FirstOrDefaultAsync(uo => uo.UserId == existingUser.Id);
+                currectIsManager.IsManager = (bool)user.IsManager;
                 _context.Users.Update(existingUser);
                 _context.SaveChanges();
             }

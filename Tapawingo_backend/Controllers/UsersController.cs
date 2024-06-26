@@ -78,9 +78,9 @@ namespace Tapawingo_backend.Controllers
         [HttpPatch("organisations/{organisationId}/users/{userId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> UpdateUserOnOrganisation(int organisationId, string userId, [FromBody] UpdateUserDto userRegistrationDto)
+        public async Task<IActionResult> UpdateUserOnOrganisation(int organisationId, string userId, [FromBody] UpdateUserDto updateUserDto)
         {
-            var response = await _usersService.UpdateUserOnOrganisationAsync(organisationId, userId, userRegistrationDto);
+            var response = await _usersService.UpdateUserOnOrganisationAsync(organisationId, userId, updateUserDto);
             return Ok(response);
         }
 

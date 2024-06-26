@@ -45,7 +45,7 @@ namespace Tapawingo_backend.Tests.TEST_Users_on_organisation.PATCH_User_on_organ
 
             _usersRepository = new UsersRepository(_context, _userManagerMock.Object);
 
-            _usersService = new UsersService(_usersRepository, _mapper, _organisationsRepositoryMock.Object, _eventsRepositoryMock.Object);
+            _usersService = new UsersService(_usersRepository, _mapper, _organisationsRepositoryMock.Object, _eventsRepositoryMock.Object, _context);
         }
 
         //Good Weather
