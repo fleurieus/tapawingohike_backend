@@ -49,21 +49,19 @@ namespace Tapawingo_backend.Repository
 
         public async Task<LoginResponse> Refresh([FromBody] RefreshDto model)
         {
-            Console.WriteLine("Refresh called");
-
             var principal = GetPrincipalFromExpiredToken(model.AccessToken);
 
-            if (principal?.Identity?.Name is null)
+            if (principal?.Identity is null)
                 throw new UnauthorizedAccessException();
 
-            var user = await _userManager.FindByEmailAsync(principal.Identity.Name);
+            var userEmail = principal.Claims.Single(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
+
+            var user = await _userManager.FindByEmailAsync(userEmail);
 
             if (user is null || user.RefreshToken != model.RefreshToken || user.RefreshTokenExpiry < DateTime.UtcNow)
                 throw new UnauthorizedAccessException();
 
             var token = await GenerateJwt(user.Id);
-
-            Console.WriteLine("Refresh succeeded");
 
             return new LoginResponse
             {
