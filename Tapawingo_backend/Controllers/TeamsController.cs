@@ -122,5 +122,11 @@ namespace Tapawingo_backend.Controllers
         {
             return await _teamService.DeleteTeamOnEditionAsync(editionId, teamId);
         }
+
+        [HttpGet("/teams/{teamCode}")]
+        public async Task<IActionResult> LoginWithTeamCode(string teamCode)
+        {
+            return await _teamService.LoginWithTeamCode(teamCode);
+        }
     }
 }
