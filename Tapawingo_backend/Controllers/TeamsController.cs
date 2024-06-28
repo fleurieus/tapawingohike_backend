@@ -103,6 +103,13 @@ namespace Tapawingo_backend.Controllers
                 var response = await _teamService.UpdateTeamOnEditionAsync(editionId, teamId, model);
                 return Ok(response);
             }
+            catch (ArgumentException ex)
+            {
+                return new BadRequestObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
             catch (Exception ex)
             {
                 return new NotFoundObjectResult(new
