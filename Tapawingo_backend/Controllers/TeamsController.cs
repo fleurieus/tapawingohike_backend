@@ -131,6 +131,9 @@ namespace Tapawingo_backend.Controllers
         }
 
         [HttpGet("/teams/{teamCode}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> LoginWithTeamCode(string teamCode)
         {
             return await _teamService.LoginWithTeamCode(teamCode);
