@@ -156,5 +156,16 @@ namespace Tapawingo_backend.Repository
                 return false;
             return team.EditionId == editionId;
         }
+
+        public async Task<Team> GetTeamByTeamCode(string teamCode)
+        {
+            return await _context.Teams.FirstOrDefaultAsync(t => t.Code.Equals(teamCode));
+        }
+
+        public async Task<bool> TeamcodeIsUnique(string teamCode)
+        {
+            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Code.Equals(teamCode));
+            return team == null;
+        }
     }
 }

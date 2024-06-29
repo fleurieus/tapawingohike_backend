@@ -62,6 +62,10 @@ namespace Tapawingo_backend.Services
         {
             if (!await _editionsRepository.EditionExists(editionId))
                 throw new BadHttpRequestException("Edition not found");
+            if(!await _teamRepository.TeamcodeIsUnique(model.Code))
+            {
+                throw new ArgumentException("Team code already exists");
+            }
 
             // TODO check if team already exists with that name
 
@@ -86,6 +90,13 @@ namespace Tapawingo_backend.Services
                 throw new BadHttpRequestException("Team not found");
             if (!await _teamRepository.TeamExistsOnEdition(teamId, editionId))
                 throw new BadHttpRequestException("Team does not exist on edition");
+            if(model.Code != null)
+            {
+                if (!await _teamRepository.TeamcodeIsUnique(model.Code))
+                {
+                    throw new ArgumentException("Team code already exists");
+                }
+            }
 
             await _teamRepository.UpdateTeamOnEditionAsync(await _teamRepository.GetTeamOnEditionAsync(editionId, teamId), model);
 
@@ -116,6 +127,26 @@ namespace Tapawingo_backend.Services
             {
                 message = "Team could not be deleted"
             });
+        }
+
+        public async Task<IActionResult> LoginWithTeamCode(string teamCode)
+        {
+            if(teamCode == null || teamCode.Equals(""))
+            {
+                return new BadRequestObjectResult(new
+                {
+                    message = "Teamcode cannot be empty"
+                });
+            }
+
+            var team = await _teamRepository.GetTeamByTeamCode(teamCode);
+
+            return team == null ?
+                new NotFoundObjectResult(new
+                {
+                    message = "No team found with this team code"
+                }) :
+                new OkObjectResult(_mapper.Map<TeamDto>(team));
         }
     }
 }

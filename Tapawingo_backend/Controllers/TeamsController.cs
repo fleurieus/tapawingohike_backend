@@ -109,6 +109,13 @@ namespace Tapawingo_backend.Controllers
                 var response = await _teamService.UpdateTeamOnEditionAsync(editionId, teamId, model);
                 return Ok(response);
             }
+            catch (ArgumentException ex)
+            {
+                return new BadRequestObjectResult(new
+                {
+                    message = ex.Message
+                });
+            }
             catch (Exception ex)
             {
                 return new NotFoundObjectResult(new
@@ -127,6 +134,15 @@ namespace Tapawingo_backend.Controllers
         public async Task<IActionResult> DeleteTeamOnEditionAsync(int editionId, int teamId)
         {
             return await _teamService.DeleteTeamOnEditionAsync(editionId, teamId);
+        }
+
+        [HttpGet("/teams/{teamCode}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> LoginWithTeamCode(string teamCode)
+        {
+            return await _teamService.LoginWithTeamCode(teamCode);
         }
     }
 }
