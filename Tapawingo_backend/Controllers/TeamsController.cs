@@ -36,6 +36,12 @@ namespace Tapawingo_backend.Controllers
             }
         }
 
+        [HttpGet("/editions/{editionId}/teams/{teamId}/routeparts")]
+        public async Task<IActionResult> GetTeamRouteparts( int editionId, int teamId)
+        {
+            return await _teamService.GetTeamRouteparts(editionId, teamId);
+        }
+
         [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("/editions/{editionId}/teams/{teamId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

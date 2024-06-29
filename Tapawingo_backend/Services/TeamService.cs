@@ -1,7 +1,9 @@
 using AutoMapper;
+using Google.Protobuf.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Interface;
+using Tapawingo_backend.Models;
 using Tapawingo_backend.Repository;
 
 namespace Tapawingo_backend.Services
@@ -40,6 +42,20 @@ namespace Tapawingo_backend.Services
                 throw new BadHttpRequestException("Team does not exist on edition");
 
             return _mapper.Map<TeamDto>(await _teamRepository.GetTeamOnEditionAsync(editionId, teamId));
+        }
+
+        public async Task<IActionResult> GetTeamRouteparts(int editionId, int teamId)
+        {
+            if (!await _editionsRepository.EditionExists(editionId))
+                return new NotFoundObjectResult(new { message = "Edition not found" });
+
+            if (!await _teamRepository.TeamExists(teamId))
+                return new NotFoundObjectResult(new { message = "Team not found" });
+            if (!await _teamRepository.TeamExistsOnEdition(teamId, editionId))
+                return new NotFoundObjectResult(new { message = "Team does not exist on edition" });
+
+            var team = await _teamRepository.GetTeamOnEditionAsync(editionId, teamId);
+            return new OkObjectResult(team.TeamRouteparts);
         }
 
         public async Task<TeamDto> CreateTeamOnEditionAsync(int editionId, CreateTeamDto model)
