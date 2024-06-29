@@ -1,0 +1,65 @@
+version: "3"
+
+networks:
+  proxynetwork:
+    driver: bridge
+    name: proxynetwork
+
+services:
+
+  TWdatabase:
+    restart: unless-stopped
+    container_name: TWdatabase
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: tapawingodb
+      MYSQL_USER: testUser
+      MYSQL_PASSWORD: testPassword
+#    volumes:
+#      - type: bind
+#        source: ./TapawingoDB
+#        target: /var/lib/mysql
+    ports:
+      - 3306:3306
+    healthcheck:
+      test:  ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - proxynetwork
+
+  dotnet-backend:
+    restart: unless-stopped
+    container_name: backend
+    build:
+      context: Tapawingo_backend
+      target: development
+      args:
+        BUILD_CONFIGURATION: Development
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ./Tapawingo_backend:/src/Tapawingo_backend
+    ports:
+      - 8080
+    depends_on:
+      TWdatabase:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: rebuild
+          path: .
+    networks:
+      - proxynetwork
+
+  nginx-proxy:
+    image: nginxproxy/nginx-proxy:1.2.0
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx/default.conf:/etc/nginx/conf.d/current.conf
+    networks:
+      - proxynetwork
