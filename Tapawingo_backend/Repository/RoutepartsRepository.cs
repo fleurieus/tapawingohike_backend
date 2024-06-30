@@ -17,7 +17,10 @@ namespace Tapawingo_backend.Repository
 
         public async Task<List<Routepart>> GetRoutepartsAsync(int route_id)
         {
-            return await _context.Routeparts.Where(rp => rp.RouteId == route_id).ToListAsync();
+            return await _context.Routeparts.Where(rp => rp.RouteId == route_id)
+                .Include(rp => rp.Destinations)
+                .Include(d => d.Files)
+                .ToListAsync();
         }
 
         public async Task<Routepart> GetRoutepartOnRouteAsync(int routeId, int routepartId)
