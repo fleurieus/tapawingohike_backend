@@ -32,7 +32,7 @@ services:
 
   dotnet-backend:
     restart: unless-stopped
-    container_name: backend
+    container_name: dotnet-backend
     build:
       context: Tapawingo_backend
       target: development
@@ -43,7 +43,7 @@ services:
     volumes:
       - ./Tapawingo_backend:/src/Tapawingo_backend
     ports:
-      - 8080
+      - '8080:8080'
     depends_on:
       TWdatabase:
         condition: service_healthy
@@ -52,7 +52,9 @@ services:
         - action: rebuild
           path: .
     networks:
-      - proxynetwork
+      proxynetwork:
+        aliases:
+          - next-app
 
   nginx-proxy:
     image: nginxproxy/nginx-proxy:1.2.0
