@@ -36,7 +36,6 @@ namespace Tapawingo_backend.Controllers
             }
         }
 
-        [Authorize(Policy = "SuperAdminOrOrganisationMOrUOrEventUserPolicy")]
         [HttpGet("/editions/{editionId}/teams/{teamId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

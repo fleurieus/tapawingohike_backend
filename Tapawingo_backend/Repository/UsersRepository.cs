@@ -177,7 +177,9 @@ namespace Tapawingo_backend.Repository
             var result = await _userManager.CreateAsync(newUser, model.Password);
             if (!result.Succeeded)
             {
-                throw new Exception("User creation failed.");
+                var errors = result.Errors.Select(e => e.Description);
+                var errorMessage = string.Join(", ", errors);
+                throw new Exception($"message: {errorMessage}");
             }
 
             // Add user to event
@@ -187,11 +189,13 @@ namespace Tapawingo_backend.Repository
             // Add claim that gives user acces to event
             var userClaim = new Claim("Claim", $"{eventId}:EventUser");
 
-
             var claimResult = await _userManager.AddClaimAsync(newUser, userClaim);
             if (!claimResult.Succeeded)
             {
-                throw new Exception("Something went worng adding claim to user.");
+
+                var errors = result.Errors.Select(e => e.Description);
+                var errorMessage = string.Join(", ", errors);
+                throw new Exception($"message: {errorMessage}");
             }
 
             return newUser;
