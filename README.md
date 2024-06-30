@@ -93,5 +93,19 @@ To add change to dataset: 1. first revert 2. remove 3. add 4. run
 5. Services: Contains the services that are used to handle the business logic.
 6. Repositories: Contains the repositories that are used to handle the database logic.
 
+## RabbitMQ
+1. Create the RabbitMQ Docker image with command: `docker run -d --hostname rmq --name rabbit:server -p 8080:15672 -p 5672:5672 rabbitmq:3-management`
+2. Make sure the RabbitMQ project (in Backend directory) has package RabbitMQ.Client. If not, you can add this using command: `dotnet add package RabbitMQ.Client`
+
+To start 3 projects simultaneously:
+1. Expand start button in visual studio
+2. Click 'Startup options'
+3. Select 'Multiple startup projects'
+4. Select:
+  4.1. Tapawingo_backend --> Start
+  4.2. Tapawingo_backend.RabbitMQ_Receiver_Example --> start
+  4.3. Tapawingo_backend.RabbitMQ_Sender_Example --> start
+  4.4. Tapawingo_backend.Tests --> none
+
 ## API Endpoints
 To see all the endpoints that are available in the API, you can go to the swagger page of the API(ApiUrl/swagger/index.html).
