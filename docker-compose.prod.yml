@@ -1,0 +1,49 @@
+version: "3"
+
+networks:
+  proxynetwork:
+    driver: bridge
+    name: proxynetwork
+
+services:
+
+  database:
+    restart: unless-stopped
+    container_name: database
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: TapawingoDB
+    ports:
+      - '3306'
+    networks:
+      - proxynetwork
+
+  dotnet-backend:
+    restart: unless-stopped
+    container_name: dotnet-backend
+    build:
+      context: Tapawingo_backend
+      args:
+        BUILD_CONFIGURATION: Release
+    environment:
+      - ASPNETCORE_HTTP_PORTS=5170
+    ports:
+      - '5170:5170'
+    networks:
+      proxynetwork:
+        aliases:
+          - next-app
+
+  nginx:
+    restart: unless-stopped
+    container_name: nginx
+    image: nginx:stable-alpine
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - dotnet-backend
+    networks:
+      - proxynetwork

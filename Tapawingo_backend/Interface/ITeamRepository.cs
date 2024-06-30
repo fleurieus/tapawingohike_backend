@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Tapawingo_backend.Dtos;
 using Tapawingo_backend.Models;
 
@@ -12,5 +13,7 @@ namespace Tapawingo_backend.Repository
         Task<Team> UpdateTeamOnEditionAsync(Team existingTeam, UpdateTeamDto team);
         Task<bool> DeleteTeamOnEditionAsync(int editionId, int teamId);
         Task<bool> TeamExistsOnEdition(int teamId, int editionId);
+        Task<Team> GetTeamByTeamCode(string teamCode);
+        Task<bool> TeamcodeIsUnique(string teamCode);
     }
 }

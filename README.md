@@ -38,6 +38,31 @@ For Visual Studio 2022(You can also use the NuGet Package Manager):
 Install-Package {packageName}
 ```
 
+## Project structure
+1. Models: Contains the entities that are used in the database.
+2. Data: Contains the Database context file.
+3. Dtos: Contains the Data Transfer Objects that are used to send data to the client.
+4. Controllers: Contains the controllers that are used to handle the requests.
+5. Services: Contains the services that are used to handle the business logic.
+6. Repositories: Contains the repositories that are used to handle the database logic.
+
+## RabbitMQ
+1. Create the RabbitMQ Docker image with command: `docker run -d --hostname rmq --name rabbit:server -p 8080:15672 -p 5672:5672 rabbitmq:3-management`
+2. Make sure the RabbitMQ project (in Backend directory) has package RabbitMQ.Client. If not, you can add this using command: `dotnet add package RabbitMQ.Client`
+
+To start 3 projects simultaneously:
+1. Expand start button in visual studio
+2. Click 'Startup options'
+3. Select 'Multiple startup projects'
+4. Select:
+- Tapawingo_backend --> Start
+- Tapawingo_backend.RabbitMQ_Receiver_Example --> start
+- Tapawingo_backend.RabbitMQ_Sender_Example --> start
+- Tapawingo_backend.Tests --> none
+
+## API Endpoints
+To see all the endpoints that are available in the API, you can go to the swagger page of the API(ApiUrl/swagger/index.html).
+
 ## Migrations
 ### show all migrations: 
 Visual Studio Code:
@@ -81,17 +106,3 @@ Update-Database {name of migration where you want to go}
 ```
 When executing this command, you will need to remove the migration that you want to go to.
 To add change to dataset: 1. first revert 2. remove 3. add 4. run
-
-## Steps to create a entire entity
-1. Create Record in Dtos folder with the attributes of that entity
-
-## Project structure
-1. Models: Contains the entities that are used in the database.
-2. Data: Contains the Database context file.
-3. Dtos: Contains the Data Transfer Objects that are used to send data to the client.
-4. Controllers: Contains the controllers that are used to handle the requests.
-5. Services: Contains the services that are used to handle the business logic.
-6. Repositories: Contains the repositories that are used to handle the database logic.
-
-## API Endpoints
-To see all the endpoints that are available in the API, you can go to the swagger page of the API(ApiUrl/swagger/index.html).
