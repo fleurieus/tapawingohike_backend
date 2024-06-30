@@ -40,10 +40,11 @@ services:
         BUILD_CONFIGURATION: Development
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=5170
     volumes:
       - ./Tapawingo_backend:/src/Tapawingo_backend
     ports:
-      - '8080:8080'
+      - '5170:5170'
     depends_on:
       TWdatabase:
         condition: service_healthy
