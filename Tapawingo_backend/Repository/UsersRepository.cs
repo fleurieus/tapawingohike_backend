@@ -115,6 +115,21 @@ namespace Tapawingo_backend.Repository
                 currectIsManager.IsManager = (bool)user.IsManager;
                 _context.Users.Update(existingUser);
                 _context.SaveChanges();
+
+                var claims = await _userManager.GetClaimsAsync(existingUser);
+                var claimToRemove = claims.FirstOrDefault(c => c.Type == "Claim");
+                await _userManager.RemoveClaimAsync(existingUser, claimToRemove);
+                if ((bool)user.IsManager)
+                {
+                    var userClaim = new Claim("Claim", $"{currectIsManager.OrganisationId}:OrganisationManager");
+                    await _userManager.AddClaimAsync(existingUser, userClaim);
+                }
+                else
+                { 
+                   var userClaim = new Claim("Claim", $"{currectIsManager.OrganisationId}:OrganisationUser");
+                    await _userManager.AddClaimAsync(existingUser, userClaim);
+                }
+
             }
 
             return existingUser;
@@ -162,7 +177,9 @@ namespace Tapawingo_backend.Repository
             var result = await _userManager.CreateAsync(newUser, model.Password);
             if (!result.Succeeded)
             {
-                throw new Exception("User creation failed.");
+                var errors = result.Errors.Select(e => e.Description);
+                var errorMessage = string.Join(", ", errors);
+                throw new Exception($"message: {errorMessage}");
             }
 
             // Add user to event
@@ -172,11 +189,13 @@ namespace Tapawingo_backend.Repository
             // Add claim that gives user acces to event
             var userClaim = new Claim("Claim", $"{eventId}:EventUser");
 
-
             var claimResult = await _userManager.AddClaimAsync(newUser, userClaim);
             if (!claimResult.Succeeded)
             {
-                throw new Exception("Something went worng adding claim to user.");
+
+                var errors = result.Errors.Select(e => e.Description);
+                var errorMessage = string.Join(", ", errors);
+                throw new Exception($"message: {errorMessage}");
             }
 
             return newUser;
