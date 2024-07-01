@@ -11,6 +11,9 @@ class Program
 
     static async Task Main(string[] args)
     {
+        Console.WriteLine("Please enter your JWT Token");
+        var token = Console.ReadLine();
+
         var factory = new ConnectionFactory { HostName = "localhost" };
         using var connection = factory.CreateConnection();
         using var locationLogChannel = connection.CreateModel();
@@ -30,7 +33,7 @@ class Program
             var message = Encoding.UTF8.GetString(body);
             Console.WriteLine($" [RECEIVER - LOCATIONLOG] Received {message}");
 
-            await SendApiCallAsync(message);
+            await SendApiCallAsync(message, token);
         };
         locationLogChannel.BasicConsume(queue: "locationlogs",
                              autoAck: true,
@@ -40,7 +43,7 @@ class Program
         Console.ReadLine();
     }
 
-    private static async Task SendApiCallAsync(string message)
+    private static async Task SendApiCallAsync(string message, string jwtToken)
     {
         var parts = message.Split(';');
         if (parts.Length != 3)
@@ -69,6 +72,8 @@ class Program
             Encoding.UTF8,
             "application/json"
         );
+
+        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwtToken);
 
         try
         {
